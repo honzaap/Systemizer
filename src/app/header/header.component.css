@@ -1,0 +1,20 @@
+.nav .navbar-name {
+  background-color: transparent;
+  padding: 0.1em 0.2em;
+  border: none;
+  outline: none;
+  font-size: 1.2rem;
+  width: 8em;
+  color: #9278ff;
+}
+
+.nav a {
+  color: #787ea8;
+  -webkit-transition: color 0.1s linear;
+  transition: color 0.1s linear;
+}
+
+.nav a:hover {
+  color: #7767d4;
+}
+/*# sourceMappingURL=header.component.css.map */

@@ -1,0 +1,38 @@
+<nav class="nav">
+    <ul class="nav-list">
+        <li>
+            <mat-form-field appearance="fill" class="nav-select">
+                <mat-select (selectionChange)="handleScaleChange()" [formControl]="scaleControl">
+                  <mat-option *ngFor="let val of scaleSelectList" [value]="val">{{val*100}}%</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li class="line">
+            <span (click)="zoomIn()" class="icon"><i class="fas fa-search-plus"></i></span>
+        </li>
+        <li>
+            <span (click)="zoomOut()" class="icon"><i class="fas fa-search-minus"></i></span>
+        </li>
+        <li class="line">
+            <span class="icon"><i class="fas fa-undo-alt"></i></span>
+        </li>
+        <li>
+            <span class="icon"><i class="fas fa-redo"></i></span>
+        </li>
+        <li class="line">
+            <span (click)="copyItem()" class="icon"><i class="far fa-copy"></i></span>
+        </li>
+        <li>
+            <span (click)="pasteItem()" class="icon"><i class="fas fa-paste"></i></span>
+        </li>
+        <li class="line">
+            <span (click)="delete()" class="icon"><i class="fas fa-trash"></i></span>
+        </li>
+    </ul>
+</nav>
+<div #board class="board infocus" id="board" (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick()" (click)="handleClick($event)" (mousewheel.self)="scroll($event)">
+    <h1 class="board-bg-title">Systemizer</h1>
+    <template #conn></template>
+    <svg class="svg-canvas" id="svg-canvas" >
+    </svg>
+</div>

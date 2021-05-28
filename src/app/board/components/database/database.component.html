@@ -1,0 +1,62 @@
+<input [style.left.px]="LogicDatabase.options.X-20"
+[style.top.px]="LogicDatabase.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicDatabase.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicDatabase.options.X"
+[style.top.px]="LogicDatabase.options.Y"
+>
+    <div class="img-container">
+        <img src="../../../../assets/database.svg">
+    </div>  
+    <port #inputPort class="left" [LogicParent]="LogicDatabase"></port>
+    <port #outputPort [style.display]="LogicDatabase.options.isMasterShard? 'flex' : 'none'" class="right" [LogicParent]="LogicDatabase" [IsOutput]="true"></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-type-container">
+            <span class="property-name">Type:</span>
+            <div>
+                <mat-form-field appearance="fill" class="action-endpoint">
+                    <mat-select (selectionChange)="changeDatabaseType()" [disabled]="LogicDatabase.options.isShard" [(ngModel)]="LogicDatabase.options.type">
+                      <mat-option *ngFor="let type of DatabaseTypeKeys" [value]="type">{{DatabaseType[type]}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="options-endpoints-container">
+            <div class="options-endpoints-top">
+                <span class="property-name">Endpoints:</span>
+            </div>
+            <div class="options-endpoints">
+                <div class="options-endpoint" *ngFor="let endpoint of this.LogicDatabase.options.endpoints">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="options-endpoint-menu-top">
+                            <mat-form-field class="endpoint-method" appearance="fill">
+                                <mat-select disabled [(ngModel)]="endpoint.supportedMethods" multiple>
+                                    <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ formatMethod(HTTPMethod[method], true) }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div #actions>
+        <div class="options-actions">
+            <div class="actions-container">
+                <button [disabled]="LogicDatabase.options.isMasterShard || LogicDatabase.options.isShard"
+                 (click)="shard()">Shard Database</button>
+            </div>
+        </div>
+    </div>
+</div>

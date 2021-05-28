@@ -1,0 +1,483 @@
+@import "colors";
+
+body{
+    min-height: 100vh;
+    background-color: $bg-purple-darker;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    font-size: 1.2rem;
+}
+.component{
+    &:hover{
+        cursor: move;
+    }
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: $bg-purple-darker;
+    border-radius: 10%;
+    padding: 0.3em;
+    z-index: 3;
+    & .img-container{
+        position: absolute;
+        top: 7px;
+        bottom: 7px;
+        left: 7px;
+        right: 7px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &.anim{
+        animation: receivedatabg 0.5s linear; 
+        & img{
+            animation: receivedata 0.3s linear;
+        }
+    }
+    &.is-current-selection{
+        outline: 2px solid $orange-light;
+        outline-style: dashed;
+        outline-offset: 2px;
+    }
+}
+.status-code-side{
+    position: absolute;
+    z-index: 10;
+    right: 120%;
+    bottom: 0;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.55rem;
+    text-align: center;
+    animation: status-side 1.5s linear;
+    & > span{
+        font-size: 1.1em;
+        &.info{
+            color:rgb(38, 175, 146);
+        }
+        &.success{
+            color:rgb(38, 175, 79);
+        }
+        &.warning{
+            color:rgb(175, 161, 38);
+        }
+        &.error{
+            color:rgb(175, 38, 38);
+        }
+    }
+}
+.component-title{
+    position: absolute;
+    font-size: 0.6rem;
+    z-index: 100;
+    width: 80px;
+    z-index: 3;
+    overflow: visible;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    outline: none;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.1s linear;
+    &:hover{
+        border-color: rgba(2, 86, 143,0.45);
+    }
+}
+a{
+    color: inherit;
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+.button-icon{
+    width: 1em;
+    height: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s ease-out;
+    cursor: pointer;
+    &:hover{
+        transform: scale(1.2);
+    }
+}
+.nav{
+    z-index: 30;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    background-color: $bg-purple-light;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+}
+.nav-list{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+    gap:1em;
+    & mat-form-field{
+        font-weight: normal;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 0.8;
+        width: 2.8em;
+        margin-left: 0.9em;
+        & .mat-form-field-wrapper, .mat-form-field-flex, .mat-form-field-infix, mat-select, mat-select div:not(.mat-select-trigger), .mat-form-field-underline, .mat-form-field-ripple{
+            margin: 0;
+            padding: 0;
+            border: none;
+            line-height: 1;
+            outline: none;
+            height: 100%;
+            border-radius: 0;
+            background-color: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: inherit;
+            &::after{
+                display: none;
+            }
+            &::before{
+                display: none;
+            }
+        }
+        & mat-select .mat-select-trigger{
+            width: 100%;
+        }
+    }
+}
+.options-menu-window{
+    position: absolute;
+    top: 30%;
+    bottom: 30%;
+    right: 0;
+    width: 18rem;
+    padding-bottom: 2em;
+    overflow-y: scroll;
+    background-color: $bg-purple-light;
+    /*backdrop-filter: blur(6px);*/
+    color: #C5C5C5;
+    border-radius: 0.5em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    box-shadow: 4px -7px 20px 7px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 28%), 0px 1px 10px 0px rgb(0 0 0 / 24%);
+    & .input{
+        outline: none;
+        background-color: $purple-darker;
+        border: 0.15em solid rgba(0,0,0,0.2);
+        color: rgba(255,255,255,0.6);
+        padding: 0.2em 0 0.2em 0.5em;
+        font-size: 1rem;
+        max-width: 70%;
+        transition: background-color 0.1s linear;
+        &::placeholder{
+            color: #e2e2e2;
+            transition: transform 0.1s ease-out;
+        }
+        &:hover{
+            background-color: $purple-dark;
+            &::placeholder{
+                transform: translateX(0.1em);
+            }
+        }
+    }
+    & .main{
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 0.3em;
+    }
+    & .section{
+        & .header{
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 0.2em 0.3em;
+            background-color: $bg-purple-dark;
+            display: flex;
+            justify-content: space-between;
+            &:hover{
+                cursor: default;
+            }
+        }
+        &.active .content{
+            display: flex;
+        }
+        & .content{
+            display: none;
+            flex-flow: row wrap;
+            margin: 0.4em 10% 0.4em 5%;
+            gap: 10%;
+            & > div{
+                margin-top: 0.4em;
+                flex-grow: 1;
+                &.small{
+                    width: 35%;
+                    flex-grow: 0;
+                    margin-left: auto;
+                    margin-right: auto;
+                    & input, & textarea{
+                        font-family: inherit;
+                        font-size: 0.9em;
+                        width: 70%;
+                        margin-left: 0.4em;
+                    }
+                }
+            }
+            & .property-name{
+                font-size: 1.1rem;
+                text-align: left;
+                display: inline-block;
+            }
+            & input, & textarea{
+                outline: none;
+                border: 2px solid rgba(0,0,0,0.2);
+                background-color: $bg-purple-lighter;
+                color: #fff;
+                padding: 0.2em;
+                cursor: text;
+                transition: background-color 0.1s linear;
+                &::placeholder{
+                    color: #a1a1a1;
+                    transition: transform 0.1s ease-out;
+                }
+                &:hover{
+                    background-color: $bg-purple-dark;
+                    &::placeholder{
+                        transform: translateX(10px);
+                    }
+                }
+            }
+            & textarea{
+                display: block;
+                width: 100%;
+                resize: vertical;
+                font-size: 0.9em;
+                min-height: 2.2em;
+                max-height: 10em;
+            }
+        }
+    }
+    & mat-form-field{
+        font-weight: normal;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 0.8;
+        &, .mat-form-field-wrapper, .mat-form-field-flex, .mat-form-field-infix, mat-select, mat-select div, mat-select .mat-select-trigger, .mat-form-field-underline, .mat-form-field-ripple{
+            margin: 0;
+            padding: 0;
+            border: none;
+            line-height: 1;
+            outline: none;
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            background-color: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: inherit;
+            &::after{
+                display: none;
+            }
+            &::before{
+                display: none;
+            }
+        }
+        & .mat-form-field-underline, .mat-form-field-ripple{
+            display: none;
+        }
+        & .mat-select-arrow-wrapper{
+            transform: none;
+            & > div{
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid;
+                margin: 0 4px;
+            }
+        }
+        & mat-select{
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            background-color: $bg-purple-lighter;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.2em;
+            cursor: pointer;
+            transition: background-color 0.1s linear;
+            &:hover{
+                background-color: $bg-purple-dark;
+            }
+            &.mat-select-disabled{
+                pointer-events: none;
+                filter: brightness(0.45);
+            }
+        }
+    }
+    & .options-button-icon{
+        color: $purple-light;
+        width: 1em;
+        height: 1em;
+        margin: 0 1em;
+        transition: transform 0.1s linear, color 0.1s linear;
+        cursor: pointer;
+        display: inline-block;
+        &.active{
+            color: $purple-dark;
+            &:hover{
+                transform: scale(1.1);
+                color: $purple-darker;
+            }
+        }
+        &.inactive{
+            color: #999;
+            &:hover{
+                transform: scale(1.1);
+                color: $text-purple-light;
+            }
+        }
+        &.disabled{
+            color: #757575;
+            pointer-events: none;
+        }
+
+    }
+}
+.mat-select-panel{
+    background-color: rgba(23, 42, 77,0.15);
+    backdrop-filter: blur(6px);
+    & .mat-option, .mat-option-text{
+        color:rgba(255, 255, 255, 0.6)
+    }
+}
+.options-actions{
+    & button{
+        font-size: 1em;
+        border: none;
+        outline: none;
+        border-radius: 0.5em;
+        background-color: $purple-dark;
+        color: rgba(255,255,255,0.7);
+        padding: 0.25em 0.6em;
+        cursor: pointer;
+        transition: background-color 0.1s linear, color 0.1s linear;
+        &:hover{
+            background-color: $purple-darker;
+            color: #fff;
+        }
+        &:active{
+            animation: pulsing .35s;
+        }
+        &:disabled{
+            filter:grayscale(70%);
+            &:hover{
+                background-color: $purple-dark;
+                color: rgba(255,255,255,0.7);
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+mat-expansion-panel-header .mat-content{
+    flex: unset;
+}
+mat-expansion-panel .mat-expansion-panel-body{
+    padding: 0.3em 0.4em 0.2em;
+}
+.mat-select-panel-wrap{
+    box-shadow: 4px -7px 20px 7px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 28%), 0px 1px 10px 0px rgb(0 0 0 / 24%);
+    & mat-option.mat-option{
+        font-size: 1rem;
+        height: 1.5em;
+        background-color: rgb(8, 10, 26,0.5);
+        color: #fff;
+        & span{
+            color: inherit;
+        }
+        &.mat-option-disabled{
+            cursor: not-allowed;
+            background-color: rgba(120,120,120,0.4);
+        }
+    }
+}
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled), .mat-form-field.mat-focused.mat-primary .mat-select-arrow{
+    color:#fff;
+}
+.mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
+    background: #fff;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+input, select, option{
+    font-size:1rem;
+    width: 100%;
+    min-width: 0;
+}
+
+@keyframes receivedata{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.1);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+@keyframes receivedatabg{
+    0%{
+        background-color: $bg-purple-darker;
+    }
+    50%{
+        background-color: $bg-purple-light;
+    }
+    100%{
+        background-color: $bg-purple-darker;
+    }
+}
+
+@keyframes status-side {
+    0%{
+        opacity: 1;
+        bottom: 0;
+    }
+    80%{
+        opacity: 0.7;
+        bottom: 100%;
+    }
+    100%{
+        opacity: 0;
+        bottom: 110%;
+    }
+}
+
+
+@keyframes pulsing {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0px 0px 0px 0px rgba(148, 62, 219, 0.5);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0px 0px 0px 20px rgba(232, 69, 69, 0);
+    }
+    100% {
+        box-shadow: 0px 0px 0px 0px rgba(232, 69, 69, 0);
+    }
+}
+
+@media screen and (min-width: 2560px) {
+    html{
+        font-size: 1.8rem;
+    }
+}

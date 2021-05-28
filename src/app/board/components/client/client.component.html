@@ -1,0 +1,65 @@
+<input [style.left.px]="LogicClient.options.X-20"
+[style.top.px]="LogicClient.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicClient.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicClient.options.X "
+[style.top.px]="LogicClient.options.Y"
+>
+    <div class="img-container">
+        <img src="../../../../assets/client.svg">
+    </div>    
+    <port #inputPort class="right" [LogicParent]="LogicClient"></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div>
+            <div class="options-endpoint">
+                <span class="property-name endpoint-title">Target Endpoint:</span>
+                <div class="endpoint-protocol">
+                    <span>{{ Protocol[protocol] }}</span>
+                </div>
+            </div>
+            <div class="options-endpoint">
+                <mat-form-field appearance="fill" class="endpoint-url">
+                    <mat-select #endpointSelect (selectionChange)="handleEndpointChange()" [(ngModel)]="LogicClient.options.endpointRef.endpoint">
+                      <mat-option *ngFor="let endpoint of availableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
+                    </mat-select>
+                    <ng-template #emptyEndpoint>
+                        <mat-select value="/" disabled>
+                            <mat-option value="/">/</mat-option>
+                        </mat-select>
+                    </ng-template>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="endpoint-method">
+                    <mat-select [(ngModel)]="LogicClient.options.endpointRef.method" #methodSelect>
+                      <mat-option *ngFor="let method of availableMethods" [value]="method">{{ formatMethod(HTTPMethod[method+''], protocol == Protocol.Database) }}</mat-option>
+                    </mat-select>
+                    <ng-template #emptyMethod>
+                        <mat-select value="GET" disabled>
+                            <mat-option value="GET">GET</mat-option>
+                        </mat-select>
+                    </ng-template>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div #actions>
+        <div class="options-actions">
+            <div class="actions-container">
+                <button *ngIf="canEstabilishStream()"
+                 (click)="estabilishConnection()">Estabilish Connection</button>
+                <button *ngIf="canEndStream()"
+                 (click)="endConnection()">End Connection</button>
+                <div>
+                    <button [disabled]="!canSendData()"
+                    (click)="sendData()">Send Data</button>
+                    <span [class.active]="isAutomaticSending" [class.inactive]="!isAutomaticSending" [class.disabled]="!canSendData()" (click)="toggleAutomaticSend()" class="options-button-icon inactive auto-send"><i class="fas fa-sync-alt"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

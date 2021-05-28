@@ -1,0 +1,43 @@
+<input [style.left.px]="LogicWebServer.options.X-20"
+[style.top.px]="LogicWebServer.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicWebServer.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicWebServer.options.X"
+[style.top.px]="LogicWebServer.options.Y"
+>
+    <div class="img-container">
+        <img src="../../../../assets/webserver.svg">
+    </div>  
+    <port #inputPort class="left" [LogicParent]="LogicWebServer"></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-endpoints-container">
+            <div class="options-endpoints-top">
+                <span class="property-name">Endpoints:</span>
+            </div>
+            <div class="options-endpoints">
+                <div class="options-endpoint" *ngFor="let endpoint of this.LogicWebServer.options.endpoints">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="options-endpoint-menu-top">
+                            <mat-form-field class="endpoint-method" appearance="fill">
+                                <mat-select disabled [(ngModel)]="endpoint.supportedMethods" multiple>
+                                    <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ HTTPMethod[method] }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

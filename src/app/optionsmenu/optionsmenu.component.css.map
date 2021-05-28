@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,WAAW;AACX,AAAA,mBAAmB,CAAC;EAChB,KAAK,EAAE,MAAM;CAChB;;AAED,WAAW;AACX,AAAA,yBAAyB,CAAC;EACtB,gBAAgB,EAAE,wBAAqB;CAC1C;;AAED,YAAY;AACZ,AAAA,yBAAyB,CAAC;EACtB,gBAAgB,EAAE,wBAAqB;EACvC,aAAa,EAAE,GAAG;CACrB",
+    "sources": [
+        "optionsmenu.component.scss"
+    ],
+    "names": [],
+    "file": "optionsmenu.component.css"
+}

@@ -1,0 +1,43 @@
+<input [style.left.px]="LogicLoadBalancer.options.X-20"
+[style.top.px]="LogicLoadBalancer.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicLoadBalancer.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicLoadBalancer.options.X"
+[style.top.px]="LogicLoadBalancer.options.Y"
+>
+    <div class="img-container">
+        <img src="../../../../assets/loadbalancer.svg">
+    </div>  
+    <port #inputPort class="left" [LogicParent]="LogicLoadBalancer"></port>
+    <port #outputPort class="right" [LogicParent]="LogicLoadBalancer" [IsOutput]="true" ></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-container">
+            <div>
+                <span class="property-name">Type:</span>
+                <div>
+                    <mat-form-field appearance="fill" class="action-endpoint">
+                        <mat-select (selectionChange)="handleTypeChange()" [(ngModel)]="LogicLoadBalancer.options.type">
+                          <mat-option *ngFor="let type of LoadBalancerTypeKeys" [value]="type">{{LoadBalancerType[type]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <span class="property-name">Balancing Algorithm:</span>
+                <div>
+                    <mat-form-field appearance="fill" class="action-endpoint">
+                        <mat-select [(ngModel)]="LogicLoadBalancer.options.algorithm">
+                          <mat-option [disabled]="algo == BalancingAlgorithm['URL Hash'] && LogicLoadBalancer.options.type == LoadBalancerType['Layer 4']" *ngFor="let algo of BalancingAlgorithmKeys" [value]="algo">{{BalancingAlgorithm[algo]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

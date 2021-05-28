@@ -1,0 +1,41 @@
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicTextField.options.X "
+[style.top.px]="LogicTextField.options.Y" 
+>
+    <textarea [class.bold]="LogicTextField.options.isBold" [class.italic]="LogicTextField.options.isItalic" [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img"></textarea>
+</div>
+<div style="display:none">
+    <div #options>
+        <div>
+            <span class="property-name">Font Size:</span>
+            <div class="text-format-container">
+                <mat-form-field appearance="fill" class="endpoint-url">
+                    <mat-select [(ngModel)]="LogicTextField.options.fontSize">
+                        <mat-option [value]="8">8px</mat-option>
+                        <mat-option [value]="10">10px</mat-option>
+                        <mat-option [value]="12">12px</mat-option>
+                        <mat-option [value]="14">14px</mat-option>
+                        <mat-option [value]="16">16px</mat-option>
+                        <mat-option [value]="18">18px</mat-option>
+                        <mat-option [value]="20">20px</mat-option>
+                    </mat-select>
+                    <ng-template #emptyEndpoint>
+                        <mat-select value="/" disabled>
+                            <mat-option value="/">/</mat-option>
+                        </mat-select>
+                    </ng-template>
+                </mat-form-field>
+                <span (click)="toggleBold()" [class.inactive]="!LogicTextField.options.isBold" [class.active]="LogicTextField.options.isBold" class="options-button-icon">
+                    <i class="fas fa-bold"></i>
+                </span>
+                <span (click)="toggleItalic()" [class.inactive]="!LogicTextField.options.isItalic" [class.active]="LogicTextField.options.isItalic" class="options-button-icon">
+                    <i class="fas fa-italic"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

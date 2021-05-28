@@ -1,0 +1,74 @@
+<div class="options-menu-window" [style.display]="isActive? 'block' : 'none' ">
+    <div class="main">
+        <div class="section" [class.active]="openGeneral">
+            <div class="header" (click)="openGeneral = !openGeneral">
+                <span class="title">General</span>
+                <span class="icon" *ngIf="openGeneral; else closed">
+                    <i class="fas fa-caret-up"></i>
+                </span>
+                <ng-template #closed>
+                    <span class="icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </ng-template>
+            </div>
+            <div class="content" *ngIf="isActive">
+                <div *ngIf="!isSelectionTextField(); else textFieldTitle">
+                    <span class="property-name">Title:</span>
+                    <input type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']">
+                </div>
+                <ng-template #textFieldTitle>
+                    <div>
+                        <span class="property-name">Content:</span>
+                        <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']"></textarea>
+                    </div>
+                </ng-template>
+                <div class="small">
+                    <span class="property-name">X:</span>
+                    <input #x (input)="change($event, x.value, y.value)" step="1" type="number" min="0" max="1960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['X']">
+                </div>
+                <div class="small">
+                    <span class="property-name">Y:</span>
+                    <input #y (input)="change($event, x.value, y.value)" step="1" type="number" min="0" max="960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['Y']">
+                </div>
+            </div>
+        </div>
+        <div class="section" [class.active]="openProps">
+            <div class="header" (click)="openProps = !openProps">
+                <span class="title">Properties</span>
+                <span class="icon" *ngIf="openProps; else closed">
+                    <i class="fas fa-caret-up"></i>
+                </span>
+                <ng-template #closed>
+                    <span class="icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </ng-template>
+            </div>
+            <div class="content">
+                <div #optionsWrapper >
+            
+                </div>
+            </div>
+        </div>
+        <div class="section" [class.active]="openActions" [style.display]="!hasActions?'none':'block'">
+            <div class="header" (click)="openActions = !openActions">
+                <span class="title">Actions</span>
+                <span class="icon" *ngIf="openActions; else closed">
+                    <i class="fas fa-caret-up"></i>
+                </span>
+                <ng-template #closed>
+                    <span class="icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </ng-template>
+            </div>
+            <div class="content">
+                <div #actionsWrapper >
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

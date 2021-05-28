@@ -1,0 +1,21 @@
+
+<svg #svg>
+  <path #mainPath [attr.d]="'M'+(portComponent1.port.nativeElement.offsetLeft+portComponent1.port.nativeElement.clientWidth/2)+' '+(portComponent1.port.nativeElement.offsetTop+portComponent1.port.nativeElement.clientHeight/2)+' L'+(portComponent2.port.nativeElement.offsetLeft+portComponent2.port.nativeElement.clientWidth/2)+' '+(portComponent2.port.nativeElement.offsetTop+portComponent2.port.nativeElement.clientHeight/2)" 
+  ></path>
+  <path #secondPath (click)="handleClick()" class="blur" [attr.d]="'M'+(portComponent1.port.nativeElement.offsetLeft+portComponent1.port.nativeElement.clientWidth/2)+' '+(portComponent1.port.nativeElement.offsetTop+portComponent1.port.nativeElement.clientHeight/2)+' L'+(portComponent2.port.nativeElement.offsetLeft+portComponent2.port.nativeElement.clientWidth/2)+' '+(portComponent2.port.nativeElement.offsetTop+portComponent2.port.nativeElement.clientHeight/2)" 
+  ></path>
+  <circle style="display: none;" #data [attr.cx]="(portComponent1.port.nativeElement.offsetLeft+portComponent1.port.nativeElement.clientWidth/2)" [attr.cy]="(portComponent1.port.nativeElement.offsetTop+portComponent1.port.nativeElement.clientHeight/2)" r="5" fill="#31B78D" >
+    <animate 
+    attributeName="cx"
+    from="50"
+    to="450" 
+    dur="0.18s"
+    begin="no"/>
+    <animate 
+    attributeName="cy"
+    from="50"
+    to="450" 
+    dur="0.18s"
+    begin="no"/>
+  </circle>
+</svg>

@@ -1,0 +1,32 @@
+@import "../../../../colors";
+:host{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -25px;
+    right: -25px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.port{
+    padding: 0.3em;
+    z-index: 2;
+    position: fixed;
+    &:hover{
+        cursor: pointer;
+    }
+    & .port-image{
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: $bg-purple-darker;
+        border: 2px solid $orange-light;
+    }
+}
+:host.right{
+    justify-content: flex-end;
+}
+:host.left{
+    justify-content: flex-start;
+}

@@ -1,0 +1,15 @@
+:host {
+  position: relative;
+}
+
+.options-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  gap: 1em;
+}
+/*# sourceMappingURL=loadbalancer.component.css.map */

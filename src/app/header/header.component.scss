@@ -1,0 +1,20 @@
+@import "../../colors";
+
+.nav{
+    & .navbar-name{
+        background-color: transparent;
+        padding: 0.1em 0.2em;
+        border: none;
+        outline: none;
+        font-size: 1.2rem;
+        width: 8em;
+        color: $purple-light;
+    }
+    & a{
+        color: $text-purple-light;
+        transition: color 0.1s linear;
+    }
+    & a:hover{
+        color: $text-purple-light2;
+    }
+}

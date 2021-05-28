@@ -1,0 +1,95 @@
+:host{
+    position: relative;
+}
+.options-endpoints{
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.3em;
+}
+.options-endpoint{
+    position: relative;
+    & > .button-icon{
+        position: absolute;
+        right: -1.5em;
+        top: 15%;
+        bottom: 15%;
+        text-align: center;
+    }
+}
+.options-endpoint-inputs{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    height: 2em;
+    & .endpoint-url{
+        height: 100%;
+        flex-grow: 1;
+        padding: 0;
+    }
+}
+.options-endpoint-actions{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.1em;
+}
+.options-endpoint-action{
+    display: flex;
+    flex-flow: row nowrap;
+    & .action-endpoint{
+        flex-grow: 1;
+    }
+    & .action-method{
+        flex-basis: 35%;
+        flex-shrink: 0;
+    }
+    & .button-icon{
+        flex-basis: 10%;
+        flex-shrink: 0;
+        align-self: center;
+    }
+}
+.options-endpoint-menu-top{
+    display: flex;
+    flex-flow: row nowrap;
+    & mat-form-field{
+        flex-shrink: 1;
+        &.endpoint-protocol{
+            flex-basis: 32%;
+        }
+        &.endpoint-grpcmode{
+            flex-shrink: 0;
+            flex-basis: 66%;
+        }
+    }
+}
+.options-endpoint-actions-container{
+    padding-top: 1em;
+    & .property-name{
+        font-size: 1.2em;
+    }
+}
+.options-endpoints-top{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+mat-expansion-panel{
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+    &:not([class*=mat-elevation-z]){
+        box-shadow: none;
+    }
+    & mat-expansion-panel-header{
+        padding: 0;
+        height: auto;
+
+    }
+    .mat-expansion-panel-body{
+        padding: 0 0.15em;
+    }
+}
+.options-type-container{
+    margin-bottom: 1em;
+}

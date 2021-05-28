@@ -1,0 +1,177 @@
+:host {
+  position: relative;
+}
+
+.component {
+  height: 80px;
+}
+
+.options-endpoints-container {
+  padding: 0.15em;
+  margin-top: 0.55em;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.options-endpoints {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  gap: 0.3em;
+  padding-left: 0.15em;
+}
+
+.property-name {
+  font-size: 1em !important;
+}
+
+.options-endpoint {
+  position: relative;
+}
+
+.options-endpoint > .button-icon {
+  position: absolute;
+  right: -1.5em;
+  top: 15%;
+  bottom: 15%;
+  text-align: center;
+}
+
+.options-endpoint-inputs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  height: 2em;
+}
+
+.options-endpoint-inputs .endpoint-url {
+  height: 100%;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 0;
+}
+
+.options-endpoint-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  gap: 0.1em;
+}
+
+.options-endpoint-action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+}
+
+.options-endpoint-action .action-endpoint {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+.options-endpoint-action .action-method {
+  -ms-flex-preferred-size: 35%;
+      flex-basis: 35%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+.options-endpoint-action .button-icon {
+  -ms-flex-preferred-size: 10%;
+      flex-basis: 10%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+}
+
+.options-endpoint-menu-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+}
+
+.options-endpoint-menu-top mat-form-field {
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+}
+
+.options-endpoint-menu-top mat-form-field.endpoint-protocol {
+  -ms-flex-preferred-size: 32%;
+      flex-basis: 32%;
+}
+
+.options-endpoint-menu-top mat-form-field.endpoint-grpcmode {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-preferred-size: 66%;
+      flex-basis: 66%;
+}
+
+.options-endpoint-actions-container {
+  padding-top: 1em;
+}
+
+.options-endpoint-actions-container .property-name {
+  font-size: 1.2em;
+}
+
+.options-endpoints-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+mat-expansion-panel {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+mat-expansion-panel:not([class*=mat-elevation-z]) {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+mat-expansion-panel mat-expansion-panel-header {
+  padding: 0;
+  height: auto;
+}
+
+mat-expansion-panel .mat-expansion-panel-body {
+  padding: 0 0.15em;
+}
+/*# sourceMappingURL=apigateway.component.css.map */

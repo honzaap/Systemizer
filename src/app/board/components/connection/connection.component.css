@@ -1,0 +1,42 @@
+svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+svg path {
+  stroke: #df9300;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 3;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+svg path.is-current-selection {
+  stroke: #ccc91c;
+}
+
+svg path.blur {
+  stroke: #9278ff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  -webkit-filter: blur(3px);
+          filter: blur(3px);
+  -webkit-transition: stroke 0.2s linear;
+  transition: stroke 0.2s linear;
+}
+
+svg path.blur:hover {
+  stroke: #7c5df9;
+}
+
+svg path.blur.is-current-selection {
+  -webkit-filter: blur(5px);
+          filter: blur(5px);
+  stroke: #6d3fd8;
+  stroke-width: 7;
+}
+/*# sourceMappingURL=connection.component.css.map */

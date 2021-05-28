@@ -1,0 +1,48 @@
+<div class="component-menu-window" *ngIf="isOpen; else closedWindow">
+    <div class="top">
+        <input #searchBar (input)="search(searchBar.value)" type="text" autocomplete="off" spellcheck="false" class="search" placeholder="search"/>
+        <span (click)="toggleWindow()" class="window-close">
+            <i class="fas fa-minus"></i>
+        </span>
+    </div>
+    <div class="main">
+        <div class="section" *ngFor="let category of categories" [class.active]="category.isOpen">
+            <div class="header" (click)="category.isOpen = !category.isOpen">
+                <span class="title">{{ category.title }}</span>
+                <span class="icon" *ngIf="category.isOpen; else closed">
+                    <i class="fas fa-caret-up"></i>
+                </span>
+                <ng-template #closed>
+                    <span class="icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </ng-template>
+            </div>
+            <div class="content">
+                <div class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
+                    <span class="caption">{{ item.mark }}</span>
+                    <img src="{{ item.imageUrl }}">
+                </div>
+                <div class="section-item fill">
+                </div>
+                <div class="section-item fill">
+                </div>
+                <div class="section-item fill">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="item-description" *ngIf="currentItem != null">
+    <span>{{ currentItem.caption }}</span>
+    <hr>
+    <img src="{{ currentItem.imageUrl }}">
+</div>
+<div #placingItemRef class="section-item placing-item" *ngIf="placingItem != null">
+    <img src="{{ placingItem.imageUrl }}">
+</div>
+<ng-template #closedWindow>
+    <div class="arrow-open" (click)="toggleWindow()">
+        <i class="fas fa-chevron-right"></i>
+    </div>
+</ng-template>

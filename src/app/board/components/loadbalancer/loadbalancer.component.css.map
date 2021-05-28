@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,KAAK,CAAA;EACD,QAAQ,EAAE,QAAQ;CACrB;;AACD,AAAA,kBAAkB,CAAA;EACd,OAAO,EAAE,IAAI;EACb,SAAS,EAAE,aAAa;EACxB,GAAG,EAAE,GAAG;CACX",
+    "sources": [
+        "loadbalancer.component.scss"
+    ],
+    "names": [],
+    "file": "loadbalancer.component.css"
+}

@@ -1,0 +1,35 @@
+@import "../../../../colors";
+
+svg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    & path{
+        stroke: $orange-light;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-dasharray: 3;
+        cursor: pointer;
+        pointer-events: all;
+        &.is-current-selection{
+            stroke: #ccc91c;
+        }
+    }
+    & path.blur{
+        stroke: $purple-light;
+        stroke-width: 3;
+        stroke-linecap: round;
+        filter: blur(3px);
+        transition: stroke 0.2s linear;
+        &:hover{
+            stroke: $purple-dark;
+        }
+        &.is-current-selection{
+            filter: blur(5px);
+            stroke: $purple-darker;
+            stroke-width: 7;
+        }
+    }
+}

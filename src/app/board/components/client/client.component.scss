@@ -1,0 +1,36 @@
+@import "../../../../colors";
+
+:host{
+    position: relative;
+}
+.options-endpoint{
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    gap: 0.3em;
+    margin-top: 0.3em;
+    & .endpoint-url{
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+    & .endpoint-method{
+        flex-basis: 30%;
+        flex-shrink: 0;
+    }
+}
+.endpoint-protocol{
+    flex-grow: 1;
+    text-align: right;
+    & span{
+        font-size: 0.55rem;
+        color: $purple-light;
+    }
+}
+.actions-container{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+    & button{
+        width: max-content;
+    }
+}

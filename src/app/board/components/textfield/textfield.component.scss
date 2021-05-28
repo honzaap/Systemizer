@@ -1,0 +1,96 @@
+@import "../../../../colors";
+
+:host{
+    position: relative;
+}
+.component{
+    width: auto;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    z-index: 0;
+    & textarea{
+        font-family: Arial;
+        font-size: 12px;
+        min-width: 80px;
+        max-width: 300px;
+        height: 40px;
+        min-height: 20px;
+        max-height: 120px;
+        outline: none;
+        border: 2px solid rgba(0,0,0,0.2);
+        background-color: $bg-purple-lighter;
+        color: #fff;
+        padding: 0.2em;
+        cursor: text;
+        transition: background-color 0.1s linear;
+        &::-webkit-scrollbar {
+            background-color: transparent;
+        }
+        &::-webkit-scrollbar-track {
+            display: none;
+        }
+        &::-webkit-scrollbar-thumb {
+            display: none;
+        }
+        &::placeholder{
+            color: #a1a1a1;
+            transition: transform 0.1s ease-out;
+        }
+        &:hover{
+            background-color: $bg-purple-dark;
+            &::placeholder{
+                transform: translateX(10px);
+            }
+        }
+        &.italic{
+            font-style: italic;
+        }
+        &.bold{
+            font-weight: bold;
+        }
+    }
+    &.is-current-selection{
+        & textarea{
+            cursor: move;;
+        }
+    }
+}
+.text-format-container{
+    display: flex;
+    gap: 0.35em;
+    & span{
+        margin: 0;
+    }
+}
+.options-endpoint{
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    gap: 0.3em;
+    margin-top: 0.3em;
+    & .endpoint-url{
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+    & .endpoint-method{
+        flex-basis: 30%;
+        flex-shrink: 0;
+    }
+}
+.endpoint-protocol{
+    flex-grow: 1;
+    text-align: right;
+    & span{
+        font-size: 0.55rem;
+        color: $purple-light;
+    }
+}
+.actions-container{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+    & button{
+        width: max-content;
+    }
+}
