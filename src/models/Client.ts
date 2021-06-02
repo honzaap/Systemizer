@@ -59,6 +59,8 @@ export class Client implements IDataOperator{
         this.showStatusCodeDispatcher.fire(event);
     }
 
+    onConnectionRemove(wasOutput: boolean = false){}
+
     async sendData(data: RequestData) {
         this.updateEndpoint();
         return await this.port.sendData(data);

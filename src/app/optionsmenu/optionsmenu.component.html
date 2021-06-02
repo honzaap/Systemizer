@@ -13,15 +13,24 @@
                 </ng-template>
             </div>
             <div class="content" *ngIf="isActive">
-                <div *ngIf="!isSelectionTextField(); else textFieldTitle">
+                <div *ngIf="!isSelectionTextField() && !isSelectionMQ(); else textFieldTitle">
                     <span class="property-name">Title:</span>
                     <input type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']">
                 </div>
                 <ng-template #textFieldTitle>
-                    <div>
-                        <span class="property-name">Content:</span>
-                        <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']"></textarea>
+                    <div *ngIf="isSelectionTextField()">
+                        <div>
+                            <span class="property-name">Content:</span>
+                            <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']"></textarea>
+                        </div>
                     </div>
+                    <div *ngIf="isSelectionMQ()">
+                        <div>
+                            <span class="property-name">Title:</span>
+                            <input #title type="text" spellcheck="false"  (input)="this.selectionService.currentSelection.getLogicComponent().options['endpoints'][0].url = title.value" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']">
+                        </div>
+                    </div>   
+
                 </ng-template>
                 <div class="small">
                     <span class="property-name">X:</span>

@@ -1,0 +1,36 @@
+<input [style.left.px]="LogicMessageQueue.options.X-20"
+[style.top.px]="LogicMessageQueue.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicMessageQueue.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicMessageQueue.options.X"
+[style.top.px]="LogicMessageQueue.options.Y"
+>
+    <div class="img-container messages">
+        <div class="message empty" *ngFor="let num of [].constructor(10)"></div>
+    </div>  
+    <div class="img-container messages">
+        <div class="message" *ngFor="let message of LogicMessageQueue.messages | slice:0:10;"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+        <div class="message fill"></div>
+    </div>  
+    <port #inputPort class="left" [LogicParent]="LogicMessageQueue"></port>
+    <port #outputPort class="right" [LogicParent]="LogicMessageQueue" [IsOutput]="true" ></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-container">
+        </div>
+    </div>
+</div>

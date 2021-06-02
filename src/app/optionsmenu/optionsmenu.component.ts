@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component, ElementRef, OnInit, Type } from '@angular/core';
+import { MessagequeueComponent } from '../board/components/messagequeue/messagequeue.component';
 import { TextfieldComponent } from '../board/components/textfield/textfield.component';
 import { SelectionService } from '../selection.service';
 
@@ -56,6 +57,10 @@ export class OptionsmenuComponent implements OnInit {
     return this.selectionService.currentSelection.constructor.name == TextfieldComponent.name
   }
  
+  isSelectionMQ(){
+    return this.selectionService.currentSelection.constructor.name == MessagequeueComponent.name
+  }
+
   change(e:Event, x, y){
     x = parseInt(x);
     y = parseInt(y);

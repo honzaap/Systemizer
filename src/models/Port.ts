@@ -57,21 +57,23 @@ export class Port{
      * connectTo: connects this port to given port via Connection class
      */
     public connectTo(port: Port) : Connection {
-
+        console.log(`${this.parent.options.title} has multiple: ${this.hasMultipleConnections}`);
         if(this.hasMultipleConnections){
             if(!this.isConnectedTo(port)){
                 let connection = new Connection(this, port);
                 this.connections.push(connection);
                 port.connectWith(connection);
+                this.parent.onConnectionRemove(this.isOutput);
                 return connection;
             }
         }
         else{
             if(!this.isConnectedTo(port)){
                 let connection = new Connection(this, port);
-                this.removeConnections();
+                this.removeConnections(false);
                 this.connections  = [connection];
                 port.connectWith(connection); 
+                this.parent.onConnectionRemove(this.isOutput);
                 return connection;
             }
         }
@@ -82,16 +84,19 @@ export class Port{
      * connectWith: connects this port to given connection
      */
     public connectWith(connection: Connection) {
+        console.log(`${this.parent.options.title} has multiple: ${this.hasMultipleConnections}`);
         if(this.hasMultipleConnections){
             this.connections.push(connection);
+            this.parent.onConnectionRemove(this.isOutput);
         }
         else{
-            this.removeConnections();
+            this.removeConnections(false);
             this.connections = [connection];
+            this.parent.onConnectionRemove(this.isOutput);
         }
     }
 
-    public removeConnection(connection: Connection, removeFromOther:boolean = false){
+    public removeConnection(connection: Connection, removeFromOther:boolean = false, triggerOnRemove:boolean = true){
         let idx = 0;
         let was = false;
         for(let connected of this.connections){
@@ -106,12 +111,18 @@ export class Port{
             if(removeFromOther)this.connections[idx].getOtherPort(this).removeConnection(this.connections[idx]);
             this.connections.splice(idx,1);
         }
-        else console.log("connection was not found")
+        if(triggerOnRemove){
+            this.parent.onConnectionRemove(this.isOutput);
+        }
     }
 
-    public removeConnections(){
+    public removeConnections(triggerOnRemove = true){
+        let removed = this.connections.length > 0;
         while(this.connections.length > 0){
-            this.removeConnection(this.connections[0], true);
+            this.removeConnection(this.connections[0], true, false);
+        }
+        if(triggerOnRemove && removed){
+            this.parent.onConnectionRemove(this.isOutput);
         }
     }
 

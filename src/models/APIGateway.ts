@@ -262,7 +262,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
     private fireReceiveData(event: ReceiveDataEvent) { 
         this.receiveDataDispatcher.fire(event);
     }
-    
+
     private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
     public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
         this.showStatusCodeDispatcher.register(handler);
@@ -270,6 +270,8 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
     private fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
     }
+
+    onConnectionRemove(wasOutput: boolean = false){}
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]

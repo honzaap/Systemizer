@@ -2,6 +2,7 @@ import { Directive, ElementRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
+import { Endpoint, MQEndpoint } from "src/models/Endpoint";
 import { APIType } from "src/models/enums/APIType";
 import { BalancingAlgorithm } from "src/models/enums/BalancingAlgorithm";
 import { DatabaseType } from "src/models/enums/DatabaseType";
@@ -211,5 +212,9 @@ export class OperatorComponent {
 
 	formatMethod(method: HTTPMethod, isDatabase: boolean){
 		return getFormattedMethod(method, isDatabase);
+	}
+
+	isMQEndpoint(endpoint: Endpoint){
+		return endpoint instanceof MQEndpoint;
 	}
 }

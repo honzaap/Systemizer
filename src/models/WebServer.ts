@@ -93,6 +93,8 @@ export class WebServer extends EndpointOperator implements IDataOperator{
         this.showStatusCodeDispatcher.fire(event);
     }
 
+    onConnectionRemove(wasOutput: boolean = false){}
+
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
         if(targetConnection == null){

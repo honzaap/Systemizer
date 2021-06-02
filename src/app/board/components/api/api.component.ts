@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
-import { Endpoint, EndpointAction, EndpointRef } from 'src/models/Endpoint';
+import { Endpoint, EndpointAction, EndpointRef, MQEndpoint } from 'src/models/Endpoint';
 import { RequestData } from 'src/models/RequestData';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
@@ -83,10 +83,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == ""){
 			endpoint.url = `api/v${Math.floor(10*Math.random())}`
 		}
-	}
-
-	test(){
-		console.log(this.LogicApi.options.endpoints);
 	}
 
 	public handleClick(){

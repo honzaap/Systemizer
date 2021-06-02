@@ -54,7 +54,7 @@ class="anchor component"
                                           <mat-option [disabled]="endpoint.protocol == Protocol.WebSockets || endpoint.grpcMode == gRPCMode['Server Streaming'] || endpoint.grpcMode == gRPCMode['Bidirectional Streaming']" *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="action-method">
+                                    <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
                                         <mat-select [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                             <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                             <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>
@@ -114,7 +114,7 @@ class="anchor component"
                                           <mat-option [disabled]="endpoint.protocol == Protocol.WebSockets || endpoint.grpcMode == gRPCMode['Server Streaming'] || endpoint.grpcMode == gRPCMode['Bidirectional Streaming']" *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="action-method">
+                                    <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
                                         <mat-select [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                             <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                             <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>
@@ -162,7 +162,7 @@ class="anchor component"
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field class="endpoint-grpcmode" appearance="fill">
-                                <mat-select [(ngModel)]="endpoint.grpcMode" required>
+                                <mat-select (selectionChange)="endpoint.actions = []" [(ngModel)]="endpoint.grpcMode" required>
                                     <mat-option *ngFor="let mode of gRPCModeKeys" [value]="mode">{{ gRPCMode[mode] }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -177,10 +177,10 @@ class="anchor component"
                                 <div class="options-endpoint-action" *ngFor="let action of endpoint.actions">
                                     <mat-form-field appearance="fill" class="action-endpoint">
                                         <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action)" [(ngModel)]="action.endpoint">
-                                          <mat-option [disabled]="((endpoint.grpcMode == gRPCMode.Unary || endpoint.grpcMode == gRPCMode['Client Streaming']) && (connendpoint.protocol == Protocol.WebSockets || connendpoint.grpcMode == gRPCMode['Server Streaming'] || connendpoint.grpcMode == gRPCMode['Bidirectional Streaming'])) || (endpoint.grpcMode == gRPCMode['Server Streaming'] && connendpoint.grpcMode == gRPCMode['Client Streaming'])" *ngFor="let connendpoint of connectableEndpoints" [value]="connendpoint">{{connendpoint.url}}</mat-option>
+                                          <mat-option [disabled]="(isMQEndpoint(connendpoint) && endpoint.grpcMode == gRPCMode['Server Streaming']) || ((endpoint.grpcMode == gRPCMode.Unary || endpoint.grpcMode == gRPCMode['Client Streaming']) && (connendpoint.protocol == Protocol.WebSockets || connendpoint.grpcMode == gRPCMode['Server Streaming'] || connendpoint.grpcMode == gRPCMode['Bidirectional Streaming'])) || (endpoint.grpcMode == gRPCMode['Server Streaming'] && connendpoint.grpcMode == gRPCMode['Client Streaming'])" *ngFor="let connendpoint of connectableEndpoints" [value]="connendpoint">{{connendpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="action-method">
+                                    <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
                                         <mat-select [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                             <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                             <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>
@@ -238,7 +238,7 @@ class="anchor component"
                                 <div class="options-endpoint-action" *ngFor="let action of endpoint.actions">
                                     <mat-form-field appearance="fill" class="action-endpoint">
                                         <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action)" [(ngModel)]="action.endpoint">
-                                          <mat-option [disabled]="endpoint.protocol == Protocol.WebSockets || endpoint.grpcMode == gRPCMode['Server Streaming'] || endpoint.grpcMode == gRPCMode['Bidirectional Streaming']" *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
+                                          <mat-option [disabled]="isMQEndpoint(endpoint) || endpoint.protocol == Protocol.WebSockets || endpoint.grpcMode == gRPCMode['Server Streaming'] || endpoint.grpcMode == gRPCMode['Bidirectional Streaming']" *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     <mat-form-field appearance="fill" class="action-method">
@@ -301,7 +301,7 @@ class="anchor component"
                                           <mat-option *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field appearance="fill" class="action-method">
+                                    <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
                                         <mat-select [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                             <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                             <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>

@@ -30,7 +30,8 @@ import { ApiGatewayComponent } from './board/components/apigateway/apigateway.co
 import { TextfieldComponent } from './board/components/textfield/textfield.component';
 import { ResizableTextAreaDirective } from "../shared/resizable-textarea";
 import { DatabaseComponent } from './board/components/database/database.component';
-import { CacheComponent } from './board/components/cache/cache.component'
+import { CacheComponent } from './board/components/cache/cache.component';
+import { MessagequeueComponent } from './board/components/messagequeue/messagequeue.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { CacheComponent } from './board/components/cache/cache.component'
     ResizableTextAreaDirective,
     DatabaseComponent,
     CacheComponent,
+    MessagequeueComponent
   ],
   imports: [
     BrowserModule,

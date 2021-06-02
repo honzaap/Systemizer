@@ -1,0 +1,40 @@
+@import "../../../../colors";
+
+:host{
+    position: relative;
+}
+.options-container{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+}
+.component{
+    width: 80px;
+}
+.img-container{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 1px;
+    & .message{
+        flex-basis: calc(10% - 1px);
+        flex-grow: 0;
+        flex-shrink: 0;
+        background-color: $orange-light;
+        &.fill{
+            background-color: transparent;
+            pointer-events: none;
+            opacity: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        &.empty{
+            background-color: rgba(255,255,255,0.4);
+        }
+    }
+}
+
+.component-title{
+    width: 120px;
+}

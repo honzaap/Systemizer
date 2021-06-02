@@ -22,7 +22,7 @@
         background-color: $bg-purple-lighter;
         color: #fff;
         padding: 0.2em;
-        cursor: text;
+        cursor: move;
         transition: background-color 0.1s linear;
         &::-webkit-scrollbar {
             background-color: transparent;
@@ -52,7 +52,7 @@
     }
     &.is-current-selection{
         & textarea{
-            cursor: move;;
+            cursor: text;;
         }
     }
 }

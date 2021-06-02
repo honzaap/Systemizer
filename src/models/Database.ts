@@ -103,6 +103,8 @@ export class Database extends EndpointOperator implements IDataOperator{
     private fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
     }
+    
+    onConnectionRemove(wasOutput: boolean = false){}
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]

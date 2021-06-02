@@ -102,7 +102,8 @@ export class PlacingService{
     let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
     let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
     
-    let logicConn = portComponent1.LogicPort.connectTo(portComponent2.LogicPort);
+    //let logicConn = portComponent1.LogicPort.connectTo(portComponent2.LogicPort);
+    let logicConn = portComponent1.LogicPort.parent.connectTo(portComponent2.LogicPort.parent, portComponent1.IsOutput, portComponent2.IsOutput);
     if(logicConn == null){
       c.destroy();
       return

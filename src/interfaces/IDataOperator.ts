@@ -39,6 +39,8 @@ export interface IDataOperator{
 
     onShowStatusCode(handler: Handler<ShowStatusCodeEvent>);
 
+    onConnectionRemove(wasOutput: boolean);
+
     destroy();
 }
         

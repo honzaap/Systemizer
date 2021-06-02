@@ -13,6 +13,7 @@ import { CacheComponent } from '../board/components/cache/cache.component';
 import { ClientComponent } from '../board/components/client/client.component';
 import { DatabaseComponent } from '../board/components/database/database.component';
 import { LoadbalancerComponent } from '../board/components/loadbalancer/loadbalancer.component';
+import { MessagequeueComponent } from '../board/components/messagequeue/messagequeue.component';
 import { TextfieldComponent } from '../board/components/textfield/textfield.component';
 import { WebserverComponent } from '../board/components/webserver/webserver.component';
 import { PlacingService } from '../placing.service';
@@ -85,9 +86,10 @@ export class ComponentmenuComponent implements OnInit {
       new MenuItem(LoadbalancerComponent, "Layer 4 Load Balancer", "L4","../../assets/loadbalancer.svg", { type: LoadBalancerType['Layer 4'] })
     ]));/*
     this.allCategories.push(new Category("Proxies",[
-    ]));
-    this.allCategories.push(new Category("Queues",[
     ]));*/
+    this.allCategories.push(new Category("Queues",[
+      new MenuItem(MessagequeueComponent, "Message Queue", "MQ","../../assets/messagequeue.svg"),
+    ]));
     this.allCategories.push(new Category("Other",[
       new MenuItem(TextfieldComponent, "Text Field", "TEXT","../../assets/text.svg"),
     ]));

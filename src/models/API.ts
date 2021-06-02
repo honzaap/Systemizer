@@ -12,6 +12,7 @@ import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
+import { MessageQueue } from "./MessageQueue";
 
 interface ReceiveDataEvent { }
 
@@ -92,6 +93,7 @@ export class API extends EndpointOperator implements IDataOperator{
                 }
                 else if(targetEndpoint.grpcMode == gRPCMode["Client Streaming"]){
                     // Got data from client stream 
+                    this.fireReceiveData(data);
                     return;
                 }
                 else if(targetEndpoint.grpcMode == gRPCMode["Server Streaming"]){
@@ -183,17 +185,19 @@ export class API extends EndpointOperator implements IDataOperator{
             }
 
             // Send data back
-            let response = new RequestData();
-            response.header = {
-                protocol: Protocol.HTTP,
-                endpoint: data.header.endpoint,
-            };
-            response.data = {};
-            response.origin = data.origin;
-            response.originID = this.originID;
-            response.requestId = UUID();
-            response.responseId = data.requestId;
-            await this.sendData(response);
+            if(!this.options.isConsumer){
+                let response = new RequestData();
+                response.header = {
+                    protocol: Protocol.HTTP,
+                    endpoint: data.header.endpoint,
+                };
+                response.data = {};
+                response.origin = data.origin;
+                response.originID = this.originID;
+                response.requestId = UUID();
+                response.responseId = data.requestId;
+                await this.sendData(response);
+            }
         }
     }
 
@@ -211,6 +215,47 @@ export class API extends EndpointOperator implements IDataOperator{
     }
     private fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
+    }
+
+    initiateConsumer(consumerConnection: Connection){
+        while(this.inputPort.connections.length > 1){
+            for(let connection of this.inputPort.connections){
+                if(connection !== consumerConnection){
+                    this.inputPort.removeConnection(connection,true,false);
+                }
+            }
+        }
+        this.options.isConsumer = true;
+        this.inputPort.hasMultipleConnections = false;
+        this.options.endpoints = [
+            (consumerConnection.getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints[0]
+        ]
+    }
+
+    onConnectionRemove(wasOutput: boolean = false){
+        if(this.options.isConsumer && !this.isConsumer()){
+            this.options.isConsumer = false;
+            this.inputPort.hasMultipleConnections = true;
+            let ep = new Endpoint("api/posts", [HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE,])
+            ep.protocol = Protocol.HTTP;
+            this.options.endpoints = [
+                ep
+            ]
+        }
+    }
+
+    isConsumer(){
+        if(this.inputPort.connections.length == 1 && this.inputPort.connections[0].getOtherPort(this.inputPort).parent instanceof MessageQueue){
+            return true;
+        }
+        return false;
+    }
+
+    getConsumingEndpoint() : Endpoint{
+        if(!this.options.isConsumer || this.inputPort.connections.length == 0){
+            return null;
+        }
+        return (this.inputPort.connections[0].getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints[0];
     }
 
     async sendData(response: RequestData) {
@@ -240,7 +285,11 @@ export class API extends EndpointOperator implements IDataOperator{
         if(connectingWithOutput){
             return this.outputPort.connectTo(operator.getPort(connectingToOutput));
         }
-        return this.inputPort.connectTo(operator.getPort(connectingToOutput));
+        let conn = this.inputPort.connectTo(operator.getPort(connectingToOutput));
+        if(conn != null && operator instanceof MessageQueue){
+            this.initiateConsumer(conn);
+        }
+        return conn;
     }
 
     getPort(outputPort:boolean=false) : Port {
@@ -263,4 +312,5 @@ export class API extends EndpointOperator implements IDataOperator{
 
 export class APIOptions extends EndpointOptions{
     type: APIType = APIType.REST
+    isConsumer = false;
 }

@@ -18,6 +18,7 @@ export class Endpoint{
 export class EndpointRef {
     endpoint: Endpoint;
     method: HTTPMethod;
+    topic: string;
 }
 
 export class EndpointAction {
@@ -31,5 +32,11 @@ export class DatabaseEndpoint extends Endpoint{
         this.actions = null;
         this.grpcMode = gRPCMode.Unary;
         this.protocol = Protocol.Database
+    }
+}
+
+export class MQEndpoint extends Endpoint{
+    constructor(){
+        super("Message Queue", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])
     }
 }

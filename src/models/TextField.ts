@@ -33,6 +33,8 @@ export class TextField implements IDataOperator{
         
     }
 
+    onConnectionRemove(wasOutput: boolean = false){}
+
     destroy = () => {}
 
 }

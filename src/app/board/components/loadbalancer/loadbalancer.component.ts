@@ -9,15 +9,15 @@ import { RequestData } from 'src/models/RequestData';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
-  selector: 'loadbalancer',
-  templateUrl: './loadbalancer.component.html',
+  	selector: 'loadbalancer',
+	templateUrl: './loadbalancer.component.html',
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
 		inputPortRef: new ViewChild("inputPort"),
 		outputPortRef: new ViewChild("outputPort")
 	},
-  styleUrls: ['./loadbalancer.component.scss']
+  	styleUrls: ['./loadbalancer.component.scss']
 })
 export class LoadbalancerComponent extends OperatorComponent implements OnInit {
 

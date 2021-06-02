@@ -9,6 +9,7 @@ import { arrayEquals, UUID } from "src/shared/ExtensionMethods";
 import { BalancingAlgorithm } from "./enums/BalancingAlgorithm";
 import { LoadBalancerType } from "./enums/LoadBalancerType";
 import * as objectHash from 'object-hash'
+import { API } from "./API";
 
 interface ReceiveDataEvent { }
 
@@ -166,6 +167,8 @@ export class LoadBalancer implements IDataOperator{
     private fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
     }
+
+    onConnectionRemove(wasOutput: boolean = false){}
 
     /**
      * 

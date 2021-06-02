@@ -1,12 +1,8 @@
 import { ElementRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
-import { Protocol } from 'src/models/enums/Protocol';
-import { RequestData } from 'src/models/RequestData';
 import { TextField } from 'src/models/TextField';
-import { arrayEquals, sleep, UUID } from 'src/shared/ExtensionMethods';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
@@ -23,19 +19,18 @@ export class TextfieldComponent  extends OperatorComponent implements OnInit{
 
 	// Logic
 	public LogicTextField : TextField = new TextField();
-  private selService: SelectionService
+  	private selService: SelectionService
 
-  @ViewChild("field") field: ElementRef;
+  	@ViewChild("field") field: ElementRef;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService) 
-	{
+	constructor(placingService: PlacingService, selectionService: SelectionService) {
 		super(placingService, selectionService);
-    this.selService = selectionService;
+    	this.selService = selectionService;
 	}
 
 	ngAfterViewInit(): void {
 		super.Init();
-  }
+  	}
 
 	ngOnInit(){
 	}
@@ -44,11 +39,11 @@ export class TextfieldComponent  extends OperatorComponent implements OnInit{
 		super.handleClick();
 	}
 
-  public handleMousedown(event){
-    if(this.selService.currentSelection === this){
-      super.handleMousedown(event);
-    }
-  }
+	public handleMousedown(event){
+		if(this.selService.currentSelection !== this){
+			super.handleMousedown(event);
+		}
+	}
 
 	public getLogicComponent(){
 		return this.LogicTextField;
@@ -60,11 +55,11 @@ export class TextfieldComponent  extends OperatorComponent implements OnInit{
 		this.destroyComponent();
 	}
 
-  toggleBold(){
-    this.LogicTextField.options.isBold = !this.LogicTextField.options.isBold;
-  }
+	toggleBold(){
+		this.LogicTextField.options.isBold = !this.LogicTextField.options.isBold;
+	}
 
-  toggleItalic(){
-    this.LogicTextField.options.isItalic = !this.LogicTextField.options.isItalic;
-  }
+	toggleItalic(){
+		this.LogicTextField.options.isItalic = !this.LogicTextField.options.isItalic;
+	}
 }

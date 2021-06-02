@@ -35,6 +35,7 @@ export class Cache implements IDataOperator{
         if(fromOutput){
             let targetConnection = this.connectionTable[request.responseId]
             if(targetConnection == null) return; 
+            console.log("send data from out")
             await this.sendData(request);
         }
         else{
@@ -94,21 +95,18 @@ export class Cache implements IDataOperator{
         // Write to cache
 
         // Send to DB
-        this.outputPort.sendData(data);
-
-        // Create new response
-        let response = new RequestData();
-        response.data = {}
-        response.requestId = UUID();
-        response.responseId = data.requestId;
-        response.header = {
-            endpoint: data.header.endpoint,
-            protocol: data.header.protocol
-        };
-        response.originID = this.originID;
-        response.origin = this.connectionTable[data.requestId];
-
-        await this.sendData(response)
+        if(data.header.endpoint.method == HTTPMethod.GET){
+            await this.outputPort.sendData(data);
+            console.log("wb: get")
+            //await this.sendData(data)
+        }
+        else{
+            this.outputPort.sendData(data);
+            console.log("wb: post");
+            data.responseId = data.requestId;
+            data.requestId = UUID();
+            await this.sendData(data);
+        }
     }
 
     private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
@@ -126,6 +124,8 @@ export class Cache implements IDataOperator{
     private fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
     }
+
+    onConnectionRemove(wasOutput: boolean = false){}
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
