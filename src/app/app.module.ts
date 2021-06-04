@@ -32,6 +32,7 @@ import { ResizableTextAreaDirective } from "../shared/resizable-textarea";
 import { DatabaseComponent } from './board/components/database/database.component';
 import { CacheComponent } from './board/components/cache/cache.component';
 import { MessagequeueComponent } from './board/components/messagequeue/messagequeue.component';
+import { PubsubComponent } from './board/components/pubsub/pubsub.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { MessagequeueComponent } from './board/components/messagequeue/messagequ
     ResizableTextAreaDirective,
     DatabaseComponent,
     CacheComponent,
-    MessagequeueComponent
+    MessagequeueComponent,
+    PubsubComponent,
   ],
   imports: [
     BrowserModule,

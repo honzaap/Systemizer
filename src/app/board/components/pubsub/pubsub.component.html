@@ -1,0 +1,35 @@
+<input [style.left.px]="LogicPubSub.options.X-20"
+[style.top.px]="LogicPubSub.options.Y-20" 
+#compTitle type="text" class="component-title" [(ngModel)]="LogicPubSub.options.title" spellcheck="false">
+<div
+#anchorRef
+(mousedown)="handleMousedown( $event )"
+(click)="handleClick()"
+class="anchor component"
+[style.left.px]="LogicPubSub.options.X"
+[style.top.px]="LogicPubSub.options.Y"
+>
+    <div class="img-container">
+        <img src="../../../../assets/pubsub.svg">
+    </div>   
+    <port #inputPort class="left" [LogicParent]="LogicPubSub"></port>
+    <port #outputPort class="right" [LogicParent]="LogicPubSub" [IsOutput]="true" ></port>
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-container">
+            <div class="options-endpoints-container">
+                <div class="options-endpoints-top">
+                    <span class="property-name">Topics:</span>
+                    <span class="button-icon" (click)="addEndpoint()"><i class="fas fa-plus"></i></span>
+                </div>
+                <div class="options-endpoints">
+                    <div class="options-endpoint" *ngFor="let endpoint of this.LogicPubSub.options.endpoints">
+                        <input (blur)="handleEndpointUrlChange(endpoint)" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
+                        <span class="button-icon remove-endpoint" (click)="removeEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

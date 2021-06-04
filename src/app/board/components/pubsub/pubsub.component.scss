@@ -1,0 +1,50 @@
+@import "../../../../colors";
+
+:host{
+    position: relative;
+}
+.options-container{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+}
+.options-endpoints{
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.3em;
+}
+.options-endpoint{
+    position: relative;
+    & > .button-icon{
+        position: absolute;
+        right: -1.5em;
+        top: 15%;
+        bottom: 15%;
+        text-align: center;
+    }
+}
+.options-endpoints-top{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+mat-expansion-panel{
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+    &:not([class*=mat-elevation-z]){
+        box-shadow: none;
+    }
+    & mat-expansion-panel-header{
+        padding: 0;
+        height: auto;
+
+    }
+    .mat-expansion-panel-body{
+        padding: 0 0.15em;
+    }
+}
+.options-type-container{
+    margin-bottom: 1em;
+}

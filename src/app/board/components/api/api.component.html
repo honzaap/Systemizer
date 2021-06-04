@@ -102,14 +102,22 @@ class="anchor component"
             <div>
                 <div class="options-endpoints-container">
                     <div class="options-endpoints-top">
-                        <span class="property-name">Consumer Endpoint:</span>
+                        <span class="property-name">Consumer Endpoints:</span>
+                        <span *ngIf="LogicApi.options.isSubscriber" class="button-icon" (click)="addEndpoint()"><i class="fas fa-plus"></i></span>
                     </div>
                     <div class="options-endpoints">
                         <div class="options-endpoint" *ngFor="let endpoint of LogicApi.options.endpoints">
                             <mat-expansion-panel>
-                                <mat-expansion-panel-header>
+                                <mat-expansion-panel-header class="topic-expansion-header">
                                     <mat-panel-title>
-                                        <input disabled class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
+                                        <mat-form-field *ngIf="isSubscribeable(endpoint) || endpoint.url == null; else consumer" appearance="fill" class="endpoint-url topic-select">
+                                            <mat-select [(ngModel)]="endpoint.url" >
+                                                <mat-option *ngFor="let endpoint of subscribeableEndpoints" [value]="endpoint.url">{{endpoint.url}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <ng-template #consumer >
+                                            <input disabled class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
+                                        </ng-template>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <div class="options-endpoint-actions-container">
@@ -122,7 +130,7 @@ class="anchor component"
                                         <div class="options-endpoint-action" *ngFor="let action of endpoint.actions">
                                             <mat-form-field appearance="fill" class="action-endpoint">
                                                 <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action)" [(ngModel)]="action.endpoint">
-                                                <mat-option *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
+                                                    <mat-option *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                             <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
@@ -140,7 +148,8 @@ class="anchor component"
                                         </div>
                                     </div>
                                 </div>
-                            </mat-expansion-panel>                    
+                            </mat-expansion-panel>                
+                            <span *ngIf="isSubscribeable(endpoint)" class="button-icon remove-endpoint" (click)="removeEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
                         </div>
                     </div>
                 </div>

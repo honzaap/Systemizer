@@ -1,7 +1,6 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
-import { Options } from "./Options";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
@@ -13,6 +12,7 @@ import { HTTPStatus } from "./enums/HTTPStatus";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
 import { MessageQueue } from "./MessageQueue";
+import { PubSub } from "./PubSub";
 
 interface ReceiveDataEvent { }
 
@@ -58,6 +58,7 @@ export class API extends EndpointOperator implements IDataOperator{
                 if(endpoint.url === data.header.endpoint.endpoint.url){
                     was = true;
                     if(endpoint.supportedMethods.indexOf(data.header.endpoint.method) == -1){
+                        console.log("Not allowed: ", endpoint)
                         notAllowed = true;
                     }
                     else{
@@ -217,25 +218,51 @@ export class API extends EndpointOperator implements IDataOperator{
         this.showStatusCodeDispatcher.fire(event);
     }
 
-    initiateConsumer(consumerConnection: Connection){
-        while(this.inputPort.connections.length > 1){
+    initiateConsumer(consumerConnection: Connection, subscriber = false){
+        while(!this.isConsumer()){
             for(let connection of this.inputPort.connections){
-                if(connection !== consumerConnection){
+                if(!this.isConsumableOperator(connection.getOtherPort(this.inputPort).parent)){
                     this.inputPort.removeConnection(connection,true,false);
                 }
             }
         }
+        //this.inputPort.hasMultipleConnections = false;
+        let endpoints = (consumerConnection.getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints;
+        ;
+        if(subscriber){
+            if(endpoints.length != 0){
+                if(this.options.isConsumer){
+                    this.options.endpoints.push(new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]))
+                }
+                else{
+                    this.options.endpoints = [ new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])]
+                }
+            }
+            else if(endpoints.length == 0 && !this.options.isConsumer){
+                this.options.endpoints = [];
+            }
+        }
+        else{
+            if(this.options.isConsumer){
+                this.options.endpoints.push(endpoints[0])
+            }
+            else{
+                this.options.endpoints = [endpoints[0]]
+            }
+        }
         this.options.isConsumer = true;
-        this.inputPort.hasMultipleConnections = false;
-        this.options.endpoints = [
-            (consumerConnection.getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints[0]
-        ]
+        if(subscriber) this.options.isSubscriber = true;
     }
 
     onConnectionRemove(wasOutput: boolean = false){
         if(this.options.isConsumer && !this.isConsumer()){
+            let conns = this.inputPort.connections.filter(c => this.isConsumableOperator(c.getOtherPort(this.inputPort).parent))
+            for(let connection of conns){
+                this.inputPort.removeConnection(connection,true,false);
+            }
             this.options.isConsumer = false;
-            this.inputPort.hasMultipleConnections = true;
+            this.options.isSubscriber = false;
+            //this.inputPort.hasMultipleConnections = true;
             let ep = new Endpoint("api/posts", [HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE,])
             ep.protocol = Protocol.HTTP;
             this.options.endpoints = [
@@ -245,10 +272,15 @@ export class API extends EndpointOperator implements IDataOperator{
     }
 
     isConsumer(){
-        if(this.inputPort.connections.length == 1 && this.inputPort.connections[0].getOtherPort(this.inputPort).parent instanceof MessageQueue){
+        if(this.inputPort.connections.length == 0){
             return true;
         }
-        return false;
+        for(let conn of this.inputPort.connections){
+            if(!this.isConsumableOperator(conn.getOtherPort(this.inputPort).parent)){
+                return false
+            }
+        }
+        return true;
     }
 
     getConsumingEndpoint() : Endpoint{
@@ -286,10 +318,29 @@ export class API extends EndpointOperator implements IDataOperator{
             return this.outputPort.connectTo(operator.getPort(connectingToOutput));
         }
         let conn = this.inputPort.connectTo(operator.getPort(connectingToOutput));
-        if(conn != null && operator instanceof MessageQueue){
-            this.initiateConsumer(conn);
+        if(conn != null && this.isConsumableOperator(operator)){
+            this.initiateConsumer(conn, operator instanceof PubSub);
         }
         return conn;
+    }
+
+    getSubscribeableEndpoints(){
+        let endpoints = [];
+        for(let connection of this.inputPort.connections){
+            let operator = connection.getOtherPort(this.inputPort).parent;
+            if(operator instanceof PubSub){
+                for(let endpoint of operator.options.endpoints){
+                    if(endpoints.filter(ep => ep.url == endpoint.url).length == 0){
+                        endpoints.push(endpoint);
+                    }
+                }
+            }
+        }
+        return endpoints;
+    }
+
+    isConsumableOperator(operator: IDataOperator){
+        return operator instanceof MessageQueue || operator instanceof PubSub
     }
 
     getPort(outputPort:boolean=false) : Port {
@@ -313,4 +364,5 @@ export class API extends EndpointOperator implements IDataOperator{
 export class APIOptions extends EndpointOptions{
     type: APIType = APIType.REST
     isConsumer = false;
+    isSubscriber = false;
 }

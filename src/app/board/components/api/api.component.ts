@@ -28,7 +28,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	public LogicApi : API = new API();
 	data : RequestData;
 
-	connectableEndpoints: Endpoint[];
+	connectableEndpoints: Endpoint[] = [];
+	subscribeableEndpoints: Endpoint[] = [];
 
 	constructor(placingService: PlacingService, selectionService: SelectionService) 
 	{
@@ -113,6 +114,26 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 				}
 			}
 		}
+		if(this.LogicApi.options.isSubscriber){
+			this.subscribeableEndpoints = this.LogicApi.getSubscribeableEndpoints();
+			if(this.subscribeableEndpoints.length == 0){
+				this.LogicApi.options.endpoints = [];
+				return;
+			}
+			let idx_arr = [];
+			for(let i = 0; i < this.LogicApi.options.endpoints.length; i++){
+				let endpoint = this.LogicApi.options.endpoints[i];
+				let ep = this.subscribeableEndpoints.find(x => x.url == endpoint.url);
+				if(ep == null) idx_arr.push(i);
+			}
+			for(let i = idx_arr.length-1; i>=0 ;i--){
+				this.LogicApi.options.endpoints.splice(idx_arr[i], 1);
+			}
+		}
+	}
+
+	isSubscribeable(endpoint: Endpoint){
+		return this.subscribeableEndpoints.find(ep => ep.url == endpoint.url) != null;
 	}
 
 	public handleProtocolChange(endpoint: Endpoint){

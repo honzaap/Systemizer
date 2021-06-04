@@ -36,7 +36,7 @@ export class DatabaseEndpoint extends Endpoint{
 }
 
 export class MQEndpoint extends Endpoint{
-    constructor(){
-        super("Message Queue", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])
+    constructor(url = "Message Queue"){
+        super(url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])
     }
 }

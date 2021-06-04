@@ -95,6 +95,14 @@ html{
         border-color: rgba(2, 86, 143,0.45);
     }
 }
+.topic-expansion-header{
+    font-size: 1rem;
+    padding-right: 1em !important;
+    color: #fff;
+    & .mat-content{
+        width: 100%;
+    }
+}
 a{
     color: inherit;
     text-decoration: none;
