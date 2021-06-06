@@ -8,138 +8,133 @@ import { ConnectionComponent } from './board/components/connection/connection.co
 import { PortComponent } from './board/components/port/port.component';
 
 @Injectable({
-  providedIn: 'root'
+  	providedIn: 'root'
 })
 export class PlacingService{
 
-  @ViewChild("board", { read: ViewContainerRef }) board;
+	@ViewChild("board", { read: ViewContainerRef }) board;
 
+	isPlacing = false;
+	isConnecting = false;
+	canMoveConnection = true;
+	isCreating = false;
 
-  isPlacing = false;
-  isConnecting = false;
-  canMoveConnection = true;
-  isCreating = false;
+	connectingPort : PortComponent;
+	connectionRef : ViewContainerRef;
 
-  connectingPort : PortComponent;
-  connectionRef : ViewContainerRef;
+	canDrag = () => { 
+		return !this.isPlacing && !this.isConnecting 
+	};
 
-  canDrag = () => {return !this.isPlacing && !this.isConnecting};
+	boardScale = 1;
 
-  boardScale = 1;
+	creatingItem: any;
+	creatingItemOptions: any;
 
-  creatingItem: any;
-  creatingItemOptions: any;
+	copiedItem: any;
+	copiedItemOptions: any;
 
-  copiedItem: any;
-  copiedItemOptions: any;
+	startCreating(creatingItem: any, options: any){
+		this.isCreating = true;
+		this.creatingItem = creatingItem;
+		this.creatingItemOptions = options;
+	}
 
-  startCreating(creatingItem: any, options: any){
-    this.isCreating = true;
-    this.creatingItem = creatingItem;
-    this.creatingItemOptions = options;
-  }
+	stopCreating(){
+		this.isCreating = false;
+		this.creatingItem = null;
+		this.creatingItemOptions = null;
+	}
 
-  stopCreating(){
-    this.isCreating = false;
-    this.creatingItem = null;
-    this.creatingItemOptions = null;
-  }
+	startPlacing(){
+		this.isPlacing = true;
+	}
 
-  startPlacing(){
-    this.isPlacing = true;
-  }
+	stopPlacing(){
+		this.isPlacing = false;
+	}
 
-  stopPlacing(){
-    this.isPlacing = false;
-  }
+	startConnecting(portComponent: PortComponent){
+		let board = document.getElementById("board");
+		board.classList.remove("infocus");
+		this.isConnecting = true;
+		this.connectingPort = portComponent;
+	}
 
-  startConnecting(portComponent: PortComponent){
-    let board = document.getElementById("board");
-    board.classList.remove("infocus");
-    this.isConnecting = true;
-    this.connectingPort = portComponent;
-  }
+	stopConnecting(){
+		let board = document.getElementById("board");
+		board.classList.add("infocus");
+		board.onmousemove = null;
+		this.isConnecting = false;
+		this.connectingPort = null;
+	}
 
-  stopConnecting(){
-    let board = document.getElementById("board");
-    board.classList.add("infocus");
-    board.onmousemove = null;
-    this.isConnecting = false;
-    this.connectingPort = null;
-  }
+	copyItem(item: any, options: any){
+		if(item == null) 	
+			return;
+		this.copiedItem = item;
+		this.copiedItemOptions = options;
+	}
 
-  copyItem(item: any, options: any){
-    if(item == null) return;
-    this.copiedItem = item;
-    this.copiedItemOptions = options;
-  }
+	pasteItem(){
+		if(this.copiedItem != null){
+			let options = this.clone(this.copiedItemOptions);
+			this.createComponent(this.copiedItem, 300, 300, options);
+		}
+	}
 
-  pasteItem(){
-    if(this.copiedItem != null){
-      let options = this.clone(this.copiedItemOptions);
-      console.log(options);
-      this.createComponent(this.copiedItem, 300, 300, options);
-    }
-  }
+	public clone(object: any): any {
+		var cloneObj = new (object.constructor as any);
+		for (var attribut in object) {
+			if (typeof object[attribut] === "object" && object[attribut] != null)
+				cloneObj[attribut] = this.clone(object[attribut]);
+			else
+				cloneObj[attribut] = object[attribut];
+		}
+		return cloneObj;
+	}
 
-  public clone(object: any): any {
-    var cloneObj = new (object.constructor as any);
-    for (var attribut in object) {
-        if (typeof object[attribut] === "object" && object[attribut] != null) {
-            cloneObj[attribut] = this.clone(object[attribut]);
-        } else {
-            cloneObj[attribut] = object[attribut];
-        }
-    }
-    return cloneObj;
-}
+	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent){
+		let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
+		let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
+		
+		let logicConn = portComponent1.LogicPort.parent.connectTo(portComponent2.LogicPort.parent, portComponent1.IsOutput, portComponent2.IsOutput);
+		if(logicConn == null){
+			c.destroy();
+			return;
+		}
+		c.instance.LogicConnection = logicConn;
 
-  connectPorts(portComponent1: PortComponent, portComponent2: PortComponent){
-    // Create connection component
-    //this.connectionRef.clear(); 
+		c.instance.destroyComponent = () => {
+			c.destroy();
+		}
 
-    
-    let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
-    let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
-    
-    //let logicConn = portComponent1.LogicPort.connectTo(portComponent2.LogicPort);
-    let logicConn = portComponent1.LogicPort.parent.connectTo(portComponent2.LogicPort.parent, portComponent1.IsOutput, portComponent2.IsOutput);
-    if(logicConn == null){
-      c.destroy();
-      return
-    }
-    c.instance.LogicConnection = logicConn;
+		c.instance.portComponent1 = portComponent1;
+		c.instance.portComponent2 = portComponent2;
+	}
 
-    c.instance.destroyComponent = () => {
-      c.destroy();
-    }
+	public createComponent<T>(component: Type<T>, left = 100, top = 100, options: any) {
+		if(component == null) 
+			return;
+		let factory  = this.resolver.resolveComponentFactory(component);
+		let c : any = this.connectionRef.createComponent(factory);
+		let comp = c.instance.getLogicComponent();
 
-    c.instance.portComponent1 = portComponent1;
-    c.instance.portComponent2 = portComponent2;
-  }
+		c.instance.destroyComponent = () => {
+			c.destroy();
+		}
 
-  public createComponent<T>(component: Type<T>, left = 100, top = 100, options: any) {
-    if(component == null) return;
-    let factory  = this.resolver.resolveComponentFactory(component);
-    let c : any = this.connectionRef.createComponent(factory);
-    let comp = c.instance.getLogicComponent();
+		if(options != null){
+			for(let key of Object.keys(options)){
+				comp.options[key] = options[key];
+			}
+		}
 
-    c.instance.destroyComponent = () => {
-      c.destroy();
-    }
+		comp.options.X = left;
+		comp.options.Y = top;
+		return c.instance;
+	}
 
-    if(options != null){
-      for(let key of Object.keys(options)){
-        comp.options[key] = options[key];
-      }
-    }
-
-    comp.options.X = left;
-    comp.options.Y = top;
-    return c.instance;
-  }
-
-  constructor(private resolver: ComponentFactoryResolver) 
-  {
-  }
+	constructor(private resolver: ComponentFactoryResolver) {
+	}
 }

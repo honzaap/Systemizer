@@ -9,11 +9,10 @@ class="anchor component"
 [style.left.px]="LogicLoadBalancer.options.X"
 [style.top.px]="LogicLoadBalancer.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/loadbalancer.svg">
     </div>  
-    <port #inputPort class="left" [LogicParent]="LogicLoadBalancer"></port>
-    <port #outputPort class="right" [LogicParent]="LogicLoadBalancer" [IsOutput]="true" ></port>
 </div>
 <div style="display:none">
     <div #options>

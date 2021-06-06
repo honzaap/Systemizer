@@ -9,6 +9,7 @@ class="anchor component"
 [style.left.px]="LogicMessageQueue.options.X"
 [style.top.px]="LogicMessageQueue.options.Y"
 >
+    <template #conn></template>
     <div class="img-container messages">
         <div class="message empty" *ngFor="let num of [].constructor(10)"></div>
     </div>  
@@ -25,8 +26,6 @@ class="anchor component"
         <div class="message fill"></div>
         <div class="message fill"></div>
     </div>  
-    <port #inputPort class="left" [LogicParent]="LogicMessageQueue"></port>
-    <port #outputPort class="right" [LogicParent]="LogicMessageQueue" [IsOutput]="true" ></port>
 </div>
 <div style="display:none">
     <div #options>

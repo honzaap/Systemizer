@@ -9,11 +9,10 @@ class="anchor component"
 [style.left.px]="LogicApi.options.X "
 [style.top.px]="LogicApi.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/api.svg">
     </div>
-    <port #inputPort class="left" [LogicParent]="LogicApi"></port>
-    <port #outputPort class="right" [LogicParent]="LogicApi" [IsOutput]="true" ></port>
 </div>
 <div style="display:none">
     <div #options>
@@ -23,7 +22,7 @@ class="anchor component"
                 <div>
                     <mat-form-field appearance="fill" class="action-endpoint">
                         <mat-select (selectionChange)="handleTypeChange()"  [(ngModel)]="LogicApi.options.type">
-                        <mat-option *ngFor="let type of APITypeKeys" [value]="type">{{APIType[type]}}</mat-option>
+                            <mat-option *ngFor="let type of APITypeKeys" [value]="type">{{APIType[type]}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

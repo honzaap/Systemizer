@@ -1,4 +1,4 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
@@ -7,101 +7,97 @@ import { Connection } from 'src/models/Connection';
 import { PortComponent } from '../port/port.component';
 
 @Component({
-  selector: 'connection',
-  templateUrl: './connection.component.html',
-  styleUrls: ['./connection.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'connection',
+	templateUrl: './connection.component.html',
+	styleUrls: ['./connection.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConnectionComponent implements OnInit {
   
-  public portComponent1 : PortComponent;
-  public portComponent2 : PortComponent;
+	public portComponent1 : PortComponent;
+	public portComponent2 : PortComponent;
+	
+	public LogicConnection : Connection;
 
-  public LogicConnection : Connection;
+	@ViewChild("svg") svg: ElementRef;
+	@ViewChild("mainPath") mainPath: ElementRef;
+	@ViewChild("secondPath") secondPath: ElementRef;
 
-  showData: boolean;
+	constructor(private cdRef: ChangeDetectorRef, private selectionService: SelectionService){
+	}
 
-  @ViewChild("svg") svg;
-  @ViewChild("mainPath") mainPath;
-  @ViewChild("secondPath") secondPath;
+	ngOnInit(): void {
+		this.portComponent1.LogicPort.onRemoveConnection((conn) => {
+			if(conn === this.LogicConnection){
+				this.destroyComponent();
+			}
+		});
 
+		this.portComponent2.LogicPort.onRemoveConnection((conn) => {
+			if(conn === this.LogicConnection){
+				this.destroyComponent();
+			}    
+		});
 
-  constructor(private cdRef:ChangeDetectorRef, private selectionService: SelectionService) 
-  {
+		this.LogicConnection.onSendData((port)=>{
+			let dataSvg = document.createElementNS('http://www.w3.org/2000/svg','circle');
+			this.svg.nativeElement.appendChild(dataSvg);
+			let animX = document.createElementNS('http://www.w3.org/2000/svg','animate');
+			let animY = document.createElementNS('http://www.w3.org/2000/svg','animate');
 
-  }
+			animX.setAttribute("attributeName","cx")
+			animY.setAttribute("attributeName","cy")
 
-  ngOnInit(): void {
-    this.portComponent1.LogicPort.onRemoveConnection((conn) => {
-      if(conn === this.LogicConnection){
-        this.destroyComponent();
-      }
-    });
-    this.portComponent2.LogicPort.onRemoveConnection((conn) => {
-      if(conn === this.LogicConnection){
-        this.destroyComponent();
-      }    
-    });
-    this.LogicConnection.onSendData((data)=>{
-      let dataSvg = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      this.svg.nativeElement.appendChild(dataSvg);
-      let animX = document.createElementNS('http://www.w3.org/2000/svg','animate');
-      let animY = document.createElementNS('http://www.w3.org/2000/svg','animate');
+			animX.setAttribute("dur","0.18s")
+			animY.setAttribute("dur","0.18s")
 
-      animX.setAttribute("attributeName","cx")
-      animY.setAttribute("attributeName","cy")
+			animX.setAttribute("begin","0")
+			animY.setAttribute("begin","0")
 
-      animX.setAttribute("dur","0.18s")
-      animY.setAttribute("dur","0.18s")
+			dataSvg.setAttribute("r","5")
+			dataSvg.setAttribute("fill","#31B78D")
 
-      animX.setAttribute("begin","0")
-      animY.setAttribute("begin","0")
+			if(port === this.portComponent1.LogicPort){
+				dataSvg.setAttribute("cx",(this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString())
+				dataSvg.setAttribute("cy",(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString())
+				animX.setAttribute("from", (this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString());
+				animX.setAttribute("to", (this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString());
+				animY.setAttribute("from", (this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString());
+				animY.setAttribute("to", (this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString());
+			}
+			else{
+				dataSvg.setAttribute("cx",(this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString())
+				dataSvg.setAttribute("cy",(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString())
+				animX.setAttribute("from", (this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString());
+				animX.setAttribute("to", (this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString());
+				animY.setAttribute("from", (this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString());
+				animY.setAttribute("to", (this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString());
+			}
 
-      dataSvg.setAttribute("r","5")
-      dataSvg.setAttribute("fill","#31B78D")
+			dataSvg.appendChild(animX);
+			dataSvg.appendChild(animY);
 
-      if(data === this.portComponent1.LogicPort){
-        dataSvg.setAttribute("cx",(this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString())
-        dataSvg.setAttribute("cy",(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString())
-        animX.setAttribute("from", (this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString());
-        animX.setAttribute("to", (this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString());
-        animY.setAttribute("from", (this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString());
-        animY.setAttribute("to", (this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString());
-      }
-      else{
-        dataSvg.setAttribute("cx",(this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString())
-        dataSvg.setAttribute("cy",(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString())
-        animX.setAttribute("from", (this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2).toString());
-        animX.setAttribute("to", (this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2).toString());
-        animY.setAttribute("from", (this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2).toString());
-        animY.setAttribute("to", (this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2).toString());
-      }
+			(animX as any).beginElement();
+			(animY as any).beginElement();
+			
+			setTimeout(()=>{
+				dataSvg.remove();
+			},180)
+		})
+	}
 
-      dataSvg.appendChild(animX);
-      dataSvg.appendChild(animY);
+	handleClick(){
+		this.selectionService.setConnectionSelection(this);
+	}
 
-      (animX as any).beginElement();
-      (animY as any).beginElement();
-      
-      setTimeout(()=>{
-        dataSvg.remove();
-      },180)
-    })
-  }
+	destroySelf = () => {
+		this.LogicConnection.destroy();
+		this.destroyComponent();
+	}
 
-  handleClick(){
-    this.selectionService.setConnectionSelection(this);
-  }
+	destroyComponent = () => {}
 
-  destroySelf = () => {
-    this.LogicConnection.destroy();
-    this.destroyComponent();
-  }
-
-  destroyComponent = () => {}
-
-  ngAfterViewChecked()
-  {
-    this.cdRef.detectChanges();
-  }
+	ngAfterViewChecked(){
+		this.cdRef.detectChanges();
+	}
 }

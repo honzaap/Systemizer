@@ -9,10 +9,10 @@ class="anchor component"
 [style.left.px]="LogicClient.options.X "
 [style.top.px]="LogicClient.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/client.svg">
     </div>    
-    <port #inputPort class="right" [LogicParent]="LogicClient"></port>
 </div>
 <div style="display:none">
     <div #options>
@@ -50,14 +50,14 @@ class="anchor component"
     <div #actions>
         <div class="options-actions">
             <div class="actions-container">
-                <button *ngIf="canEstabilishStream()"
+                <button *ngIf="canEstabilishConnection"
                  (click)="estabilishConnection()">Estabilish Connection</button>
-                <button *ngIf="canEndStream()"
+                <button *ngIf="canEndConnection"
                  (click)="endConnection()">End Connection</button>
                 <div>
-                    <button [disabled]="!canSendData()"
+                    <button [disabled]="!canSend"
                     (click)="sendData()">Send Data</button>
-                    <span [class.active]="isAutomaticSending" [class.inactive]="!isAutomaticSending" [class.disabled]="!canSendData()" (click)="toggleAutomaticSend()" class="options-button-icon inactive auto-send"><i class="fas fa-sync-alt"></i></span>
+                    <span [class.active]="isAutomaticSending" [class.inactive]="!isAutomaticSending" [class.disabled]="!canSend" (click)="toggleAutomaticSend()" class="options-button-icon inactive auto-send"><i class="fas fa-sync-alt"></i></span>
                 </div>
             </div>
         </div>

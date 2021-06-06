@@ -9,11 +9,10 @@ class="anchor component"
 [style.left.px]="LogicCache.options.X"
 [style.top.px]="LogicCache.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/cache.svg">
     </div>  
-    <port #inputPort class="left" [LogicParent]="LogicCache"></port>
-    <port #outputPort [style.display]="true ? 'flex' : 'none'" class="right" [LogicParent]="LogicCache" [IsOutput]="true"></port>
 </div>
 <div style="display:none">
     <div #options>
@@ -21,7 +20,7 @@ class="anchor component"
             <span class="property-name">Write Policy:</span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
-                    <mat-select (selectionChange)="changeCacheWP()" [(ngModel)]="LogicCache.options.writePolicy">
+                    <mat-select [(ngModel)]="LogicCache.options.writePolicy">
                       <mat-option *ngFor="let type of WritePolicyKeys" [value]="type">{{WritePolicy[type]}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -31,7 +30,7 @@ class="anchor component"
             <span class="property-name">Replacement Policy:</span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
-                    <mat-select (selectionChange)="changeCacheRP()" [(ngModel)]="LogicCache.options.replacementPolicy">
+                    <mat-select [(ngModel)]="LogicCache.options.replacementPolicy">
                       <mat-option *ngFor="let type of ReplacementPolicyKeys" [value]="type">{{ReplacementPolicy[type]}}</mat-option>
                     </mat-select>
                 </mat-form-field>

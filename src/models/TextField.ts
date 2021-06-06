@@ -1,24 +1,31 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { Endpoint } from "./Endpoint";
+import { LogicComponent } from "./LogicComponent";
 import { Options } from "./Options";
 import { Port } from "./Port";
 import { RequestData } from "./RequestData";
 import { Handler } from "./Shared/EventDispatcher";
 
-
-
-
-export class TextField implements IDataOperator{
-
+export class TextField extends LogicComponent implements IDataOperator{
+    
     options: TextFieldOptions;
+    originID: string;
 
     constructor() {
+        super();
         this.options = new TextFieldOptions();
-        this.options.title = "Text Field"
+        this.options.title = "Text Field";
+        this.originID = UUID();
     }
-    receiveData(data: RequestData, fromOutput: boolean): void { }
-    sendData(data: RequestData): void { }
+    
+    receiveData(data: RequestData, fromOutput: boolean): void { 
+        return;
+    }
+    sendData(data: RequestData): void { 
+        return;
+    }
     connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean): Connection {
         throw new Error("Method not implemented.");
     }
@@ -28,15 +35,14 @@ export class TextField implements IDataOperator{
     getAvailableEndpoints(): Endpoint[] {
         throw new Error("Method not implemented.");
     }
-    originID: string;
     onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        
+        return;
+    }
+    onConnectionUpdate(wasOutput: boolean = false){
+        return;
     }
 
-    onConnectionRemove(wasOutput: boolean = false){}
-
     destroy = () => {}
-
 }
 
 export class TextFieldOptions extends Options{

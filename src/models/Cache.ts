@@ -1,29 +1,29 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
-import { RequestData } from "./RequestData";
+import { RequestData, RequestDataHeader } from "./RequestData";
 import { Options } from "./Options";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { UUID } from "src/shared/ExtensionMethods";
-import { Protocol } from "./enums/Protocol";
-import { Endpoint, EndpointRef } from "./Endpoint";
+import { Endpoint } from "./Endpoint";
 import { HTTPMethod } from "./enums/HTTPMethod";
 import { HTTPStatus } from "./enums/HTTPStatus";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { ReplacementPolicy } from "./enums/ReplacementPolicy";
 import { WritePolicy } from "./enums/WritePolicy";
+import { LogicComponent } from "./LogicComponent";
 
 interface ReceiveDataEvent { }
 
-export class Cache implements IDataOperator{
+export class Cache extends LogicComponent implements IDataOperator{
 
     inputPort: Port;
     outputPort: Port
     options: CacheOptions;
-    connectionTable: {[id:string]:Connection} = {};
+    connectionTable: { [id:string]: Connection } = {};
     originID: string;
 
     constructor() {
+        super();
         this.inputPort = new Port(this,false,true);      
         this.outputPort = new Port(this,true,false);      
         this.options = new CacheOptions();  
@@ -35,32 +35,31 @@ export class Cache implements IDataOperator{
         if(fromOutput){
             let targetConnection = this.connectionTable[request.responseId]
             if(targetConnection == null) return; 
-            console.log("send data from out")
             await this.sendData(request);
         }
         else{
             this.fireReceiveData(request);
             if(request.header.endpoint == null) return;
             this.connectionTable[request.requestId] = request.origin;
-            if(request.header.endpoint.method == HTTPMethod.GET){
-                let cacheHit = Math.random() > 0.43 ? true : false;
+            if(request.header.endpoint.method == HTTPMethod.GET){ // Client wants to write
+                let cacheHit = Math.random() > 0.43 ? true : false; // Random chance of cache hit
                 if(cacheHit){
                     let response = new RequestData();
                     response.responseId = request.requestId;
                     response.requestId = UUID();
                     response.origin = request.origin;
                     response.originID = this.originID;
-                    response.header = {
-                        endpoint: request.header.endpoint,
-                        protocol: request.header.protocol
-                    };
-                    response.data = {hit: true};
+                    response.header = new RequestDataHeader(request.header.endpoint, request.header.protocol);
                     this.fireShowStatusCode(HTTPStatus["Cache Hit"])
                     await this.sendData(response);
                     return;
                 }
                 this.fireShowStatusCode(HTTPStatus["Cache Miss"])
             }
+
+            if(this.outputPort.connections.length == 0) 
+                return;
+
             switch(this.options.writePolicy){
                 case WritePolicy["Write-Through"]:
                     await this.writeThrough(request);
@@ -77,7 +76,6 @@ export class Cache implements IDataOperator{
 
     async writeThrough(data: RequestData){
         // write to cache, then database, if both succeeded, return success
-        if(this.outputPort.connections.length == 0) return;
         data.origin = this.outputPort.connections[0];
         data.originID = this.originID;
         // Write to cache
@@ -89,60 +87,36 @@ export class Cache implements IDataOperator{
 
     async writeBack(data: RequestData){
         // write to cache, send success, write asynchronously to database
-        if(this.outputPort.connections.length == 0) return;
         data.origin = this.outputPort.connections[0];
         data.originID = this.originID;
         // Write to cache
 
         // Send to DB
-        if(data.header.endpoint.method == HTTPMethod.GET){
+        if(data.header.endpoint.method == HTTPMethod.GET)
             await this.outputPort.sendData(data);
-            console.log("wb: get")
-            //await this.sendData(data)
-        }
         else{
             this.outputPort.sendData(data);
-            console.log("wb: post");
             data.responseId = data.requestId;
             data.requestId = UUID();
             await this.sendData(data);
         }
     }
 
-    private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
-    public onReceiveData(handler: Handler<ReceiveDataEvent>) {
-        this.receiveDataDispatcher.register(handler);
-    }
-    private fireReceiveData(event: ReceiveDataEvent) { 
-        this.receiveDataDispatcher.fire(event);
-    }
-
-    private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
-    public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        this.showStatusCodeDispatcher.register(handler);
-    }
-    private fireShowStatusCode(event: ShowStatusCodeEvent) { 
-        this.showStatusCodeDispatcher.fire(event);
-    }
-
-    onConnectionRemove(wasOutput: boolean = false){}
+    onConnectionUpdate(wasOutput: boolean = false){}
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
-        if(targetConnection == null){
+        if(targetConnection == null)
             throw new Error("Target connection can not be null");
-        }
         this.connectionTable[response.responseId] = null; // reset request id
         await this.inputPort.sendData(response, targetConnection);
     }
 
     connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        if(connectingWithOutput){
+        if(connectingWithOutput)
             return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        }
-        else{
+        else
             return this.inputPort.connectTo(operator.getPort(connectingToOutput));
-        }    
     }
 
     getPort(outputPort:boolean=false) : Port {
@@ -151,9 +125,8 @@ export class Cache implements IDataOperator{
 
     getAvailableEndpoints(): Endpoint[]
     {
-        if(this.outputPort.connections.length > 0){
+        if(this.outputPort.connections.length > 0)
             return this.outputPort.connections[0].getOtherPort(this.outputPort).parent.getAvailableEndpoints();
-        }
         return [];
     }
 

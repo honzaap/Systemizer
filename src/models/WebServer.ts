@@ -1,7 +1,6 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
-import { RequestData } from "./RequestData";
-import { Options } from "./Options";
+import { RequestData, RequestDataHeader } from "./RequestData";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { UUID } from "src/shared/ExtensionMethods";
@@ -17,7 +16,7 @@ export class WebServer extends EndpointOperator implements IDataOperator{
 
     port: Port;
     options: WebServerOptions;
-    connectionTable: {[id:string]:Connection} = {};
+    connectionTable: { [id:string]: Connection } = {};
     originID: string;
 
     constructor() {
@@ -32,88 +31,67 @@ export class WebServer extends EndpointOperator implements IDataOperator{
         ]
     }
 
-    async receiveData(request: RequestData) {
+    async receiveData(data: RequestData) {
+        // Checking for 404 and 405
+        let hasEndpoint = false;
+        let notAllowed = false;
+        let targetEndpoint: Endpoint;
+        let targetUrl = data.header.endpoint.endpoint.url;
 
-         // Checking for 404 and 405
-         let was = false;
-         let notAllowed = false;
-         let targetEndpoint: Endpoint;
-         for(let endpoint of this.options.endpoints){
-             if(endpoint.url === request.header.endpoint.endpoint.url){
-                 was = true;
-                 if(endpoint.supportedMethods.indexOf(request.header.endpoint.method) == -1){
-                     notAllowed = true;
-                 }
-                 else{
-                     notAllowed = false;
-                     targetEndpoint = endpoint;
-                     break;
-                 }
-             }
-         }
-         if(!was){
-             this.fireShowStatusCode(HTTPStatus["Not Found"])
-             return;
-         }
-         if(notAllowed){
-             this.fireShowStatusCode(HTTPStatus["Method Not Allowed"]);
-             return;
-         }
+        this.options.endpoints.filter(endpoint => 
+            endpoint.url == targetUrl
+        ).forEach(endpoint => {
+            hasEndpoint = true;
+            if(endpoint.supportedMethods.indexOf(data.header.endpoint.method) == -1)
+                notAllowed = true;
+            else{
+                // Found wanted endpoint
+                notAllowed = false;
+                targetEndpoint = endpoint;
+                return;
+            }
+        })
 
-        this.connectionTable[request.requestId] = request.origin;
+        if(!hasEndpoint){
+            this.fireShowStatusCode(HTTPStatus["Not Found"])
+            return;
+        }
+        if(notAllowed){
+            this.fireShowStatusCode(HTTPStatus["Method Not Allowed"]);
+            return;
+        }
 
-        this.fireReceiveData(request);
+        this.connectionTable[data.requestId] = data.origin;
+        this.fireReceiveData(data);
 
         let response = new RequestData();
-        response.header = {
-            protocol: Protocol.HTTP,
-            endpoint: request.header.endpoint,
-        };
-        response.data = {};
-        response.origin = request.origin;
+        response.header = new RequestDataHeader(data.header.endpoint, Protocol.HTTP);
+        response.origin = data.origin;
         response.originID = this.originID;
         response.requestId = UUID();
-        response.responseId = request.requestId;
+        response.responseId = data.requestId;
         await this.sendData(response);
     }
 
-    private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
-    public onReceiveData(handler: Handler<ReceiveDataEvent>) {
-        this.receiveDataDispatcher.register(handler);
-    }
-    private fireReceiveData(event: ReceiveDataEvent) { 
-        this.receiveDataDispatcher.fire(event);
-    }
-
-    private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
-    public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        this.showStatusCodeDispatcher.register(handler);
-    }
-    private fireShowStatusCode(event: ShowStatusCodeEvent) { 
-        this.showStatusCodeDispatcher.fire(event);
-    }
-
-    onConnectionRemove(wasOutput: boolean = false){}
+    onConnectionUpdate(wasOutput: boolean = false){}
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
-        if(targetConnection == null){
+        if(targetConnection == null)
             throw new Error("Target connection can not be null");
-        }
         this.connectionTable[response.responseId] = null; // reset request id
         await this.port.sendData(response, targetConnection);
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
+    connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean): Connection{
         return this.port.connectTo(operator.getPort(connectingToOutput));
     }
 
-    getPort(outputPort:boolean=false) : Port {
+    getPort(outputPort:boolean=false): Port {
         return this.port;
     }
 
-    getAvailableEndpoints(): Endpoint[]
-    {
+    getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
 
@@ -123,5 +101,4 @@ export class WebServer extends EndpointOperator implements IDataOperator{
 }
 
 export class WebServerOptions extends EndpointOptions{
-
 }

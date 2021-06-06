@@ -1,4 +1,4 @@
-import { ElementRef, ViewChild } from '@angular/core';
+import { ComponentFactoryResolver, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
@@ -6,30 +6,30 @@ import { TextField } from 'src/models/TextField';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
-  selector: 'textfield',
+  	selector: 'textfield',
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
 		actionsRef: new ViewChild("actions")
 	},
-  templateUrl: './textfield.component.html',
-  styleUrls: ['./textfield.component.scss']
+	templateUrl: './textfield.component.html',
+	styleUrls: ['./textfield.component.scss']
 })
 export class TextfieldComponent  extends OperatorComponent implements OnInit{
 
-	// Logic
 	public LogicTextField : TextField = new TextField();
-  	private selService: SelectionService
+  	private currentSelectionService: SelectionService
 
   	@ViewChild("field") field: ElementRef;
+	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService) {
-		super(placingService, selectionService);
-    	this.selService = selectionService;
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
+		super(placingService, selectionService, resolver);
+    	this.currentSelectionService = selectionService;
 	}
 
 	ngAfterViewInit(): void {
-		super.Init();
+		super.Init(this.conn);
   	}
 
 	ngOnInit(){
@@ -40,19 +40,12 @@ export class TextfieldComponent  extends OperatorComponent implements OnInit{
 	}
 
 	public handleMousedown(event){
-		if(this.selService.currentSelection !== this){
+		if(this.currentSelectionService.currentSelection !== this)
 			super.handleMousedown(event);
-		}
 	}
 
 	public getLogicComponent(){
 		return this.LogicTextField;
-	}
-
-	destroySelf = () => {
-		super.destroySelf();
-		this.LogicTextField.destroy();
-		this.destroyComponent();
 	}
 
 	toggleBold(){

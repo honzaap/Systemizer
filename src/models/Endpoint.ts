@@ -18,7 +18,6 @@ export class Endpoint{
 export class EndpointRef {
     endpoint: Endpoint;
     method: HTTPMethod;
-    topic: string;
 }
 
 export class EndpointAction {

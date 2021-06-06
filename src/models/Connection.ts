@@ -1,7 +1,6 @@
 import { RequestData } from "./RequestData";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
-import { UUID } from "src/shared/ExtensionMethods";
 
 interface SendDataEvent {}
 
@@ -9,23 +8,17 @@ export class Connection{
     port1: Port;
     port2: Port;
 
-    /**
-     * 
-     * @param connection: connection between ports
-     * @param parent: parent of port
-     */
     constructor(port1: Port, port2: Port) {
         this.port1 = port1;
         this.port2 = port2;
     }
 
-    getOtherPort(port):Port{
-        if(port === this.port1) return this.port2;
-        return this.port1;
+    getOtherPort(port: Port): Port{
+        return port === this.port1 ? this.port2 : this.port1;
     }
 
     /**
-     * sendData: sends data to connection property
+     * sendData: sends data to connection
      */
     public async sendData(data: RequestData, origin: Port) {
         if(origin === this.port1){
@@ -36,9 +29,8 @@ export class Connection{
             this.fireSendData(origin);
             await this.port1.receiveData(data);
         }
-        else{
+        else
             throw new Error("Invalid origin in Connection.sendData");
-        }
     }
 
     destroy(){

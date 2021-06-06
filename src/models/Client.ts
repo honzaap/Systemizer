@@ -5,109 +5,89 @@ import { Options } from "./Options";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { Protocol } from "./enums/Protocol";
-import { HTTPMethod } from "./enums/HTTPMethod";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { arrayEquals, UUID } from "src/shared/ExtensionMethods";
 import { gRPCMode } from "./enums/gRPCMode";
-
-
+import { LogicComponent } from "./LogicComponent";
 
 interface ReceiveDataEvent { }
 
-export class Client implements IDataOperator{
+export class Client extends LogicComponent implements IDataOperator{
 
-    port: Port;
+    outputPort: Port;
     options: ClientOptions;
     originID: string;
 
     constructor() {
-        this.port = new Port(this);        
+        super();
+        this.outputPort = new Port(this);        
         this.options = new ClientOptions();
         this.options.title = "Client";
         this.originID = UUID();
     }
 
     receiveData(data: RequestData): void {
-        //console.log("Client got data: ",data);
+        this.fireReceiveData(data);
         if(data.header.endpoint.endpoint.protocol == Protocol.WebSockets || data.header.endpoint.endpoint.grpcMode == gRPCMode["Bidirectional Streaming"] || data.header.endpoint.endpoint.grpcMode == gRPCMode["Server Streaming"]){
             if(data.header.stream == true){
-                if(this.options.connectedId == null) return;
+                if(this.options.connectedId == null) 
+                    return;
                 this.options.isConnectedToEndpoint = true;
             }
             else{
                 this.options.isConnectedToEndpoint = false;
                 this.options.connectedId = null;
             }
-
         }
-        this.fireReceiveData(data);
     }
 
-    private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
-    public onReceiveData(handler: Handler<ReceiveDataEvent>) {
-        this.receiveDataDispatcher.register(handler);
-    }
-    private fireReceiveData(event: ReceiveDataEvent) { 
-        this.receiveDataDispatcher.fire(event);
-    }
-
-    private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
-    public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        this.showStatusCodeDispatcher.register(handler);
-    }
-    private fireShowStatusCode(event: ShowStatusCodeEvent) { 
-        this.showStatusCodeDispatcher.fire(event);
-    }
-
-    onConnectionRemove(wasOutput: boolean = false){}
+    onConnectionUpdate(wasOutput: boolean = false){}
 
     async sendData(data: RequestData) {
         this.updateEndpoint();
-        return await this.port.sendData(data);
+        return await this.outputPort.sendData(data);
     }
 
     connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        return this.port.connectTo(operator.getPort(connectingToOutput));
+        return this.outputPort.connectTo(operator.getPort(connectingToOutput));
     }
 
     getPort(outputPort:boolean=false) : Port {
-        return this.port;
+        return this.outputPort;
     }
     
     getAvailableEndpoints(): Endpoint[]
     {
-        let endpoints :Endpoint[] = [];
-        for(let connection of this.port.connections){
-            connection.getOtherPort(this.port).parent.getAvailableEndpoints().forEach(x=>{
-                let has = false;
-                for(let y of endpoints){
-                    if(y.url===x.url &&  arrayEquals(x.supportedMethods,y.supportedMethods)){
-                        has = true;
-                        break;
-                    } 
-                }
-                if(!has)endpoints.push(x);
+        let availableEndpoints :Endpoint[] = [];
+        for(let connection of this.outputPort.connections){
+            connection.getOtherPort(this.outputPort).parent.getAvailableEndpoints().forEach(endpoint =>{
+                let duplicate = (availableEndpoints.find(ep => ep.url === endpoint.url && arrayEquals(endpoint.supportedMethods, ep.supportedMethods)) != null)
+                if(!duplicate)
+                    availableEndpoints.push(endpoint);
             });        
         }
-        return endpoints;
+        return availableEndpoints;
     }
 
     updateEndpoint(){
         let availableEndpoints = this.getAvailableEndpoints();
-        if(this.options.endpointRef.endpoint == null){
-            if(availableEndpoints.length == 0) return;
+        if(this.options.endpointRef.endpoint == null){ // Set default endpoint if available
+            if(availableEndpoints.length == 0) 
+                return;
             this.options.endpointRef.endpoint = availableEndpoints[0];
             this.options.endpointRef.method = availableEndpoints[0].supportedMethods[0];
         }
         else{
-            let was = false;
+            let isAvailable = false;
             for(let endpoint of availableEndpoints){
                 if(this.options.endpointRef.endpoint === endpoint){
-                    was = true;
+                    isAvailable = true;
+                    break;
                 }
             }
-            if(!was){
-                if(availableEndpoints.length == 0) return;
+            if(!isAvailable){ // If current endpoint is no longer available, replace it
+                if(availableEndpoints.length == 0) 
+                    return;
                 this.options.endpointRef.endpoint = availableEndpoints[0];
                 this.options.endpointRef.method = availableEndpoints[0].supportedMethods[0];
             }
@@ -115,7 +95,7 @@ export class Client implements IDataOperator{
     }
 
     destroy(){
-        this.port.removeConnections();
+        this.outputPort.removeConnections();
     }
 }
 

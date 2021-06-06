@@ -9,10 +9,10 @@ class="anchor component"
 [style.left.px]="LogicWebServer.options.X"
 [style.top.px]="LogicWebServer.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/webserver.svg">
     </div>  
-    <port #inputPort class="left" [LogicParent]="LogicWebServer"></port>
 </div>
 <div style="display:none">
     <div #options>

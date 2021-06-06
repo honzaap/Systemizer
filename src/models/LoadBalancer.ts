@@ -3,28 +3,25 @@ import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Options } from "./Options";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { Endpoint } from "./Endpoint";
-import { arrayEquals, UUID } from "src/shared/ExtensionMethods";
+import { UUID } from "src/shared/ExtensionMethods";
 import { BalancingAlgorithm } from "./enums/BalancingAlgorithm";
 import { LoadBalancerType } from "./enums/LoadBalancerType";
 import * as objectHash from 'object-hash'
-import { API } from "./API";
+import { LogicComponent } from "./LogicComponent";
 
-interface ReceiveDataEvent { }
-
-export class LoadBalancer implements IDataOperator{
-
+export class LoadBalancer extends LogicComponent implements IDataOperator{
     inputPort: Port;
     outputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
-    streamConnectionTable: {[id:string]:Connection} = {};
+    streamConnectionTable: { [id:string]:Connection } = {};
     options: LoadBalancerOptions;
     originID: string;
 
     roundRobinIndex = -1;
 
     constructor() {
+        super();
         this.inputPort = new Port(this, false, true);        
         this.outputPort = new Port(this, true, true);        
         this.options = new LoadBalancerOptions();
@@ -33,25 +30,21 @@ export class LoadBalancer implements IDataOperator{
     }
 
     async receiveData(data: RequestData, fromOutput:boolean) {
-        //console.log("Load Balancer got data: ",data);
-
         if(fromOutput){
-            let targetConnection = this.connectionTable[data.responseId]
-            if(targetConnection == null){
-                throw new Error("Connection doesnt exist (unknown response to request)")
-            }
+            let targetConnection = this.connectionTable[data.responseId];
+            if(targetConnection == null)
+                throw new Error("Connection doesnt exist (unknown response to request)");
             if(data.header.stream != true) {
-                // reset request id
-                this.connectionTable[data.responseId] = null; 
+                this.connectionTable[data.responseId] = null;  // reset request id
                 this.streamConnectionTable[data.responseId] = null;
             }
             this.fireReceiveData(data);
-            let res = await this.inputPort.sendData(data,targetConnection);
-            if(!res && data.header.stream){
+            let result = await this.inputPort.sendData(data,targetConnection);
+            if(!result && data.header.stream){
                 data.header.stream = false;
                 data.requestId = data.responseId;
                 data.responseId = null;
-                let res = this.outputPort.sendData(data,data.origin)
+                let res = this.outputPort.sendData(data,data.origin);
                 if(res){
                     this.connectionTable[data.responseId] = null;
                     this.streamConnectionTable[data.responseId] = null;
@@ -60,18 +53,19 @@ export class LoadBalancer implements IDataOperator{
         }
         else{
             if(data.requestId == "" || data.requestId == null )
-            {
-                throw new Error("requestId can not be null. Please specify property requestId of RequestData")
-            }
+                throw new Error("requestId can not be null. Please specify property requestId of RequestData");
+
+            this.fireReceiveData(data);
+
             if(this.streamConnectionTable[data.requestId] != null){
                 data.origin = this.streamConnectionTable[data.requestId];
                 data.originID = this.originID;
-                this.fireReceiveData(data);
                 await this.outputPort.sendData(data,this.streamConnectionTable[data.requestId]);
                 return;
             }
+
             this.connectionTable[data.requestId] = data.origin;
-            this.fireReceiveData(data);
+
             switch(this.options.algorithm){
                 case BalancingAlgorithm["Round Robin"]:
                     await this.roundRobin(data);
@@ -120,11 +114,12 @@ export class LoadBalancer implements IDataOperator{
         let keys = Object.keys(this.streamConnectionTable);
         for(let i = keys.length-1; i >= 0; i--){
             let conn = keys[i];
-            if(this.streamConnectionTable[conn] == null) break;
+            if(this.streamConnectionTable[conn] == null) 
+                break;
             allConnections.push(this.streamConnectionTable[conn]);
         }
         let least = this.outputPort.connections[0];
-        let leastNum = 150000;
+        let leastNum = Number.MAX_VALUE;
         for(let conn of this.outputPort.connections){
             let length = allConnections.filter(x => x==conn).length;
             if(length < leastNum){
@@ -140,8 +135,10 @@ export class LoadBalancer implements IDataOperator{
 
     async urlHash(data: RequestData){
         let url: string;
-        if(data.header.endpoint.endpoint == null) url = "/";
-        else url = data.header.endpoint.endpoint.url;
+        if(data.header.endpoint.endpoint == null) 
+            url = "/";
+        else 
+            url = data.header.endpoint.endpoint.url;
         let hash = objectHash({id:url}).substr(0,2);
         let hashInt = parseInt(hash,16);
         let length = this.outputPort.connections.length;
@@ -152,62 +149,36 @@ export class LoadBalancer implements IDataOperator{
         await this.outputPort.sendData(data, this.outputPort.connections[connectionIndex]);
     }
 
-    private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
-    public onReceiveData(handler: Handler<ReceiveDataEvent>) {
-        this.receiveDataDispatcher.register(handler);
-    }
-    private fireReceiveData(event: ReceiveDataEvent) { 
-        this.receiveDataDispatcher.fire(event);
-    }
-
-    private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
-    public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        this.showStatusCodeDispatcher.register(handler);
-    }
-    private fireShowStatusCode(event: ShowStatusCodeEvent) { 
-        this.showStatusCodeDispatcher.fire(event);
-    }
-
-    onConnectionRemove(wasOutput: boolean = false){}
+    onConnectionUpdate(wasOutput: boolean = false){}
 
     /**
      * 
      * This method currently does nothing for LoadBalancer
      */
-    sendData(request: RequestData): void {
-        //this.port.sendData(request);
-    }
+    sendData(request: RequestData): void {}
 
     connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        if(connectingWithOutput){
+        if(connectingWithOutput)
             return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        }
         return this.inputPort.connectTo(operator.getPort(connectingToOutput));
     }
 
     getPort(outputPort:boolean=false) : Port {
-        if(outputPort){
+        if(outputPort)
             return this.outputPort;
-        }
         return this.inputPort;
     }
 
-    getAvailableEndpoints(): Endpoint[]
-    {
-        let endpoints :Endpoint[] = [];
+    getAvailableEndpoints(): Endpoint[]{
+       let connectableEndpoints :Endpoint[] = [];
         for(let connection of this.outputPort.connections){
-            connection.getOtherPort(this.outputPort).parent.getAvailableEndpoints().forEach(x=>{
-                let has = false;
-                for(let y of endpoints){
-                    if(y.url===x.url && arrayEquals(x.supportedMethods,y.supportedMethods)){
-                        has = true;
-                        break;
-                    } 
-                }
-                if(!has)endpoints.push(x);
-            });
+            connection.getOtherPort(this.outputPort).parent.getAvailableEndpoints().forEach(endpoint =>{
+                let duplicate = (connectableEndpoints.find(ep => ep.url === endpoint.url) != null)
+                if(!duplicate)
+                    connectableEndpoints.push(endpoint);
+            });        
         }
-        return endpoints;
+        return connectableEndpoints;
     }
 
     destroy(){

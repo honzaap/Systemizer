@@ -1,13 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
-import { Endpoint, EndpointAction, EndpointRef, MQEndpoint } from 'src/models/Endpoint';
-import { RequestData } from 'src/models/RequestData';
+import { Endpoint, EndpointAction } from 'src/models/Endpoint';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
-import { HTTPStatus } from 'src/models/enums/HTTPStatus';
 import { APIType } from 'src/models/enums/APIType';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
 
@@ -16,34 +14,21 @@ import { gRPCMode } from 'src/models/enums/gRPCMode';
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
-		inputPortRef: new ViewChild("inputPort"),
-		outputPortRef: new ViewChild("outputPort")
 	},
 	templateUrl: './api.component.html',
 	styleUrls: ['./api.component.scss']
 })
 export class ApiComponent  extends OperatorComponent implements OnInit{
 
-	// Logic
-	public LogicApi : API = new API();
-	data : RequestData;
+	public LogicApi: API = new API();
+	
+	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	connectableEndpoints: Endpoint[] = [];
 	subscribeableEndpoints: Endpoint[] = [];
 
-	constructor(placingService: PlacingService, selectionService: SelectionService) 
-	{
-		super(placingService, selectionService);
-		this.LogicApi.onReceiveData((data:RequestData)=>{
-			this.data = data;
-			if(!this.comp.classList.contains("anim"))
-			{
-			  this.comp.classList.add("anim");
-			  setTimeout(()=>{
-				this.comp.classList.remove("anim");
-			  },500);
-			}
-		});
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
+		super(placingService, selectionService, resolver);
 	}
 
 	addAction(endpoint: Endpoint){
@@ -53,7 +38,10 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	removeAction(endpoint: Endpoint, action: EndpointAction){
 		let idx = 0;
 		for(let act of endpoint.actions){
-			if(act === action) endpoint.actions.splice(idx,1);
+			if(act === action) {
+				endpoint.actions.splice(idx,1);
+				return;
+			}
 			idx++;
 		}
 	}
@@ -65,7 +53,10 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	removeEndpoint(endpoint: Endpoint){
 		let idx = 0;
 		for(let ep of this.LogicApi.options.endpoints){
-			if(ep === endpoint) this.LogicApi.options.endpoints.splice(idx,1);
+			if(ep === endpoint) {
+				this.LogicApi.options.endpoints.splice(idx,1);
+				return;
+			}
 			idx++;
 		}	
 	}
@@ -75,22 +66,20 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	}
 
 	handleEndpointMethodChange(endpoint: Endpoint){
-		if(endpoint.supportedMethods.length == 0){
+		if(endpoint.supportedMethods.length == 0)
 			endpoint.supportedMethods = [HTTPMethod.GET];
-		}
 	}
 
 	handleEndpointUrlChange(endpoint){
-		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == ""){
-			endpoint.url = `api/v${Math.floor(10*Math.random())}`
-		}
+		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
+			endpoint.url = `api/v${Math.floor(10*Math.random())}`;
 	}
 
 	public handleClick(){
 		super.handleClick();
 		this.connectableEndpoints = this.LogicApi.getConnectableEndpoints();
 		for(let j = 0; j < this.LogicApi.options.endpoints.length; j++){
-			let endpoint = this.LogicApi.options.endpoints[j]
+			let endpoint = this.LogicApi.options.endpoints[j];
 			for(let i = 0; i < endpoint.actions.length; i++){
 				let action = endpoint.actions[i];
 				let currEdp = action.endpoint;
@@ -103,15 +92,13 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 				}
 				if(currEdp != null && currMth != null){
 					for(let e of this.connectableEndpoints){ // need this workaround to keep values in material select....
-						if(e.url == currEdp.url){
+						if(e.url == currEdp.url)
 							this.LogicApi.options.endpoints[j].actions[i].endpoint = e;
-						}
 					}
 					endpoint.actions[i].method = currMth;
 				}
-				else{
+				else
 					endpoint.actions.splice(i,1);
-				}
 			}
 		}
 		if(this.LogicApi.options.isSubscriber){
@@ -124,11 +111,11 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 			for(let i = 0; i < this.LogicApi.options.endpoints.length; i++){
 				let endpoint = this.LogicApi.options.endpoints[i];
 				let ep = this.subscribeableEndpoints.find(x => x.url == endpoint.url);
-				if(ep == null) idx_arr.push(i);
+				if(ep == null) 
+					idx_arr.push(i);
 			}
-			for(let i = idx_arr.length-1; i>=0 ;i--){
+			for(let i = idx_arr.length-1; i>=0 ;i--)
 				this.LogicApi.options.endpoints.splice(idx_arr[i], 1);
-			}
 		}
 	}
 
@@ -137,46 +124,35 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	}
 
 	public handleProtocolChange(endpoint: Endpoint){
-		if(endpoint.protocol == Protocol.WebSockets){
+		if(endpoint.protocol == Protocol.WebSockets)
 			endpoint.supportedMethods = [HTTPMethod.GET];
-		}
 	}
 
 	public handleTypeChange(){
 		let type = this.LogicApi.options.type;
+		let endpoint: Endpoint;
 		if(type == APIType.REST){
-			let restEp = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
-			this.LogicApi.options.endpoints = [restEp]
+			endpoint = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
 		}
 		else if(type == APIType.GraphQL){
-			let gqlEp = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
-			this.LogicApi.options.endpoints = [gqlEp]
+			endpoint = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
 		}
 		else if(type == APIType.RPC){
-			let rpcEp = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-			this.LogicApi.options.endpoints = [rpcEp]
+			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
 		}
 		else if(type == APIType.gRPC){
-			let grpcEp = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-			grpcEp.grpcMode = gRPCMode.Unary;
-			this.LogicApi.options.endpoints = [grpcEp]
+			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
+			endpoint.grpcMode = gRPCMode.Unary;
 		}
-		else if(type == APIType.WebSockets){
-			let wsEp = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
-			wsEp.protocol = Protocol.WebSockets;
-			this.LogicApi.options.endpoints = [wsEp];
+    	else if(type == APIType.WebSockets){
+			endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
+			endpoint.protocol = Protocol.WebSockets;
 		}
+		this.LogicApi.options.endpoints = [endpoint];
 	}
-
-	destroySelf = () => {
-		super.destroySelf();
-		this.LogicApi.destroy();
-		this.destroyComponent();
-	}
-
 
 	ngAfterViewInit(): void {
-		super.Init();
+		super.Init(this.conn);
   	}
 
 	public getLogicComponent(){
@@ -187,7 +163,5 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		return null;
 	}
 
-	ngOnInit(){
-
-	}
+	ngOnInit(){}
 }

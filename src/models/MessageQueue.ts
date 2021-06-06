@@ -1,11 +1,10 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
-import { Options } from "./Options";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { Endpoint, EndpointRef, MQEndpoint } from "./Endpoint";
-import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
+import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
@@ -40,18 +39,15 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     async receiveData(data: RequestData) {
         //console.log("Message Queue got data: ",data);
         if(data.requestId == "" || data.requestId == null )
-        {
-            throw new Error("requestId can not be null. Please specify property requestId of RequestData")
-        }
+            throw new Error("requestId can not be null. Please specify property requestId of RequestData");
 
         this.fireReceiveData(data);
 
         // Put data to queue 
         data.header.stream = false;
         this.messages.push(data);
-        if(!this.isSendingData){
+        if(!this.isSendingData)
             this.sendToConsumer();
-        }
 
         // Return response to publisher
         let response = new RequestData();
@@ -64,9 +60,8 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     }
 
     async sendToConsumer(){
-        if(this.messages.length == 0 || this.outputPort.connections.length == 0){
+        if(this.messages.length == 0 || this.outputPort.connections.length == 0)
             return;
-        }
         this.isSendingData = true;
         await sleep(400);
 
@@ -78,12 +73,10 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
 
         this.sendData(message);
     
-        if(this.messages.length == 0){
+        if(this.messages.length == 0)
             this.isSendingData = false;
-        }
-        else {
+        else 
             this.sendToConsumer();
-        }
     }
 
     async sendData(data: RequestData){
@@ -94,53 +87,34 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     async roundRobin(data: RequestData){
         let nodesLength = this.outputPort.connections.length;
         this.roundRobinIndex++;
-        if(this.roundRobinIndex >= nodesLength){
+        if(this.roundRobinIndex >= nodesLength)
             this.roundRobinIndex = 0;
-        }
+
         data.origin = this.outputPort.connections[this.roundRobinIndex];
         await this.outputPort.sendData(data,data.origin);
     }
 
-    private receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
-    public onReceiveData(handler: Handler<ReceiveDataEvent>) {
-        this.receiveDataDispatcher.register(handler);
-    }
-    private fireReceiveData(event: ReceiveDataEvent) { 
-        this.receiveDataDispatcher.fire(event);
-    }
-
-    private showStatusCodeDispatcher = new EventDispatcher<ShowStatusCodeEvent>();
-    public onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        this.showStatusCodeDispatcher.register(handler);
-    }
-    private fireShowStatusCode(event: ShowStatusCodeEvent) { 
-        this.showStatusCodeDispatcher.fire(event);
-    }
-
-    onConnectionRemove(wasOutput: boolean = false){
+    onConnectionUpdate(wasOutput: boolean = false){
         this.sendToConsumer();
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
+    connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean) : Connection{
         if(connectingWithOutput){
             let conn = this.outputPort.connectTo(operator.getPort(connectingToOutput));
-            if(conn != null && operator instanceof API){
+            if(conn != null && operator instanceof API)
                 (operator as API).initiateConsumer(conn);
-            }
             return conn;
         }
         return this.inputPort.connectTo(operator.getPort(connectingToOutput));
     }
 
-    getPort(outputPort:boolean=false) : Port {
-        if(outputPort){
+    getPort(outputPort: boolean = false) : Port {
+        if(outputPort)
             return this.outputPort;
-        }
         return this.inputPort;
     }
 
-    getAvailableEndpoints(): Endpoint[]
-    {
+    getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
 

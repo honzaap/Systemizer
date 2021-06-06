@@ -1,69 +1,54 @@
-import { ViewChild } from '@angular/core';
+import { ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Client } from 'src/models/Client';
 import { Endpoint } from 'src/models/Endpoint';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
 import { HTTPMethod } from 'src/models/enums/HTTPMethod';
-import { HTTPStatus } from 'src/models/enums/HTTPStatus';
 import { Protocol } from 'src/models/enums/Protocol';
-import { RequestData } from 'src/models/RequestData';
+import { RequestData, RequestDataHeader } from 'src/models/RequestData';
 import { arrayEquals, sleep, UUID } from 'src/shared/ExtensionMethods';
 import { OperatorComponent } from '../Shared/OperatorComponent';
-
-
 
 @Component({
 	selector: 'client',
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
-		actionsRef: new ViewChild("actions"),
-		inputPortRef: new ViewChild("inputPort"),
-		outputPortRef: new ViewChild("outputPort")
+		actionsRef: new ViewChild("actions")
 	},
 	templateUrl: './client.component.html',
 	styleUrls: ['./client.component.scss']
 })
 export class ClientComponent  extends OperatorComponent implements OnInit{
 
-	// Logic
 	public LogicClient : Client = new Client();
-	data : RequestData;
 
 	availableEndpoints: Endpoint[] = [];
 	availableMethods: HTTPMethod[] = [];
 	protocol: Protocol;
 	canAutoSend: boolean = true;
 
+	canSend: boolean = false;
+	canEstabilishConnection: boolean = false;
+	canEndConnection: boolean = false;
+
 	@ViewChild("endpointSelect") endpointSelect;
 	@ViewChild("methodSelect") methodSelect;
+	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	isAutomaticSending = false;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService) 
-	{
-		super(placingService, selectionService);
-		this.LogicClient.onReceiveData((data:RequestData)=>{
-			this.data = data;
-			if(!this.comp.classList.contains("anim"))
-			{
-			  this.comp.classList.add("anim");
-			  setTimeout(()=>{
-				this.comp.classList.remove("anim");
-			  },500);
-			}
-		});
+	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver){
+		super(placingService, selectionService, resolver);
 	}
 
 	ngAfterViewInit(): void {
-		super.Init();
+		super.Init(this.conn);
   	}
 
-	ngOnInit(){
-	}
+	ngOnInit(){}
 
 	handleEndpointChange(){
 		this.LogicClient.options.endpointRef.method = this.LogicClient.options.endpointRef.endpoint.supportedMethods[0];
@@ -80,6 +65,9 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.availableEndpoints = this.LogicClient.getAvailableEndpoints();
 		if(this.availableEndpoints.length == 0){
 			this.availableMethods = [];
+			this.updateCanSendData();
+			this.updateCanEstabilishStream();
+			this.updateCanEndStream();
 			return;
 		}
 		if(currEdp != null && currMth != null){
@@ -105,6 +93,9 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 			this.LogicClient.options.endpointRef.method = this.availableMethods[0];
 		}
 		this.protocol = this.LogicClient.options.endpointRef.endpoint.protocol;
+		this.updateCanSendData();
+		this.updateCanEstabilishStream();
+		this.updateCanEndStream();
 	}
 
 	public handleClick(){
@@ -114,12 +105,6 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 	public getLogicComponent(){
 		return this.LogicClient;
-	}
-
-	destroySelf = () => {
-		super.destroySelf();
-		this.LogicClient.destroy();
-		this.destroyComponent();
 	}
 
 	async toggleAutomaticSend(){
@@ -132,59 +117,51 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		}
 	}
 
-	canSendData(){
-		let result = !(this.LogicClient.options.endpointRef.endpoint == null || 
-		((this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Server Streaming']) || 
-		(this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Client Streaming'] ||
-		this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Bidirectional Streaming'] || 
-		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
-		!this.LogicClient.options.isConnectedToEndpoint));
-		return result;
+	updateCanSendData(){
+		if(this.LogicClient.options.endpointRef.endpoint == null) {
+			this.canSend = false;
+			return;
+		}
+		this.canSend = this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode['Server Streaming'] && 
+			this.LogicClient.options.isConnectedToEndpoint || 
+			this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode.Unary && this.LogicClient.options.endpointRef.endpoint.protocol != Protocol.WebSockets;
 	}
 
-	canEstabilishStream(){
-		return this.LogicClient.options.endpointRef.endpoint != null && 
-		(this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Client Streaming'] || 
-		this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Server Streaming'] || 
-		this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Bidirectional Streaming'] ||
+	updateCanEstabilishStream(){
+		this.canEstabilishConnection = this.LogicClient.options.endpointRef.endpoint != null && 
+		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
 		!this.LogicClient.options.isConnectedToEndpoint
 	}
 
-	canEndStream(){
-		return this.LogicClient.options.endpointRef.endpoint != null && 
-		(this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Client Streaming'] || 
-		this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Server Streaming'] || 
-		this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode['Bidirectional Streaming'] ||
+	updateCanEndStream(){
+		this.canEndConnection = this.LogicClient.options.endpointRef.endpoint != null && 
+		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
 		this.LogicClient.options.isConnectedToEndpoint
 	}
 
 	async stream(){
 		await sleep(700);
-		if(!this.isAutomaticSending || !this.canSendData()) return true;
+		this.updateCanSendData()
+		if(!this.isAutomaticSending || !this.canSend) 
+			return true;
 		await this.sendData();
 		return await this.stream();
 	}
 
 	async sendData(){
 		let request = new RequestData();
-		request.header = { 
-			protocol: this.LogicClient.options.protocol,
-			endpoint: this.LogicClient.options.endpointRef
-		};
-		request.data = {
-			data: this.LogicClient.options.data
-		};
-		request.origin = this.LogicClient.port.connections[0];
+
+		request.header = new RequestDataHeader(this.LogicClient.options.endpointRef, this.LogicClient.options.protocol)
+		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
 		if(this.LogicClient.options.connectedId != null) {
 			request.requestId = this.LogicClient.options.connectedId;
 			request.header.stream = true;
 		}
-		else{
+		else
 			request.requestId = UUID();
-		}
 		let res = this.LogicClient.sendData(request);
 		this.updateSelection();
 		if(! (await res)){
@@ -194,20 +171,14 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	}
 
 	estabilishConnection(){
-		if(this.LogicClient.options.isConnectedToEndpoint) return;
+		if(this.LogicClient.options.isConnectedToEndpoint) 
+			return;
 		this.LogicClient.options.isConnectedToEndpoint = true;
 		
 		let id = UUID();
 		let request = new RequestData();
-		request.header = { 
-			protocol: this.LogicClient.options.protocol,
-			endpoint: this.LogicClient.options.endpointRef,
-			stream: true
-		};
-		request.data = {
-			data: this.LogicClient.options.data
-		};
-		request.origin = this.LogicClient.port.connections[0];
+		request.header = new RequestDataHeader(this.LogicClient.options.endpointRef, this.LogicClient.options.protocol, true);
+		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
 		request.requestId = id;
 		this.LogicClient.options.connectedId = id;
@@ -217,20 +188,15 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	}
 
 	async endConnection(){
-		if(!this.LogicClient.options.isConnectedToEndpoint) return;
+		if(!this.LogicClient.options.isConnectedToEndpoint) 
+			return;
 		
 		let id = this.LogicClient.options.connectedId;
-		if(id == null) return;
+		if(id == null) 
+			return;
 		let request = new RequestData();
-		request.header = { 
-			protocol: this.LogicClient.options.protocol,
-			endpoint: this.LogicClient.options.endpointRef,
-			stream: false
-		};
-		request.data = {
-			data: this.LogicClient.options.data
-		};
-		request.origin = this.LogicClient.port.connections[0];
+		request.header = new RequestDataHeader(this.LogicClient.options.endpointRef, this.LogicClient.options.protocol, false);
+		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
 		request.requestId = id;
 		this.LogicClient.options.connectedId = null;

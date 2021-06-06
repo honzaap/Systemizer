@@ -11,6 +11,7 @@ export class Port{
     parent: IDataOperator;
     isOutput:boolean;
     hasMultipleConnections:boolean;
+
     /**
      * 
      * @param parent: parent of port
@@ -25,21 +26,21 @@ export class Port{
      * sendData: sends data to connection property
      */
     public async sendData(data: RequestData, target: Connection = null) {
-        if(this.connections.length == 0) return false;
+        if(this.connections.length == 0) 
+            return false;
         if(this.hasMultipleConnections){
-            if(target == null){
+            if(target == null)
                 await this.connections[0].sendData(data, this);
-            }
             else{
                 let idx = this.connections.indexOf(target);
-                if(idx == -1) return false;
+                if(idx == -1) 
+                    return false;
                 await this.connections[idx].sendData(data, this);
             }
         }
         else{
-            if(this.connections.length > 0){
+            if(this.connections.length > 0)
                 await this.connections[0].sendData(data, this);
-            }
         }
         return true;
     }
@@ -50,30 +51,26 @@ export class Port{
     public async receiveData(data: RequestData) {
         await sleep(180);
         await this.parent.receiveData(data,this.isOutput);
-        //setTimeout(()=>{this.parent.receiveData(data,this.isOutput);},180);
     }
 
     /**
      * connectTo: connects this port to given port via Connection class
      */
     public connectTo(port: Port) : Connection {
-        console.log(`${this.parent.options.title} has multiple: ${this.hasMultipleConnections}`);
-        if(this.hasMultipleConnections){
-            if(!this.isConnectedTo(port)){
+        if(!this.isConnectedTo(port)){
+            if(this.hasMultipleConnections){
                 let connection = new Connection(this, port);
                 this.connections.push(connection);
                 port.connectWith(connection);
-                this.parent.onConnectionRemove(this.isOutput);
+                this.parent.onConnectionUpdate(this.isOutput);
                 return connection;
             }
-        }
-        else{
-            if(!this.isConnectedTo(port)){
+            else{
                 let connection = new Connection(this, port);
                 this.removeConnections(false);
                 this.connections  = [connection];
                 port.connectWith(connection); 
-                this.parent.onConnectionRemove(this.isOutput);
+                this.parent.onConnectionUpdate(this.isOutput);
                 return connection;
             }
         }
@@ -84,36 +81,33 @@ export class Port{
      * connectWith: connects this port to given connection
      */
     public connectWith(connection: Connection) {
-        console.log(`${this.parent.options.title} has multiple: ${this.hasMultipleConnections}`);
         if(this.hasMultipleConnections){
             this.connections.push(connection);
-            this.parent.onConnectionRemove(this.isOutput);
         }
         else{
             this.removeConnections(false);
             this.connections = [connection];
-            this.parent.onConnectionRemove(this.isOutput);
         }
+        this.parent.onConnectionUpdate(this.isOutput);
     }
 
     public removeConnection(connection: Connection, removeFromOther:boolean = false, triggerOnRemove:boolean = true){
-        let idx = 0;
-        let was = false;
+        let connectionIndex = 0;
+        let hasConnection = false;
         for(let connected of this.connections){
             if(connection === connected){
-                was=true;
+                hasConnection=true;
                 break;
             }
-            idx++;
+            connectionIndex++;
         }
-        if(was){
-            this.fireRemoveConnection(this.connections[idx]);
-            if(removeFromOther)this.connections[idx].getOtherPort(this).removeConnection(this.connections[idx]);
-            this.connections.splice(idx,1);
+        if(hasConnection){
+            this.fireRemoveConnection(this.connections[connectionIndex]);
+            if(removeFromOther)this.connections[connectionIndex].getOtherPort(this).removeConnection(this.connections[connectionIndex]);
+            this.connections.splice(connectionIndex,1);
         }
-        if(triggerOnRemove){
-            this.parent.onConnectionRemove(this.isOutput);
-        }
+        if(triggerOnRemove)
+            this.parent.onConnectionUpdate(this.isOutput);
     }
 
     public removeConnections(triggerOnRemove = true){
@@ -121,9 +115,8 @@ export class Port{
         while(this.connections.length > 0){
             this.removeConnection(this.connections[0], true, false);
         }
-        if(triggerOnRemove && removed){
-            this.parent.onConnectionRemove(this.isOutput);
-        }
+        if(triggerOnRemove && removed)
+            this.parent.onConnectionUpdate(this.isOutput);
     }
 
     /**
@@ -131,7 +124,8 @@ export class Port{
      */
     public isConnectedTo(port: Port) : boolean {
         for(let connecion of this.connections){
-            if(connecion.getOtherPort(this) === port) return true;
+            if(connecion.getOtherPort(this) === port) 
+                return true;
         }
         return false;
     }

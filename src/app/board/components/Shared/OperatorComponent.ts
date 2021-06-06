@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from "@angular/core";
+import { ComponentFactoryResolver, ElementRef, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
@@ -21,10 +21,9 @@ interface Position{
     left: number;
 }
 
-
 export class OperatorComponent {
 
-    board : HTMLElement;
+    board: HTMLElement;
 	comp: HTMLElement
 
 	public HTTPMethod: typeof HTTPMethod = HTTPMethod;
@@ -50,9 +49,11 @@ export class OperatorComponent {
 
     public placingService: PlacingService;
     private selectionService: SelectionService;
+	private resolver: ComponentFactoryResolver;
+
+	conn: ViewContainerRef;
 
     public anchorMouseOffset: Position;
-	//public anchorPosition: Position;
 	public anchorRef!: ElementRef;
 
 	private LogicComponent: IDataOperator;
@@ -61,35 +62,28 @@ export class OperatorComponent {
 	public inputPortRef: PortComponent;
 	public outputPortRef: PortComponent;
 
-	difX = 0;
-	difY = 0;
-	maxX = 0;
-	maxY = 0;
+	private maxX = 0;
+	private maxY = 0;
 
-	prevX = 0;
-	prevY = 0;
+	private prevX = 0;
+	private prevY = 0;
 
-	public anchorRect : any;
+	public anchorRect: any;
 
-    constructor(placingService : PlacingService, selectionService: SelectionService) 
-	{
-        this.placingService = placingService;
+    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
+		this.placingService = placingService;
         this.selectionService = selectionService;
-		/*this.anchorPosition = {
-			left: 20,
-			top: 20
-		};*/
+		this.resolver = resolver
 	}
 
-  	public handleMousedown( event: MouseEvent ) : void {
-		if(this.placingService.isConnecting) return;
+  	public handleMousedown(event: MouseEvent): void {
+		if(this.placingService.isConnecting) 
+			return;
 		this.placingService.startPlacing();
 
 		event.preventDefault();
 
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
-		this.difX = window.innerWidth - this.board.clientWidth;
-		this.difY = window.innerHeight - this.board.clientHeight;
 		this.maxX = this.board.clientWidth;
 		this.maxY = this.board.clientHeight;
 
@@ -100,19 +94,19 @@ export class OperatorComponent {
 		window.addEventListener( "mouseup", this.handleMouseup );
 	}
 
-  	public handleMousemove = ( event: MouseEvent ): void => {
+  	public handleMousemove = (event: MouseEvent): void => {
 		this.setPosition(this.LogicComponent.options.X - (this.prevX - event.clientX) / this.placingService.boardScale, this.LogicComponent.options.Y -  (this.prevY - event.clientY) / this.placingService.boardScale);
 
 		this.prevX = event.clientX;
 		this.prevY = event.clientY;
 	}
 
-	public setPosition(x:number,y:number){
+	public setPosition(x: number, y: number){
 		this.LogicComponent.options.X =  Math.max(Math.min( this.maxX - this.anchorRect.width / this.placingService.boardScale,x), 0);
 		this.LogicComponent.options.Y = Math.max(Math.min( this.maxY - this.anchorRect.height / this.placingService.boardScale, y), 0);
 	}
 
-	public handleMouseup = () : void => {
+	public handleMouseup = (): void => {
 		this.placingService.stopPlacing();
 
 		this.board.removeEventListener( "mousemove", this.handleMousemove );
@@ -123,17 +117,15 @@ export class OperatorComponent {
 		this.selectionService.setSelection(this);
 	}
 
-	public getLogicComponent() : IDataOperator{
+	public getLogicComponent(): IDataOperator{
 		return null;
 	}
 
 	public getPortComponent(getOutput = false){
-		if(getOutput){
+		if(getOutput)
 			return this.outputPortRef.getPortComponent();
-		}
-		else{
+		else
 			return this.inputPortRef.getPortComponent();
-		}
 	}
 
 	public onViewInit = () => {}
@@ -154,10 +146,7 @@ export class OperatorComponent {
 		return this.actionsRef;
 	}
 
-	destroySelf(){
-	}
-
-	destroyComponent = () =>{}
+	destroyComponent = () => {}
 
 	changeTitle(title: string){
 		this.LogicComponent.options.title = title;
@@ -167,47 +156,79 @@ export class OperatorComponent {
 		let span = document.createElement("span");
 		span.classList.add("status-code-side");
 		let type: string;
-		if(code >= 0 && code < 1000){
-			if(code >= 100 && code < 200){
+		if(code >= 0 && code < 1000){ // Classic status codes 
+			if(code >= 100 && code < 200)
 				type = "info";
-			}
-			else if(code >= 200 && code < 300){
+			else if(code >= 200 && code < 300)
 				type = "success";
-			}
-			else if(code >= 300 && code < 400){
+			else if(code >= 300 && code < 400)
 				type = "warning";
-			}
-			else if(code >= 400 && code < 500){
+			else if(code >= 400 && code < 500)
 				type = "error";
-			}
-			else{
+			else
 				type = "error";
-			}
 			span.innerHTML = `<span class="code ${type}">${code}</span><br/>${HTTPStatus[code]}`;
 		}
-		else if(code >= 1000 && code < 2000){
-			// Cache status codes 
-			if(code == 1200){
+		else if(code >= 1000 && code < 2000){ // Cache status codes
+			if(code == 1200)
 				span.innerHTML = `<span class="code success">HIT</span>`;
-			}
-			else if(code == 1404){
+			else if(code == 1404)
 				span.innerHTML = `<span class="code error">MISS</span>`;
-			}
 		}
 		this.anchorRef.nativeElement.appendChild(span);
-		setTimeout(()=>{
+		setTimeout(() => {
 			this.anchorRef.nativeElement.removeChild(span);
 		}, 1500);
 	}
 
-	Init(): void {
+	destroySelf = () => {
+		this.LogicComponent.destroy();
+		this.destroyComponent();
+	}
+
+	Init(conn: ViewContainerRef): void {
+		this.conn = conn;
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
 		this.comp = this.anchorRef.nativeElement;
 		this.LogicComponent.onShowStatusCode((code:HTTPStatus)=>{
 			this.showStatusCode(code);
 		});
-		this.onViewInit();
+
+		this.LogicComponent.onReceiveData((data) => {
+			if(!this.comp.classList.contains("anim")){
+				this.comp.classList.add("anim");
+				setTimeout(()=>{
+					this.comp.classList.remove("anim");
+				},500);
+			}
+    	});
+
+		let inputPort = this.LogicComponent["inputPort"];
+		let outputPort = this.LogicComponent["outputPort"];
+
+		if(this.conn == null) return;
+
+		if(inputPort != null){
+			let factory  = this.resolver.resolveComponentFactory(PortComponent);
+			let ref = this.conn.createComponent(factory);
+
+			ref.instance.LogicParent = this.LogicComponent;
+			ref.instance.LogicParent = this.LogicComponent;
+			ref.location.nativeElement.classList.add("left");
+
+			this.inputPortRef = ref.instance;
+		}
+		if(outputPort != null){
+			let factory  = this.resolver.resolveComponentFactory(PortComponent);
+			let ref = this.conn.createComponent(factory);
+
+			ref.instance.IsOutput = true
+			ref.instance.LogicParent = this.LogicComponent;
+			ref.location.nativeElement.classList.add("right");
+
+			this.outputPortRef = ref.instance
+		}
 	}
 
 	formatMethod(method: HTTPMethod, isDatabase: boolean){

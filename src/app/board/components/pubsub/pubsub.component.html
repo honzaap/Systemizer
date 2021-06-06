@@ -9,11 +9,10 @@ class="anchor component"
 [style.left.px]="LogicPubSub.options.X"
 [style.top.px]="LogicPubSub.options.Y"
 >
+    <template #conn></template>
     <div class="img-container">
         <img src="../../../../assets/pubsub.svg">
     </div>   
-    <port #inputPort class="left" [LogicParent]="LogicPubSub"></port>
-    <port #outputPort class="right" [LogicParent]="LogicPubSub" [IsOutput]="true" ></port>
 </div>
 <div style="display:none">
     <div #options>
