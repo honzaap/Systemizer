@@ -1,9 +1,8 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData, RequestDataHeader } from "./RequestData";
 import { Options } from "./Options";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { UUID } from "src/shared/ExtensionMethods";
 import { Endpoint } from "./Endpoint";
 import { HTTPMethod } from "./enums/HTTPMethod";
@@ -11,8 +10,7 @@ import { HTTPStatus } from "./enums/HTTPStatus";
 import { ReplacementPolicy } from "./enums/ReplacementPolicy";
 import { WritePolicy } from "./enums/WritePolicy";
 import { LogicComponent } from "./LogicComponent";
-
-interface ReceiveDataEvent { }
+import { Database } from "./Database";
 
 export class Cache extends LogicComponent implements IDataOperator{
 
@@ -112,15 +110,13 @@ export class Cache extends LogicComponent implements IDataOperator{
         await this.inputPort.sendData(response, targetConnection);
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        if(connectingWithOutput)
-            return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        else
-            return this.inputPort.connectTo(operator.getPort(connectingToOutput));
-    }
-
-    getPort(outputPort:boolean=false) : Port {
-        return outputPort ? this.outputPort : this.inputPort;
+    canConnectTo(port: Port, connectingWithOutput: boolean){
+        if(!super.canConnectTo(port, connectingWithOutput))
+            return false;
+        // Output of cache can connect only to database
+        if(!connectingWithOutput)
+            return true;
+        return port.parent instanceof Database;
     }
 
     getAvailableEndpoints(): Endpoint[]

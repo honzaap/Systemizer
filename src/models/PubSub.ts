@@ -1,15 +1,12 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { Endpoint, MQEndpoint } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
-
-interface ReceiveDataEvent { }
 
 export class PubSub extends EndpointOperator implements IDataOperator{
 
@@ -76,19 +73,27 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     }
 
     connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean) : Connection{
+        let otherPort = operator.getPort(connectingToOutput);
+        if(!this.canConnectTo(otherPort, connectingWithOutput)) 
+            return null;
+        if(!operator.canConnectTo(this.getPort(connectingWithOutput), connectingToOutput)) 
+            return null; 
         if(connectingWithOutput){
-            let conn = this.outputPort.connectTo(operator.getPort(connectingToOutput));
+            let conn = this.outputPort.connectTo(otherPort);
             if(conn != null && operator instanceof API)
                 (operator as API).initiateConsumer(conn, true);
             return conn;
         }
-        return this.inputPort.connectTo(operator.getPort(connectingToOutput));
+        return this.inputPort.connectTo(otherPort);
     }
 
-    getPort(outputPort:boolean = false) : Port {
-        if(outputPort)
-            return this.outputPort;
-        return this.inputPort;
+    canConnectTo(port: Port, connectingWithOutput: boolean){
+        if(!super.canConnectTo(port, connectingWithOutput))
+            return false;
+        // Output of PubSun can connect only to API  
+        if(!connectingWithOutput)
+            return true;
+        return port.parent instanceof API;
     }
 
     getAvailableEndpoints(): Endpoint[]{

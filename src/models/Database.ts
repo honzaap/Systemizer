@@ -1,16 +1,13 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData, RequestDataHeader } from "./RequestData";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { UUID } from "src/shared/ExtensionMethods";
 import { Protocol } from "./enums/Protocol";
 import { DatabaseEndpoint, Endpoint, EndpointRef } from "./Endpoint";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { DatabaseType } from "./enums/DatabaseType";
-
-interface ReceiveDataEvent { }
 
 export class Database extends EndpointOperator implements IDataOperator{
 
@@ -87,15 +84,13 @@ export class Database extends EndpointOperator implements IDataOperator{
         await this.inputPort.sendData(response, targetConnection);
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        if(connectingWithOutput)
-            return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        else
-            return this.inputPort.connectTo(operator.getPort(connectingToOutput));
-    }
-
-    getPort(outputPort:boolean=false) : Port {
-        return outputPort ? this.outputPort : this.inputPort;
+    canConnectTo(port: Port, connectingWithOutput: boolean){
+        if(!super.canConnectTo(port, connectingWithOutput))
+        return false;
+        // Output of database can connect only to database shard of the same type
+        if(!connectingWithOutput)
+            return true;
+        return port.parent instanceof Database && this.options.isMasterShard && port.parent.options.isShard && port.parent.options.type == this.options.type;
     }
 
     getAvailableEndpoints(): Endpoint[]

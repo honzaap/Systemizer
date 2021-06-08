@@ -1,8 +1,7 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData, RequestDataHeader } from "./RequestData";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
@@ -11,8 +10,6 @@ import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
-
-interface ReceiveDataEvent { }
 
 export class APIGateway extends EndpointOperator implements IDataOperator{
 
@@ -242,18 +239,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
 
         await this.sendData(data);
         await this.serverStream(data, streamingEndpoint);
-    }
-
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean): Connection{
-        if(connectingWithOutput)
-            return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        return this.inputPort.connectTo(operator.getPort(connectingToOutput));
-    }
-
-    getPort(outputPort:boolean=false): Port {
-        if(outputPort)
-            return this.outputPort;
-        return this.inputPort;
     }
 
     getAvailableEndpoints(): Endpoint[]{

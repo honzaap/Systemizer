@@ -4,7 +4,6 @@ import { Connection } from "./Connection";
 import { Endpoint } from "./Endpoint";
 import { LogicComponent } from "./LogicComponent";
 import { Options } from "./Options";
-import { Port } from "./Port";
 import { RequestData } from "./RequestData";
 import { Handler } from "./Shared/EventDispatcher";
 
@@ -27,13 +26,10 @@ export class TextField extends LogicComponent implements IDataOperator{
         return;
     }
     connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean): Connection {
-        throw new Error("Method not implemented.");
-    }
-    getPort(outputPort: boolean): Port {
-        throw new Error("Method not implemented.");
+        return null;
     }
     getAvailableEndpoints(): Endpoint[] {
-        throw new Error("Method not implemented.");
+        return [];
     }
     onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
         return;

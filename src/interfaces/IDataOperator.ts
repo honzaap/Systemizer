@@ -28,6 +28,11 @@ export interface IDataOperator{
     connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean): Connection;
 
     /**
+     * canConnectTo: return true if operator can connect to given port with wanted port
+     */
+    canConnectTo(port: Port, connectingWithOutput)
+
+    /**
      * getPort: returns property port
      */
     getPort(outputPort:boolean): Port;

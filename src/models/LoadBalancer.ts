@@ -1,4 +1,4 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Options } from "./Options";
@@ -156,18 +156,6 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
      * This method currently does nothing for LoadBalancer
      */
     sendData(request: RequestData): void {}
-
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        if(connectingWithOutput)
-            return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        return this.inputPort.connectTo(operator.getPort(connectingToOutput));
-    }
-
-    getPort(outputPort:boolean=false) : Port {
-        if(outputPort)
-            return this.outputPort;
-        return this.inputPort;
-    }
 
     getAvailableEndpoints(): Endpoint[]{
        let connectableEndpoints :Endpoint[] = [];

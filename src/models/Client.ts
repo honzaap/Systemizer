@@ -3,14 +3,11 @@ import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Options } from "./Options";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { Protocol } from "./enums/Protocol";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { arrayEquals, UUID } from "src/shared/ExtensionMethods";
 import { gRPCMode } from "./enums/gRPCMode";
 import { LogicComponent } from "./LogicComponent";
-
-interface ReceiveDataEvent { }
 
 export class Client extends LogicComponent implements IDataOperator{
 
@@ -20,7 +17,7 @@ export class Client extends LogicComponent implements IDataOperator{
 
     constructor() {
         super();
-        this.outputPort = new Port(this);        
+        this.outputPort = new Port(this, true, false);        
         this.options = new ClientOptions();
         this.options.title = "Client";
         this.originID = UUID();
@@ -48,14 +45,6 @@ export class Client extends LogicComponent implements IDataOperator{
         return await this.outputPort.sendData(data);
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-    }
-
-    getPort(outputPort:boolean=false) : Port {
-        return this.outputPort;
-    }
-    
     getAvailableEndpoints(): Endpoint[]
     {
         let availableEndpoints :Endpoint[] = [];

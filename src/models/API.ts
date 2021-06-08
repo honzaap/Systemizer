@@ -1,8 +1,7 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData, RequestDataHeader } from "./RequestData";
 import { Port } from "./Port";
-import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
@@ -13,8 +12,6 @@ import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
 import { MessageQueue } from "./MessageQueue";
 import { PubSub } from "./PubSub";
-
-interface ReceiveDataEvent { }
 
 export class API extends EndpointOperator implements IDataOperator{
 
@@ -227,10 +224,15 @@ export class API extends EndpointOperator implements IDataOperator{
         await this.stream(data, streamingEndpoint);
     }
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
+    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean): Connection{
+        let otherPort = operator.getPort(connectingToOutput);
+        if(!this.canConnectTo(otherPort, connectingWithOutput)) 
+            return null;
+        if(!operator.canConnectTo(this.getPort(connectingWithOutput), connectingToOutput)) 
+            return null;
         if(connectingWithOutput)
-            return this.outputPort.connectTo(operator.getPort(connectingToOutput));
-        let conn = this.inputPort.connectTo(operator.getPort(connectingToOutput));
+            return this.outputPort.connectTo(otherPort);
+        let conn = this.inputPort.connectTo(otherPort);
         if(conn != null && this.isConsumableOperator(operator))
             this.initiateConsumer(conn, operator instanceof PubSub);
         return conn;
@@ -253,12 +255,6 @@ export class API extends EndpointOperator implements IDataOperator{
 
     isConsumableOperator(operator: IDataOperator): boolean{
         return operator instanceof MessageQueue || operator instanceof PubSub;
-    }
-
-    getPort(outputPort:boolean=false): Port {
-        if(outputPort)
-            return this.outputPort;
-        return this.inputPort;
     }
 
     getAvailableEndpoints(): Endpoint[]{
