@@ -4,19 +4,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
-import { HeaderComponent } from './header/header.component';
+import { HeaderComponent } from './board/header/header.component';
 import { ClientComponent } from './board/components/client/client.component';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
 import { WebserverComponent } from './board/components/webserver/webserver.component';
 import { LoadbalancerComponent } from './board/components/loadbalancer/loadbalancer.component';
-import { ComponentmenuComponent } from './componentmenu/componentmenu.component';
+import { ComponentmenuComponent } from './board/componentmenu/componentmenu.component';
 
 import { VueEventModifiersPlugin } from "../shared/vue-event-modifiers.plugin";
 import { EVENT_MANAGER_PLUGINS } from "@angular/platform-browser";
 
 import { DelayedHoverDirective } from "../shared/DelayedHoverDirective";
-import { OptionsmenuComponent } from './optionsmenu/optionsmenu.component';
+import { OptionsmenuComponent } from './board/optionsmenu/optionsmenu.component';
 import { ApiComponent } from './board/components/api/api.component'
 
 import { MatSelectModule } from "@angular/material/select"
@@ -33,6 +33,10 @@ import { DatabaseComponent } from './board/components/database/database.componen
 import { CacheComponent } from './board/components/cache/cache.component';
 import { MessagequeueComponent } from './board/components/messagequeue/messagequeue.component';
 import { PubsubComponent } from './board/components/pubsub/pubsub.component';
+import { CreateComponent } from './create/create.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FooterComponent } from './landing-page/footer/footer.component';
+import { LandingHeaderComponent } from './landing-page/header/header.component';
 
 
 @NgModule({
@@ -56,6 +60,10 @@ import { PubsubComponent } from './board/components/pubsub/pubsub.component';
     CacheComponent,
     MessagequeueComponent,
     PubsubComponent,
+    CreateComponent,
+    LandingPageComponent,
+    FooterComponent,
+    LandingHeaderComponent
   ],
   imports: [
     BrowserModule,

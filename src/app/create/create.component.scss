@@ -1,0 +1,14 @@
+@import "../../colors";
+
+.page{
+    height: 100vh;
+    display: flex;
+    background-color: $bg-purple-darker;
+    flex-flow:column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+.page > app-board{
+    flex-grow: 1;
+    flex-shrink: 1;
+}

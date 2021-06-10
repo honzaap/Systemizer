@@ -1,0 +1,83 @@
+@import "../../../colors";
+
+footer{
+    font-size: 0.8rem;
+    background-color: $bg-purple-darker;
+    padding: 8em 1em 1em;
+    display: flex;
+    color: #fff;
+    gap: 0.5em;
+    clip-path: polygon(0 0, 0% 100%, 700px 100%);
+    & .logo{
+        width: 70%;
+        margin: 0 auto;
+    }
+    & .about{
+        display: flex;
+        flex-flow: column nowrap;
+        width: 7em;
+        & p{
+            font-size: 0.8em;
+        }
+    }
+    & .links{
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 1em;
+        & a{
+            font-size: 0.9em;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+    & .links-other{
+        font-size: 1.4em;
+    }
+}
+.link-icon{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+}
+@media (max-width: 1024px){
+    footer{
+        clip-path: none;
+        padding-top: 1em;
+        & .logo{
+            width: 5em;
+        }
+        & .about{
+            width: 10em;
+        }
+        & .links{
+            flex-flow: row wrap;
+            gap: 0;
+            & > div{
+                flex-basis: 50%;
+            }
+            & a{
+                font-size: 0.9em;
+                &:hover{
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px){
+    footer{
+        flex-flow: column nowrap;
+        align-items: center;
+        padding-bottom: 3em;
+        & .about{
+            width: 70%;
+        }
+        & .links{
+            & > div{
+                margin-top: 1em;
+            }
+        }
+    }
+}

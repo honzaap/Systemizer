@@ -1,0 +1,209 @@
+@import "../../colors.scss"; 
+.page{
+    background-color: $bg-purple-dark;
+    color: #fefefe;
+    overflow-y: scroll;
+    height: 100vh;
+    max-height: 100vh;
+}
+.container{
+    width: 1000px;
+    margin: 2em auto;
+}
+.intro{
+    display: flex;
+    & .title{
+        flex-basis: 40%;
+        & h1{
+            width: 80%;
+            margin-bottom: 0.4em;
+        }
+    }
+}
+.info-free{
+    display: block;
+    text-align: right;
+}
+.components{
+    display: flex;
+    margin-top: 4em;
+    justify-content: space-evenly;
+    & > div{
+        flex-basis: 45%;
+    }
+    & .components-showcase{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        text-align: center;
+        & > div{
+            flex-basis: 30%;
+            margin-top: 1em;
+        }
+    }
+    & .component-container{
+        & .title{
+            font-size: 0.8em;
+            margin-bottom: 0.2em;
+            display: block;
+            color: #c0c0c0;
+        }
+    }
+    & .component-body{
+        background-color: $bg-purple-darker;
+        padding: 0.5em;
+        width: 3rem;
+        border-radius: 0.3em;
+        height: 3rem;
+        position: relative;
+        margin: 0 auto;
+        &.long{
+            width: 6rem;
+            & img{
+                margin-left: 1.5rem;
+            }
+        }
+        &.high{
+            height: 6rem;
+            & img{
+                margin-top: 1.5rem;
+            }
+            & .port{
+                top: 2.5rem;
+            }
+        }
+        &.mq{
+            display: flex;
+            flex-flow: row nowrap;
+            gap: 2px;
+        }
+        & .cell{
+            width: 0.55rem;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        & .port{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            border: 0.2rem solid $orange-light;
+            background-color: $bg-purple-darker;
+            position: absolute;
+            top: 1rem;
+            &.left{
+                left: -1.25rem;
+            }
+            &.right{
+                right: -1.25rem;
+            }
+        }
+    }
+}
+.get-started{
+    margin-top: 3.5em;
+    text-align: center;
+    & h4{
+        font-weight: normal;
+    }
+    .btn-purple{
+        margin: 1em auto;
+    }
+}
+.animation{
+    position: relative;
+    margin-left: 5em;
+    width: 17em;
+    & svg{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 11em;
+        width: 17em;
+        margin-top: -4em;
+        & path{
+            stroke: #df9300;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-dasharray: 3;
+            cursor: pointer;
+            pointer-events: all;
+        }
+        & #anim-data{
+            transform: translate(-10px, 0);
+            animation: data-anim 3s linear infinite;
+        }
+    }
+}
+.caption-dark{
+    margin-top: 0.7em;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+@keyframes data-anim {
+    0%, 20.001%, 30%, 50.001%, 60%, 80.001%, 100%{
+        transform: translate(-10px, 0);
+    }
+    10%, 40%, 70%{
+        transform: translate(35px, 0);
+    }
+    10.001%, 40.001%, 70.001%{
+        transform: translate(125px, 0);
+    }
+    20%{
+        transform: translate(170px, -75px);
+    }
+    50%{
+        transform: translate(170px, 0);
+    }
+    80%{
+        transform: translate(170px, 75px);
+    }
+
+}
+
+
+@media (max-width: 1024px){
+    .container{
+        width: 95%;
+    }
+    .intro{
+        flex-flow: column nowrap;
+        text-align: center;
+        & .title{
+            flex-basis: 100%;
+            & h1{
+                width: 100%;                
+            }
+        }
+        & .btn-purple{
+            margin: 0 auto;
+        }
+    }
+    .animation{
+        margin: 6em auto 0;
+    }
+    .components{
+        flex-flow: column nowrap;
+        text-align: center;
+        & .components-showcase{
+            margin-bottom: 2em;
+        }
+    }
+    .components-intro{
+        flex-flow: row nowrap;
+    }
+    .info-free{
+        text-align: center;
+    }
+}
+
+@media (max-width: 560px){
+    .components{
+        & .component-container{
+            flex-basis: 40% !important;
+        }
+    }
+}

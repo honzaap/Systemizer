@@ -1,8 +1,8 @@
 import { Renderer2, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { MessagequeueComponent } from '../board/components/messagequeue/messagequeue.component';
-import { TextfieldComponent } from '../board/components/textfield/textfield.component';
-import { SelectionService } from '../selection.service';
+import { SelectionService } from 'src/app/selection.service';
+import { MessagequeueComponent } from '../components/messagequeue/messagequeue.component';
+import { TextfieldComponent } from '../components/textfield/textfield.component';
 
 @Component({
 	selector: 'app-optionsmenu',
