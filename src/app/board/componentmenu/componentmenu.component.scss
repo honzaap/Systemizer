@@ -74,6 +74,7 @@
         justify-content: space-around;
         align-items: center;
         margin-top: 0.4em;
+        position: relative;
         & .section-item{
             background-color: $bg-purple-dark;
             border-radius: 0.4em;
@@ -89,6 +90,22 @@
             }
             & img{
                 vertical-align: bottom;
+            }
+            & .info{
+                position: absolute;
+                top: 0em;
+                right: 0em;
+                color: $purple-light;
+                height: 1em;
+                width: 1em;
+                outline: none;
+                border: 0;
+                background-color: transparent;
+                padding: 0;
+                cursor: pointer;
+                &:hover{
+                    transform: scale(1.2);
+                }
             }
             & .caption{
                 font-size: 0.575em;
@@ -179,5 +196,76 @@
         & img{
             vertical-align: bottom;
         }
+    }
+}
+.component-info-window{
+    color: #fff;
+    position: absolute;
+    top: 15%;
+    bottom: 30%;
+    right: 25%;
+    left: 25%;
+    backdrop-filter: blur(4px);
+    border: 0.1em solid $bg-purple-light;
+    box-shadow: 0px 0px 25px 2px #000;
+    padding: 2em;
+    overflow-y: scroll;
+    & .component-info-title{
+        margin-bottom: 0.5em;
+        display: block;
+        text-align: center;
+        font-size: 1.1em;
+    }
+    & .component-info-icon{
+        margin: 0 auto;
+        height: 4em;
+        width: 4em;
+        padding: 1em;
+        background-color: $bg-purple-darker;
+        border-radius: 0.8em;
+        margin-bottom: 2em;
+    }
+    & p{
+        margin: 1em 0;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 200;
+        font-size: 0.8em;
+    }
+    & .highlight{
+        color: $purple-dark;
+        font-weight: 400;
+    }
+    & .underline{
+        text-decoration: underline;
+    }
+    & .close{
+        outline: 0;
+        border: 0;
+        cursor: pointer;
+        position: absolute;
+        top: 0.25em;
+        right: 0.25em;
+        font-size: 1em;
+        color: #fff;
+        background-color: transparent;
+        width: 1.5em;
+        height: 1.5em;
+        transition: color 0.1s linear;
+        &:hover{
+            color: $purple-light;
+        }
+    }
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent
     }
 }

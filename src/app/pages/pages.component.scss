@@ -1,0 +1,9 @@
+@import "../../colors.scss"; 
+
+.page{
+    background-color: $bg-purple-dark;
+    color: #fefefe;
+    overflow-y: scroll;
+    height: 100vh;
+    max-height: 100vh;
+}

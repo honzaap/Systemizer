@@ -22,6 +22,7 @@
                 <div class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
                     <span class="caption">{{ item.mark }}</span>
                     <img src="{{ item.imageUrl }}">
+                    <button class="info" (click)="showInfo(item)"><i class="far fa-question-circle"></i></button>
                 </div>
                 <div class="section-item fill">
                 </div>
@@ -46,3 +47,11 @@
         <i class="fas fa-chevron-right"></i>
     </div>
 </ng-template>
+<div class="component-info-window" *ngIf="isInfoOpen">
+    <span class="component-info-title">{{currentInfoComponent.caption}}</span>
+    <div class="component-info-icon">
+        <img src="{{currentInfoComponent.imageUrl}}">
+    </div>
+    <div [innerHtml]="currentInfoComponent.info"></div>
+    <button class="close" (click)="closeInfo()"><i class="fas fa-times"></i></button>
+</div>

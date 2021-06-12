@@ -10,11 +10,16 @@
         width: 8em;
         color: $purple-light;
     }
-    & a{
+    & a, button{
+        background-color: transparent;
+        border: none;
+        outline: none;    
+        font-size: 1em;    
         color: $text-purple-light;
         transition: color 0.1s linear;
+        cursor: pointer;
     }
-    & a:hover{
+    & a:hover, button:hover{
         color: $text-purple-light2;
     }
 }

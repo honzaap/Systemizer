@@ -1,0 +1,122 @@
+@import "../../../../colors";
+
+.window{
+    height: 395px;
+    width: 360px;
+    border: 0.2em solid $orange-light;
+    background-color: $bg-purple-darker;
+    color: #e0e0e0;
+    position: relative;
+    font-size: 0.8em;
+    z-index: 1000;
+    display: flex;
+    flex-flow: column nowrap;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: bottom 0.2s ease-in-out;
+    & .progress{
+        position: absolute;
+        height: 1rem;
+        background-color: #c4c4c4;
+        top: -1.5rem;
+        left: 15%;
+        right: 15%; 
+        text-align: center;
+        color: $bg-purple-lighter;
+        font-weight: bold;
+        & .progress-bar{
+            height: 100%;
+            background-color: $orange-light;
+            position: absolute;
+        }
+        & .progress-text{
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+    }
+    & .window-controls{
+        position: absolute;
+        top: 0;
+        right: -1.7rem;
+        transition: top 0.5s ease-in-out, right 0.5s ease-in-out;
+        & button{
+            width: 1.2rem;
+            height: 1.2rem;
+            outline: none;
+            border: 0;
+            display: block;     
+            cursor: pointer;
+            &.close{
+                background-color: $purple-dark;
+                &:hover{
+                    background-color: $purple-light;
+                }
+            }
+            &.min{
+                transition: transform 0.5s ease-in-out;
+                background-color: $text-purple-light;
+                &:hover{
+                    background-color: lighten($text-purple-light, 10%);
+                }
+            }
+        }
+    }
+    & .content{
+        & img{
+            width: 100%;
+        }
+        & .title{
+            font-size: 1.2em;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.4em;
+        }
+        & .line{
+            width: 70%;
+            margin: 0.4em auto 0.8em;
+        }
+        .text{
+            padding: 0 0.8em 1em;
+        }
+    }
+    & .controls{
+        display: flex;
+        margin-top: auto;
+        padding: 0.5em;
+        & > button{
+            outline: none;
+            border: 0;
+            cursor: pointer;
+            padding: 0.5em;
+            width: 120px;
+            color: #fff;
+        }
+        & .prev{
+            margin-right: auto;
+            background-color: $text-purple-light;
+            &:hover{
+                background-color: lighten($text-purple-light, 10%);
+            }
+        }
+        & .next{
+            margin-left: auto;
+            background-color: $purple-dark;
+            &:hover{
+                background-color: $purple-light;
+            }
+        }
+    }
+    &.minimized{
+        bottom: -395px;
+        & .window-controls{
+            top: -1.6rem;
+            right: 0;
+            & .min{
+                transform: translate(100%, -100%);
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+<div class="window" [class.minimized]="isMinimized">
+    <div class="progress">
+        <div class="progress-bar" [style.width]="((currentSlideIndex+1)/slides.length)*100+'%'">
+        </div>
+        <span class="progress-text">{{currentSlideIndex+1+"/"+slides.length}}</span>
+    </div>
+    <div class="window-controls">
+        <button class="close" (click)="close()">
+            <i class="fas fa-times"></i>
+        </button>
+        <button class="min" (click)="toggleMinimize()">
+            <i *ngIf="!isMinimized" class="fas fa-minus"></i>
+            <i *ngIf="isMinimized" class="fas fa-chevron-up"></i>
+        </button>
+    </div>
+    <div class="content">
+        <div class="image">
+            <img src="../../../../assets/{{currentSlide.image}}">
+        </div>
+        <p class="title">{{currentSlide.title}}</p>
+        <hr class="line">
+        <p class="text">
+            {{currentSlide.text}}
+        </p>
+    </div>
+    <div class="controls">
+        <button class="prev" *ngIf="currentSlideIndex > 0" (click)="previous()">Previous</button>
+        <button class="next" *ngIf="currentSlideIndex < slides.length-1" (click)="next()">Next</button>
+        <button class="next" *ngIf="currentSlideIndex == slides.length-1" (click)="close()">Close</button>
+    </div>
+</div>

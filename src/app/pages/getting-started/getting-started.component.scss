@@ -1,0 +1,122 @@
+@import "../../../colors.scss"; 
+
+.container{
+    width: 1000px;
+    margin: 2em auto;
+}
+.container-inner{
+    width: 70%;
+    margin: 0 auto;
+}
+h1{
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+}
+h2{
+    text-align: center;
+    color: $text-purple-light2;
+    margin-bottom: 0.7em;
+    font-size: 1.25em;
+}
+p{
+    font-size: 0.9em;
+}
+img{
+    margin: 1em auto;
+    display: block;
+    &.gif{
+        width: 100%;
+    }
+}
+.highlight{
+    color: $orange-light;
+}
+.text-center{
+    text-align: center;
+}
+.section{
+    margin: 1em auto 2em;
+}
+a{
+    color: $purple-dark;
+    cursor: pointer;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+.small{
+    font-size: 0.8em;
+    color: #c7c7c7;
+}
+.ico-info{
+    position: absolute;
+    top: -0.1em;
+    right: -0.1em;
+    color: $purple-dark;
+    font-size: 0.8em;
+}
+.info-section{
+    display: flex;
+    align-items: center;
+    & p{
+        flex-basis: 70%;
+    }
+}
+.components{
+    margin-top: 0.5em;
+    margin-bottom: 4em;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    & > div{
+        flex-basis: 4em;
+        margin: 0 2em;
+        margin-top: 1.5em;
+        &.line{
+            flex-basis: 100%;
+        }
+    }
+    & .component-body{
+        background-color: $bg-purple-darker;
+        padding: 0.5em;
+        width: 3rem;
+        border-radius: 0.3em;
+        height: 3rem;
+        position: relative;
+        margin: 0 auto;
+        & img{
+            margin: 0;
+        }
+        & .port{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            border: 0.2rem solid $orange-light;
+            background-color: $bg-purple-darker;
+            position: absolute;
+            top: 1rem;
+            &.left{
+                left: -1.25rem;
+            }
+            &.right{
+                right: -1.25rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px){
+    .container{
+        width: 95%;
+    }
+}
+
+@media (max-width: 768px){
+    .container-inner{
+        width: 100%;
+    }
+    img{
+        width: 100%;
+    }
+}

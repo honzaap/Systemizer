@@ -5,13 +5,35 @@
                 <input spellcheck="false" autocomplete="off" type="text" class="navbar-name" id="navbar-name" value="Untitled System" />
             </li>
             <li>
-                <a href="#" class="nav-link" >File</a>
+                <button mat-icon-button [matMenuTriggerFor]="fileMenu" aria-label="File menu">
+                    File
+                </button>
+                <mat-menu #fileMenu="matMenu">
+                </mat-menu>
             </li>
             <li>
-                <a href="#" class="nav-link" >View</a>
+                <button mat-icon-button [matMenuTriggerFor]="viewMenu" aria-label="View menu">
+                    View
+                </button>
+                <mat-menu #viewMenu="matMenu">
+                </mat-menu>
             </li>
             <li>
-                <a href="#" class="nav-link" >Edit</a>
+                <button mat-icon-button [matMenuTriggerFor]="editMenu" aria-label="Edit menu">
+                    Edit
+                </button>
+                <mat-menu #editMenu="matMenu">
+                </mat-menu>
+            </li>
+            <li>
+                <button mat-icon-button [matMenuTriggerFor]="helpMenu" aria-label="Help menu">
+                    Help
+                </button>
+                <mat-menu #helpMenu="matMenu">
+                    <button mat-menu-item (click)="onboardTutorial1.emit()">
+                        <span>Quick introduction tutorial</span>
+                    </button>
+                </mat-menu>
             </li>
         </ul>
     </nav>

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'landing-header',
+  selector: 'pages-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class LandingHeaderComponent implements OnInit {
+export class PagesHeaderComponent implements OnInit {
 
   constructor() { }
 

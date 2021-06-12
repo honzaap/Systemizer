@@ -1,11 +1,5 @@
-@import "../../colors.scss"; 
-.page{
-    background-color: $bg-purple-dark;
-    color: #fefefe;
-    overflow-y: scroll;
-    height: 100vh;
-    max-height: 100vh;
-}
+@import "../../../colors.scss"; 
+
 .container{
     width: 1000px;
     margin: 2em auto;
@@ -18,6 +12,13 @@
             width: 80%;
             margin-bottom: 0.4em;
         }
+    }
+}
+a.highlight{
+    cursor: pointer;
+    color: $purple-dark;
+    &:hover{
+        text-decoration: underline;
     }
 }
 .info-free{

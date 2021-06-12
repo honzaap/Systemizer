@@ -20,7 +20,8 @@ import { OptionsmenuComponent } from './board/optionsmenu/optionsmenu.component'
 import { ApiComponent } from './board/components/api/api.component'
 
 import { MatSelectModule } from "@angular/material/select"
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule} from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field"
 import { ReactiveFormsModule } from '@angular/forms';
@@ -34,9 +35,12 @@ import { CacheComponent } from './board/components/cache/cache.component';
 import { MessagequeueComponent } from './board/components/messagequeue/messagequeue.component';
 import { PubsubComponent } from './board/components/pubsub/pubsub.component';
 import { CreateComponent } from './create/create.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
-import { FooterComponent } from './landing-page/footer/footer.component';
-import { LandingHeaderComponent } from './landing-page/header/header.component';
+import { PagesComponent } from './pages/pages.component';
+import { FooterComponent } from './pages/footer/footer.component';
+import { PagesHeaderComponent } from './pages/header/header.component';
+import { TutorialControlsComponent } from './board/tutorials/tutorial-controls/tutorial-controls.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import { GettingStartedComponent } from './pages/getting-started/getting-started.component';
 
 
 @NgModule({
@@ -61,9 +65,12 @@ import { LandingHeaderComponent } from './landing-page/header/header.component';
     MessagequeueComponent,
     PubsubComponent,
     CreateComponent,
-    LandingPageComponent,
+    PagesComponent,
     FooterComponent,
-    LandingHeaderComponent
+    PagesHeaderComponent,
+    TutorialControlsComponent,
+    GettingStartedComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +80,8 @@ import { LandingHeaderComponent } from './landing-page/header/header.component';
     ReactiveFormsModule,
     MatFormFieldModule,
     BrowserAnimationsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatMenuModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [
