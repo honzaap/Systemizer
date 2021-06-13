@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
-import { Endpoint, EndpointAction, EndpointRef } from 'src/models/Endpoint';
+import { Endpoint, EndpointAction } from 'src/models/Endpoint';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
