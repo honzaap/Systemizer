@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="loadbalancer.svg"
+   id="svg4"
+   version="1.1"
+   viewBox="0 0 20 20">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     inkscape:current-layer="g7"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:cy="11.151974"
+     inkscape:cx="5.985589"
+     inkscape:zoom="30.052038"
+     showgrid="false"
+     id="namedview6"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:document-rotation="0" />
+  <g
+     id="g7"
+     transform="matrix(0.34883924,0,0,0.34883315,-2.2760989,-3.5562619)"
+     style="fill:#ff6680;fill-opacity:1">
+    <path
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccccc"
+       d="M 63.857779,24.140844 H 50.957854 V 21.365569 L 46.95171,26.827794 45.109888,24.01378 26.929594,36.537385 h 15.42831 v -2.978269 l 8.59995,3.47723 V 31.888682 H 63.857779 V 45.83479 H 50.957854 v -5.149213 l -8.59995,3.47878 V 41.186088 H 26.93246 l 18.345127,12.522055 1.674123,-2.910088 4.006144,5.559849 V 53.582628 H 63.857779 V 67.528737 H 50.957854 V 61.953392 L 42.045439,59.635239 43.263765,56.83827 20.858029,41.169042 v 9.314451 H 6.5247789 V 27.239979 H 20.858029 v 9.312902 l 22.572002,-15.669228 -1.383159,-2.79542 8.910982,-2.319702 v -5.573795 h 12.899925 z"
+       style="fill:#df9300;fill-opacity:1;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path5" />
+  </g>
+</svg>
