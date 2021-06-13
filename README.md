@@ -2,6 +2,9 @@
 
 Systemizer is a system design tool used to create and simulate large scale distributed systems.
 
+### Want to try Systemizer?
+Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/">github pages</a>.
+
 ## Installation
 
 1) Clone repository to your local machine
