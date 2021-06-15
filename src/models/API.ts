@@ -152,14 +152,17 @@ export class API extends EndpointOperator implements IDataOperator{
             if(!this.isConsumableOperator(connection.getOtherPort(this.inputPort).parent)) 
                 bad_connection_indexes.push(i);
         }
+
         for(let i of bad_connection_indexes)
             this.inputPort.connections.splice(i, 1);
 
         let endpoints = (consumerConnection.getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints;
         if(subscriber){
             if(endpoints.length != 0){
-                if(this.options.isConsumer)
+                if(this.options.isConsumer){
+                    console.log("push")
                     this.options.endpoints.push(new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
+                }
                 else
                     this.options.endpoints = [ new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])];
             }
@@ -178,7 +181,11 @@ export class API extends EndpointOperator implements IDataOperator{
 
     onConnectionUpdate(wasOutput: boolean = false){
         // Remove consumer connection if the API is no longer a consumer
+        if(wasOutput)
+            return;
+        console.log("Update")
         if(this.options.isConsumer && !this.isConsumer()){
+            console.log("API is no longer a consumer");
             let conns = this.inputPort.connections.filter(c => this.isConsumableOperator(c.getOtherPort(this.inputPort).parent))
             for(let connection of conns)
                 this.inputPort.removeConnection(connection,true,false);
@@ -190,16 +197,28 @@ export class API extends EndpointOperator implements IDataOperator{
                 ep
             ]
         }
+        if(this.options.isSubscriber && !this.isSubscriber())
+            this.options.isSubscriber = false;
     }
 
     isConsumer(): boolean{
         if(this.inputPort.connections.length == 0)
-            return this.options.isConsumer;
+            return false;
         for(let conn of this.inputPort.connections){
             if(!this.isConsumableOperator(conn.getOtherPort(this.inputPort).parent))
                 return false;
         }
         return true;
+    }
+
+    isSubscriber(): boolean{
+        if(this.inputPort.connections.length == 0)
+            return false;
+        for(let conn of this.inputPort.connections){
+            if(conn.getOtherPort(this.inputPort).parent instanceof PubSub)
+                return true;
+        }
+        return false;
     }
 
     async sendData(response: RequestData) {
@@ -238,13 +257,13 @@ export class API extends EndpointOperator implements IDataOperator{
         return conn;
     }
 
-    getSubscribeableEndpoints(): Endpoint[]{
+    getConsumableEndpoints(): Endpoint[]{
         let endpoints = [];
         for(let connection of this.inputPort.connections){
             let operator = connection.getOtherPort(this.inputPort).parent;
-            if(operator instanceof PubSub){
-                for(let endpoint of operator.options.endpoints){
-                    if(endpoints.filter(ep => ep.url == endpoint.url).length == 0){
+            if(this.isConsumableOperator(operator)){
+                for(let endpoint of (operator.options as EndpointOptions).endpoints){
+                    if(endpoints.find(ep => ep.url == endpoint.url) == null){
                         endpoints.push(endpoint);
                     }
                 }
@@ -253,7 +272,7 @@ export class API extends EndpointOperator implements IDataOperator{
         return endpoints;
     }
 
-    isConsumableOperator(operator: IDataOperator): boolean{
+    private isConsumableOperator(operator: IDataOperator): boolean{
         return operator instanceof MessageQueue || operator instanceof PubSub;
     }
 

@@ -2,7 +2,7 @@ import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Port } from "./Port";
-import { Endpoint, MQEndpoint } from "./Endpoint";
+import { Endpoint } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
@@ -25,7 +25,7 @@ export class PubSub extends EndpointOperator implements IDataOperator{
         this.originID = UUID();
 
         this.options.endpoints = [
-            new MQEndpoint("post.postCreated")
+            new Endpoint("post.postCreated", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])
         ]
     }
 

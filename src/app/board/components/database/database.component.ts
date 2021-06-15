@@ -5,6 +5,7 @@ import { SelectionService } from 'src/app/selection.service';
 import { Database, DatabaseOptions } from 'src/models/Database';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { DatabaseEndpoint } from 'src/models/Endpoint';
+import { Port } from 'src/models/Port';
 
 @Component({
 	selector: 'database',
@@ -31,7 +32,11 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 
 	ngAfterViewInit(): void {
 		super.Init(this.conn);
-		this.getPortComponent();
+		this.LogicDatabase.onRemoveShard(()=>{
+			this.outputPortRef.destroySelf()
+			this.outputPortRef = null;
+		})
+		this.onViewInit();
 	}
 
 	ngOnInit(){}
@@ -53,7 +58,9 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 	}
 
 	shard(){
+		this.LogicDatabase.outputPort = new Port(this.LogicDatabase,true,true);
 		this.LogicDatabase.options.isMasterShard = true;
+		this.createPort(true);
 
 		let dirX = 0;
 		let dirY = 0;

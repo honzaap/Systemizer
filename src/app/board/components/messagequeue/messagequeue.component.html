@@ -29,7 +29,15 @@ class="anchor component"
 </div>
 <div style="display:none">
     <div #options>
-        <div class="options-container">
+        <div class="options-endpoints-container">
+            <div class="options-endpoints-top">
+                <span class="property-name">Endpoints:</span>
+            </div>
+            <div class="options-endpoints">
+                <div class="options-endpoint" *ngFor="let endpoint of this.LogicMessageQueue.options.endpoints">
+                    <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                </div>
+            </div>
         </div>
     </div>
 </div>

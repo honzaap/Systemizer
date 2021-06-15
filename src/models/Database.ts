@@ -8,6 +8,11 @@ import { DatabaseEndpoint, Endpoint, EndpointRef } from "./Endpoint";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { DatabaseType } from "./enums/DatabaseType";
+import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
+
+interface RemoveShardEvent{
+
+}
 
 export class Database extends EndpointOperator implements IDataOperator{
 
@@ -20,7 +25,7 @@ export class Database extends EndpointOperator implements IDataOperator{
     constructor() {
         super();
         this.inputPort = new Port(this,false,true);      
-        this.outputPort = new Port(this,true,true);      
+        this.outputPort = null;//new Port(this,true,true);      
         this.options = new DatabaseOptions();  
         this.options.title = "Database";
         this.originID = UUID();
@@ -74,7 +79,13 @@ export class Database extends EndpointOperator implements IDataOperator{
         await this.sendData(response);
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
+    onConnectionUpdate(wasOutput: boolean = false){
+        if(this.outputPort != null && this.outputPort.connections.length == 0){
+            this.options.isMasterShard = false;
+            this.outputPort = null;
+            this.fireRemoveShard({});
+        }
+    }
 
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
@@ -100,7 +111,17 @@ export class Database extends EndpointOperator implements IDataOperator{
 
     destroy(){
         this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
+        if(this.outputPort != null){
+            this.outputPort.removeConnections();
+        }
+    }
+
+    protected removeShardDispatcher = new EventDispatcher<RemoveShardEvent>();
+    public onRemoveShard(handler: Handler<RemoveShardEvent>) {
+        this.removeShardDispatcher.register(handler);
+    }
+    protected fireRemoveShard(event: RemoveShardEvent) { 
+        this.removeShardDispatcher.fire(event);
     }
 }
 

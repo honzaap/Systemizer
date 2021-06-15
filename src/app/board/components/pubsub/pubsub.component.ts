@@ -2,7 +2,8 @@ import { ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/
 import { Component, OnInit } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
-import { Endpoint, MQEndpoint } from 'src/models/Endpoint';
+import { Endpoint } from 'src/models/Endpoint';
+import { HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { PubSub } from 'src/models/PubSub';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
@@ -34,7 +35,7 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 	ngOnInit(){}
 
 	addEndpoint(){
-		this.LogicPubSub.options.endpoints.push(new MQEndpoint("topic.topicCreated"));
+		this.LogicPubSub.options.endpoints.push(new Endpoint("topic.topicCreated", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
 	}
 
 	removeEndpoint(endpoint: Endpoint){

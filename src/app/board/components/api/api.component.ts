@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRe
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
-import { Endpoint, EndpointAction } from 'src/models/Endpoint';
+import { Endpoint, EndpointAction, MQEndpoint } from 'src/models/Endpoint';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
@@ -25,7 +25,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	connectableEndpoints: Endpoint[] = [];
-	subscribeableEndpoints: Endpoint[] = [];
+	consumeableEndpoints: Endpoint[] = [];
 
 	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
 		super(placingService, selectionService, resolver);
@@ -101,26 +101,18 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 					endpoint.actions.splice(i,1);
 			}
 		}
-		if(this.LogicApi.options.isSubscriber){
-			this.subscribeableEndpoints = this.LogicApi.getSubscribeableEndpoints();
-			if(this.subscribeableEndpoints.length == 0){
-				this.LogicApi.options.endpoints = [];
-				return;
-			}
+		if(this.LogicApi.options.isConsumer){ // Remove consumed endpoint that are no longer available
+			this.consumeableEndpoints = this.LogicApi.getConsumableEndpoints();
 			let idx_arr = [];
 			for(let i = 0; i < this.LogicApi.options.endpoints.length; i++){
 				let endpoint = this.LogicApi.options.endpoints[i];
-				let ep = this.subscribeableEndpoints.find(x => x.url == endpoint.url);
+				let ep = this.consumeableEndpoints.find(x => x.url == endpoint.url);
 				if(ep == null) 
 					idx_arr.push(i);
 			}
 			for(let i = idx_arr.length-1; i>=0 ;i--)
 				this.LogicApi.options.endpoints.splice(idx_arr[i], 1);
 		}
-	}
-
-	isSubscribeable(endpoint: Endpoint){
-		return this.subscribeableEndpoints.find(ep => ep.url == endpoint.url) != null;
 	}
 
 	public handleProtocolChange(endpoint: Endpoint){

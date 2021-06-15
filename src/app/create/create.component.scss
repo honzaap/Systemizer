@@ -7,6 +7,12 @@
     flex-flow:column nowrap;
     justify-content: flex-start;
     align-items: stretch;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .page > app-board{
     flex-grow: 1;

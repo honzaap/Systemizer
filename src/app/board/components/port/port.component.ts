@@ -85,10 +85,10 @@ export class PortComponent implements OnInit {
 					this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
 					this.linePrevX = event.clientX;
 					this.linePrevY = event.clientY;
-					}
 				}
 			}
 		}
+	}
 	
 	public handleMouseUp(event: MouseEvent){
 		if(this.placingService.isConnecting){
@@ -96,4 +96,6 @@ export class PortComponent implements OnInit {
 				this.placingService.connectPorts(this,this.placingService.connectingPort);
 		}
 	}
+
+	destroySelf = () => {}
 }

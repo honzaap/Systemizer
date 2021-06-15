@@ -209,26 +209,30 @@ export class OperatorComponent {
 
 		if(this.conn == null) return;
 
-		if(inputPort != null){
-			let factory  = this.resolver.resolveComponentFactory(PortComponent);
-			let ref = this.conn.createComponent(factory);
+		if(inputPort != null)
+			this.createPort(false);
+		if(outputPort != null)
+			this.createPort(true);
+	}
 
-			ref.instance.LogicParent = this.LogicComponent;
-			ref.instance.LogicParent = this.LogicComponent;
-			ref.location.nativeElement.classList.add("left");
+	createPort(output = false){
+		let factory  = this.resolver.resolveComponentFactory(PortComponent);
+		let ref = this.conn.createComponent(factory);
 
+		ref.instance.IsOutput = output;
+		ref.instance.LogicParent = this.LogicComponent;
+		ref.instance.LogicPort = this.LogicComponent[output ? "outputPort" : "inputPort"];
+
+		ref.instance.destroySelf = () => {
+			ref.destroy();
+		}
+
+		ref.location.nativeElement.classList.add(output ? "right" : "left");
+
+		if(output)
+			this.outputPortRef = ref.instance;
+		else
 			this.inputPortRef = ref.instance;
-		}
-		if(outputPort != null){
-			let factory  = this.resolver.resolveComponentFactory(PortComponent);
-			let ref = this.conn.createComponent(factory);
-
-			ref.instance.IsOutput = true
-			ref.instance.LogicParent = this.LogicComponent;
-			ref.location.nativeElement.classList.add("right");
-
-			this.outputPortRef = ref.instance
-		}
 	}
 
 	formatMethod(method: HTTPMethod, isDatabase: boolean){
