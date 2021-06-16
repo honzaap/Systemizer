@@ -50,11 +50,11 @@ export class OptionsmenuComponent implements OnInit {
 	}
 
 	isSelectionTextField(){
-		return this.selectionService.currentSelection.constructor.name == TextfieldComponent.name;
+		return this.selectionService.currentSelection instanceof TextfieldComponent;
 	}
 	
 	isSelectionMQ(){
-		return this.selectionService.currentSelection.constructor.name == MessagequeueComponent.name;
+		return this.selectionService.currentSelection instanceof MessagequeueComponent;
 	}
 
 	change(e:Event, x, y){
