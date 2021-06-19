@@ -15,7 +15,7 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 	templateUrl: './textfield.component.html',
 	styleUrls: ['./textfield.component.scss']
 })
-export class TextfieldComponent  extends OperatorComponent implements OnInit{
+export class TextfieldComponent extends OperatorComponent implements OnInit{
 
 	public LogicTextField : TextField = new TextField();
   	private currentSelectionService: SelectionService

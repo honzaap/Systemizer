@@ -1,4 +1,4 @@
-import { IDataOperator, ReceiveDataEvent, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
+import { IDataOperator, ReceiveDataEvent, ShowStatusCodeEvent, FailedConnectEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
@@ -16,14 +16,19 @@ export class LogicComponent {
         // Any component must connect with either IN to OUT or OUT to IN
         if(connectingWithOutput){
             let outputPort = this["outputPort"];
-            if(outputPort != null) 
-                return !port.isOutput;
+            if(outputPort != null) {
+                if(!port.isOutput)
+                    return true;
+            }
         }
         else{
             let inputPort = this["inputPort"];
-            if(inputPort != null)
-                return port.isOutput;
+            if(inputPort != null) {
+                if(port.isOutput)
+                    return true;
+            }
         }
+        this.fireFailedConnect({message: "You can only connect input to output."});
         return false;
     }
 
@@ -47,5 +52,13 @@ export class LogicComponent {
     }
     protected fireShowStatusCode(event: ShowStatusCodeEvent) { 
         this.showStatusCodeDispatcher.fire(event);
+    }
+
+    protected failedConnectDispatcher = new EventDispatcher<FailedConnectEvent>();
+    public onFailedConnect(handler: Handler<FailedConnectEvent>) {
+        this.failedConnectDispatcher.register(handler);
+    }
+    protected fireFailedConnect(event: FailedConnectEvent) { 
+        this.failedConnectDispatcher.fire(event);
     }
 }

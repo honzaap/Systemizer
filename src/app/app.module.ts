@@ -41,6 +41,7 @@ import { PagesHeaderComponent } from './pages/header/header.component';
 import { TutorialControlsComponent } from './board/tutorials/tutorial-controls/tutorial-controls.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { GettingStartedComponent } from './pages/getting-started/getting-started.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { GettingStartedComponent } from './pages/getting-started/getting-started
     MatFormFieldModule,
     BrowserAnimationsModule,
     MatExpansionModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSnackBarModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [

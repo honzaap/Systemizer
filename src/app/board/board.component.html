@@ -36,3 +36,17 @@
     <svg class="svg-canvas" id="svg-canvas" >
     </svg>
 </div>
+<div class="loading" *ngIf="isLoading">
+    Loading...
+    <img src="./assets/logo.svg">
+</div>
+<div class="saving" *ngIf="isSaving" (click.self)="isSaving = false">
+    <div class="saving-inner">
+        <div class="name">
+            <label>File name</label>
+            <input spellcheck="false" required [(ngModel)]="saveFileName" placeholder="File name">
+        </div>
+        <button class="btn-purple" (click)="saveJson()">Download</button>
+        <button class="close" (click)="isSaving = false">×</button>
+    </div>
+</div>

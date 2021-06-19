@@ -122,10 +122,11 @@ export class OperatorComponent {
 	}
 
 	public getPortComponent(getOutput = false){
-		if(getOutput)
+		if(getOutput && this.outputPortRef != null)
 			return this.outputPortRef.getPortComponent();
-		else
+		else if(this.inputPortRef != null)
 			return this.inputPortRef.getPortComponent();
+		return null;
 	}
 
 	public onViewInit = () => {}
@@ -204,15 +205,21 @@ export class OperatorComponent {
 			}
     	});
 
+		this.LogicComponent.onFailedConnect((data) => {
+			this.placingService.showSnack(data.message);
+    	});
+
 		let inputPort = this.LogicComponent["inputPort"];
 		let outputPort = this.LogicComponent["outputPort"];
 
-		if(this.conn == null) return;
+		if(this.conn == null)
+			return;
 
 		if(inputPort != null)
 			this.createPort(false);
 		if(outputPort != null)
 			this.createPort(true);
+		this.onViewInit();
 	}
 
 	createPort(output = false){

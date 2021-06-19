@@ -116,7 +116,10 @@ export class Cache extends LogicComponent implements IDataOperator{
         // Output of cache can connect only to database
         if(!connectingWithOutput)
             return true;
-        return port.parent instanceof Database;
+        if(port.parent instanceof Database)
+            return true;
+        this.fireFailedConnect({message: "Output of Cache can only be connected to Database."});
+        return false;
     }
 
     getAvailableEndpoints(): Endpoint[]

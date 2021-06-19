@@ -2,13 +2,20 @@
     <nav class="nav">
         <ul class="nav-list">
             <li>
-                <input spellcheck="false" autocomplete="off" type="text" class="navbar-name" id="navbar-name" value="Untitled System" />
+                <input [(ngModel)]="name" spellcheck="false" autocomplete="off" type="text" class="navbar-name" id="navbar-name" />
             </li>
             <li>
                 <button mat-icon-button [matMenuTriggerFor]="fileMenu" aria-label="File menu">
                     File
                 </button>
                 <mat-menu #fileMenu="matMenu">
+                    <button mat-menu-item (click)="saveFile.emit(name)">
+                        <span>Save file</span>
+                    </button>
+                    <label class="file-form" mat-menu-item class="custom-file-upload">
+                        <input #file (input)="load(file)" type="file" accept=".json" style="position: absolute;width: 100%;height: 100%;opacity: 0;cursor: pointer;right: 0;z-index: 100;">
+                        Load file
+                    </label>
                 </mat-menu>
             </li>
             <li>

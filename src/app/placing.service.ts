@@ -4,6 +4,7 @@ import { ComponentRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
 
@@ -21,6 +22,7 @@ export class PlacingService{
 
 	connectingPort : PortComponent;
 	connectionRef : ViewContainerRef;
+	snackBar: MatSnackBar;
 
 	canDrag = () => { 
 		return !this.isPlacing && !this.isConnecting 
@@ -69,6 +71,13 @@ export class PlacingService{
 		this.connectingPort = null;
 	}
 
+	showSnack(message: string){
+		this.snackBar.open(message,"×", {
+			duration: message.length * 115,
+			horizontalPosition: "right",
+		});
+	}
+
 	copyItem(item: any, options: any){
 		if(item == null) 	
 			return;
@@ -79,7 +88,7 @@ export class PlacingService{
 	pasteItem(){
 		if(this.copiedItem != null){
 			let options = this.clone(this.copiedItemOptions);
-			this.createComponent(this.copiedItem, 300, 300, options);
+			return this.createComponent(this.copiedItem, 300, 300, options);
 		}
 	}
 

@@ -6,6 +6,7 @@ class="anchor component"
 [style.left.px]="LogicTextField.options.X "
 [style.top.px]="LogicTextField.options.Y" 
 >
+    <template #conn></template>
     <textarea [class.bold]="LogicTextField.options.isBold" [class.italic]="LogicTextField.options.isItalic" [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img"></textarea>
 </div>
 <div style="display:none">

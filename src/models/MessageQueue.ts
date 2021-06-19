@@ -116,8 +116,10 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         // Output of MQ can connect only to API  
         if(!connectingWithOutput)
             return true;
-        return port.parent instanceof API;
-    
+        if(port.parent instanceof API)
+            return true;
+        this.fireFailedConnect({message: "Output of a Message Queue can only be conencted to an API"});
+        return false;
     }
 
     getAvailableEndpoints(): Endpoint[]{

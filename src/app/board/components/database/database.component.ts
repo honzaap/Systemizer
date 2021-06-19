@@ -36,7 +36,6 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 			this.outputPortRef.destroySelf()
 			this.outputPortRef = null;
 		})
-		this.onViewInit();
 	}
 
 	ngOnInit(){}

@@ -97,11 +97,15 @@ export class Database extends EndpointOperator implements IDataOperator{
 
     canConnectTo(port: Port, connectingWithOutput: boolean){
         if(!super.canConnectTo(port, connectingWithOutput))
-        return false;
+            return false;
         // Output of database can connect only to database shard of the same type
         if(!connectingWithOutput)
             return true;
-        return port.parent instanceof Database && this.options.isMasterShard && port.parent.options.isShard && port.parent.options.type == this.options.type;
+        
+        if(port.parent instanceof Database && this.options.isMasterShard && port.parent.options.isShard && port.parent.options.type == this.options.type)
+            return true;
+        this.fireFailedConnect({message: "Output of a Database can only be connected to database shard of same type."});
+        return false;
     }
 
     getAvailableEndpoints(): Endpoint[]

@@ -420,6 +420,15 @@ mat-expansion-panel-header .mat-content{
 mat-expansion-panel .mat-expansion-panel-body{
     padding: 0.3em 0.4em 0.2em;
 }
+snack-bar-container{
+    color: #fff !important;
+    font-weight: 500;
+    background-color: $bg-purple-darker !important;
+    box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.4) !important;
+    & span {
+        font-size: 1.15em !important;
+    }
+}
 .mat-select-panel-wrap{
     box-shadow: 4px -7px 20px 7px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 28%), 0px 1px 10px 0px rgb(0 0 0 / 24%);
     & mat-option.mat-option{

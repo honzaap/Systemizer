@@ -7,6 +7,7 @@ import { Handler } from "src/models/Shared/EventDispatcher";
 
 export interface ShowStatusCodeEvent { }
 export interface ReceiveDataEvent { }
+export interface FailedConnectEvent { message: string; }
 
 export interface IDataOperator{
     options: Options;
@@ -44,6 +45,7 @@ export interface IDataOperator{
 
     onShowStatusCode(handler: Handler<ShowStatusCodeEvent>);
     onReceiveData(handler: Handler<ReceiveDataEvent>);
+    onFailedConnect(handler: Handler<FailedConnectEvent>);
 
     onConnectionUpdate(wasOutput: boolean);
 

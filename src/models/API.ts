@@ -107,7 +107,7 @@ export class API extends EndpointOperator implements IDataOperator{
 
                 for(let connection of this.outputPort.connections){
                     let endpoints = connection.getOtherPort(this.outputPort).parent.getAvailableEndpoints();
-                    if(endpoints.find(endpoint => endpoint.url == action.endpoint.url && arrayEquals(endpoint.supportedMethods,action.endpoint.supportedMethods)) != null ){
+                    if(action.endpoint != null && endpoints.find(endpoint => endpoint.url == action.endpoint.url && arrayEquals(endpoint.supportedMethods,action.endpoint.supportedMethods)) != null ){
                         targetConnection = connection;
                         break;
                     }
@@ -160,7 +160,6 @@ export class API extends EndpointOperator implements IDataOperator{
         if(subscriber){
             if(endpoints.length != 0){
                 if(this.options.isConsumer){
-                    console.log("push")
                     this.options.endpoints.push(new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
                 }
                 else
@@ -183,9 +182,7 @@ export class API extends EndpointOperator implements IDataOperator{
         // Remove consumer connection if the API is no longer a consumer
         if(wasOutput)
             return;
-        console.log("Update")
         if(this.options.isConsumer && !this.isConsumer()){
-            console.log("API is no longer a consumer");
             let conns = this.inputPort.connections.filter(c => this.isConsumableOperator(c.getOtherPort(this.inputPort).parent))
             for(let connection of conns)
                 this.inputPort.removeConnection(connection,true,false);

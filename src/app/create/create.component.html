@@ -1,6 +1,6 @@
 <div class="page" *ngIf="!showMobileDisclaimer; else mobileNoPass">
-    <board-header (onboardTutorial1)="openTutorialMenu()"></board-header>
-    <app-board></app-board>
+    <board-header (onboardTutorial1)="openTutorialMenu()" (saveFile)="saveFile($event)" (loadFile)="loadFile($event)"></board-header>
+    <app-board (changeSystemName)="changeSystemName($event)"></app-board>
     <app-componentmenu></app-componentmenu>
     <app-optionsmenu></app-optionsmenu>
     <div class="onboard-tutorial-container">

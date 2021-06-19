@@ -93,7 +93,10 @@ export class PubSub extends EndpointOperator implements IDataOperator{
         // Output of PubSun can connect only to API  
         if(!connectingWithOutput)
             return true;
-        return port.parent instanceof API;
+        if(port.parent instanceof API)
+            return true;
+        this.fireFailedConnect({message: "Output of a PubSub can only be connected to an API."});            
+        return false;
     }
 
     getAvailableEndpoints(): Endpoint[]{
