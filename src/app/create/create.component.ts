@@ -45,6 +45,10 @@ export class CreateComponent implements OnInit {
 	openTutorialMenu(){
 		this.isTutorialMenuOpen = true;
 	}
+
+	save(){
+		this.board.save(true);
+	}
 	
 	saveFile(name: string){
 		this.board.saveFile(name);
@@ -56,7 +60,11 @@ export class CreateComponent implements OnInit {
 	}
 
 	changeSystemName(name: string){
-		this.header.name = name;
+		if(this.header == null){
+			setTimeout(() => {this.changeSystemName(name)}, 50);
+		}
+		else{
+			this.header.changeName(name);
+		}
 	}
-
 }

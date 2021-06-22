@@ -1,10 +1,12 @@
-import { EventEmitter, Output, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, EventEmitter, Output, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { download } from 'src/shared/ExtensionMethods';
 import { PlacingService } from '../placing.service';
+import { SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
@@ -13,7 +15,6 @@ import { ClientComponent } from './components/client/client.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { LoadbalancerComponent } from './components/loadbalancer/loadbalancer.component';
 import { MessagequeueComponent } from './components/messagequeue/messagequeue.component';
-import { PortComponent } from './components/port/port.component';
 import { PubsubComponent } from './components/pubsub/pubsub.component';
 import { OperatorComponent } from './components/Shared/OperatorComponent';
 import { TextfieldComponent } from './components/textfield/textfield.component';
@@ -25,7 +26,7 @@ import { WebserverComponent } from './components/webserver/webserver.component';
 	templateUrl: './board.component.html',
 	styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements AfterViewChecked  {
 
 	board : HTMLElement;
 	posX = 0;
@@ -35,9 +36,23 @@ export class BoardComponent implements OnInit {
 	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
 	isLoading = false;
 	isSaving = false;
+	autosaving = false;
 	saveFileName: string = "";
 	systemName: string = "";
-	constructor(private placingService : PlacingService, private selectionService: SelectionService, private snackBar: MatSnackBar) { }
+
+	AUTOSAVE_INTERVAL = 30;
+
+	constructor(private placingService : PlacingService,
+	private selectionService: SelectionService, 
+	private snackBar: MatSnackBar,
+	private savingService: SavingService,
+	private changeRef: ChangeDetectorRef) { 
+		setInterval(()=>{
+			if(this.allLogicComponents.length != 0){
+				this.save();
+			}
+		}, this.AUTOSAVE_INTERVAL * 1000);
+	}
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
@@ -83,6 +98,10 @@ export class BoardComponent implements OnInit {
 				else if(e.key == "v")
 					this.pasteItem();
 				else if(e.key == "x") { }
+				else if(e.key == "s"){
+					e.preventDefault();
+					this.save(true);
+				}
 			}
 			if(e.key === 'Delete')
 				this.delete();
@@ -103,10 +122,18 @@ export class BoardComponent implements OnInit {
 			this.allComponents.push(component);
 		}
 	}
-
+	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
 	ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
+		this.loadLatestBoard();
+	}
+
+	loadLatestBoard(){
+		let latestBoardJson = localStorage.getItem(this.savingService.LOCALSTORAGE_AUTOSAVE_KEY);
+		if(latestBoardJson){
+			this.loadFromJson(latestBoardJson, false);
+		}
 	}
 
 	public handleMousedown( event: Event ) : void {
@@ -170,6 +197,16 @@ export class BoardComponent implements OnInit {
 		this.selectionService.deleteSelection();
 	}
 
+	save(showIcon = false){
+		this.savingService.save(this.allLogicComponents);
+		if(showIcon){
+			this.autosaving = true;
+			setTimeout(()=>{
+				this.autosaving = false;
+			}, 1000)
+		}
+	}
+
 	saveFile(name: string){
 		this.isSaving = true;
 		this.saveFileName = name;
@@ -181,61 +218,12 @@ export class BoardComponent implements OnInit {
 			this.placingService.showSnack("There is nothing to save...");
 			return;
 		}
-		let result = this.getBoardJson();
-		if(result.error)
-			this.placingService.showSnack("There were errors saving the file and some components couldn't be saved.")
-		let json = result.json;
-		let file = `{"name": "${this.systemName}", "components": ${json}}`;
+		let file = this.savingService.getBoardJson(this.allLogicComponents, this.systemName);
+		this.save();
 		download(`${this.saveFileName}.json`, file);	
 	}
 
-	getBoardJson(){
-		let jsonReadyComponents = [];
-		let wasError = false;
-		for(let component of this.allLogicComponents){
-			// If one component fails, dont fail the whole operation, tell the user there were errors instead
-			try{ 
-				let jsonReadyComponent: any = {};
-				jsonReadyComponent.type = component.constructor.name;
-				jsonReadyComponent.id = component.originID;
-				jsonReadyComponent.options = component.options;
-				jsonReadyComponent.connections = [];
-				let inputPort = component.getPort(false);
-				let outputPort = component.getPort(true);
-				if(inputPort != null){ // Get all connections from inputPort to JSON ready form
-					for(let connection of inputPort.connections){
-						let jsonReadyConnection: any = {};
-						jsonReadyConnection.isFromOutput = false;
-						jsonReadyConnection.from = jsonReadyComponent.id;
-						let connectedCompoent = connection.getOtherPort(inputPort).parent;
-						jsonReadyConnection.to = connectedCompoent.originID;
-						jsonReadyConnection.isToOutput = connection.getOtherPort(inputPort).isOutput;
-						jsonReadyComponent.connections.push(jsonReadyConnection);
-					}
-				}
-				if(outputPort != null){ // Get all connections from outputPort to JSON ready form
-					for(let connection of outputPort.connections){
-						let jsonReadyConnection: any = {};
-						jsonReadyConnection.isFromOutput = true;
-						jsonReadyConnection.from = jsonReadyComponent.id;
-						let connectedCompoent = connection.getOtherPort(outputPort).parent;
-						jsonReadyConnection.to = connectedCompoent.originID;
-						jsonReadyConnection.isToOutput = connection.getOtherPort(outputPort).isOutput;
-						jsonReadyComponent.connections.push(jsonReadyConnection);
-					}
-				}
-				jsonReadyComponents.push(jsonReadyComponent);
-			}
-			catch(e){
-				wasError = true;
-				continue;
-			}
-		}
-		let jsonComponents = JSON.stringify(jsonReadyComponents);
-		return {json: jsonComponents, error: wasError};
-	}
-
-	loadFromJson(json: string){
+	loadFromJson(json: string, showInfo = true){
 		this.clearBoard();
 		this.isLoading = true;
 		let wasError = false;
@@ -248,6 +236,9 @@ export class BoardComponent implements OnInit {
 				components = file;
 			if(file.name)
 				this.changeSystemName.emit(file.name);
+			if(components.length == 0){
+				throw Error("No components to load");
+			}
 			let connectionTable: any[] = [];
 			let index = 0;
 			for(let logicComponent of components){
@@ -292,14 +283,15 @@ export class BoardComponent implements OnInit {
 				index++;
 			}
 		}
-		catch{
-			this.placingService.showSnack("This file could not be loaded because it is corrupted or not supported.")
+		catch(e){
+			if(showInfo)
+				this.placingService.showSnack("This file could not be loaded because it is corrupted or not supported.")
 			setTimeout(()=>{
 				this.isLoading = false;
 			}, 100);
 			return;
 		}
-		if(wasError)
+		if(wasError && showInfo)
 			this.placingService.showSnack("There were errors loading the file and some components couldn't be loaded.")
 	}
 
@@ -313,10 +305,11 @@ export class BoardComponent implements OnInit {
 		}
 		setTimeout(()=>{
 			this.isLoading = false;
+			this.save();
 		}, 100);
 	}
 
-	clearBoard(){
+	clearBoard(clearLocalStorage = false){
 		for(let component of this.allComponents){
 			this.selectionService.currentSelection = component;
 			try{ // Deleting element while sending data could throw error
@@ -324,6 +317,8 @@ export class BoardComponent implements OnInit {
 			}
 			catch{}
 		}
+		if(clearLocalStorage)
+			localStorage.setItem(this.savingService.LOCALSTORAGE_AUTOSAVE_KEY,"");
 		this.allComponents = [];
 		this.allLogicComponents = [];
 	}
@@ -353,6 +348,4 @@ export class BoardComponent implements OnInit {
 		}
 		return null;
 	}
-
-	test: string = "";
 }

@@ -40,6 +40,9 @@
     Loading...
     <img src="./assets/logo.svg">
 </div>
+<div class="autosave" *ngIf="autosaving">
+    <i class="far fa-save"></i>
+</div>
 <div class="saving" *ngIf="isSaving" (click.self)="isSaving = false">
     <div class="saving-inner">
         <div class="name">

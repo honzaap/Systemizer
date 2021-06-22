@@ -7,14 +7,7 @@
 .board{
     /* background-color: #120013;*/
     background: $bg-purple-dark;
-    box-shadow:  0px 0px 35px 12px $purple-dark,
-    0 0 20px 3px $purple-dark,
-    0 0 20px $purple-darker,
-    0 0 20px 11px $purple-dark,
-    0 0px 20px 11px $purple-light,
-    inset 0px 0px 20px 3px $purple-darker,
-    inset 0px 0 30px 0px $purple-dark;
-    transition: box-shadow 0.2s ease-out;
+    outline: 6px solid $purple-darker;
     z-index: -1;
     &.infocus:hover{
         cursor: grab;
@@ -143,6 +136,23 @@
         }
     }
 }
+.autosave{
+    position: absolute;
+    top: 3em;
+    right: 1em;
+    color: #fff;
+    background-color: $purple-darker;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.35em;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: autosave 1s ease-in-out;
+}
+
 
 @keyframes loadingAnim {
     0%{
@@ -154,5 +164,38 @@
     100%{   
         transform: scale(0.9);
     }
-    
+}
+@-moz-keyframes loadingAnim {
+    0%{
+        transform: scale(0.9);
+    }
+    50%{
+        transform: scale(1.1);
+    }
+    100%{   
+        transform: scale(0.9);
+    }
+}
+
+@keyframes autosave {
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0.8;
+    }
+    100%{   
+        opacity: 0;
+    }
+}
+@-moz-keyframes autosave {
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0.8;
+    }
+    100%{   
+        opacity: 0;
+    }
 }

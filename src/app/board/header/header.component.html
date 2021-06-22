@@ -2,7 +2,7 @@
     <nav class="nav">
         <ul class="nav-list">
             <li>
-                <input [(ngModel)]="name" spellcheck="false" autocomplete="off" type="text" class="navbar-name" id="navbar-name" />
+                <input (input)="onNameChange()" [(ngModel)]="name" spellcheck="false" autocomplete="off" type="text" class="navbar-name" id="navbar-name" />
             </li>
             <li>
                 <button mat-icon-button [matMenuTriggerFor]="fileMenu" aria-label="File menu">
@@ -16,6 +16,10 @@
                         <input #file (input)="load(file)" type="file" accept=".json" style="position: absolute;width: 100%;height: 100%;opacity: 0;cursor: pointer;right: 0;z-index: 100;">
                         Load file
                     </label>
+                    <hr class="line">
+                    <button mat-menu-item (click)="save.emit(name)">
+                        <span>Save</span>
+                    </button>
                 </mat-menu>
             </li>
             <li>
