@@ -34,11 +34,11 @@
                 </ng-template>
                 <div class="small">
                     <span class="property-name">X:</span>
-                    <input #x (input)="change($event, x.value, y.value)" step="1" type="number" min="0" max="1960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['X']">
+                    <input #x (input)="change($event, x.value, y.value)" step="10" type="number" min="0" max="1960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['X']">
                 </div>
                 <div class="small">
                     <span class="property-name">Y:</span>
-                    <input #y (input)="change($event, x.value, y.value)" step="1" type="number" min="0" max="960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['Y']">
+                    <input #y (input)="change($event, x.value, y.value)" step="10" type="number" min="0" max="960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['Y']">
                 </div>
             </div>
         </div>

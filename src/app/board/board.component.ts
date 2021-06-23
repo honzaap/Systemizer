@@ -74,8 +74,8 @@ export class BoardComponent implements AfterViewChecked  {
 		});
 
 		this.board = document.getElementById("board");
-		this.board.style.width = "2000px";
-		this.board.style.height = "1000px";
+		this.board.style.width = `${this.placingService.boardWidth}px`;
+		this.board.style.height = `${this.placingService.boardHeight}px`;
 
 		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
 
@@ -97,7 +97,8 @@ export class BoardComponent implements AfterViewChecked  {
 					this.copyItem()
 				else if(e.key == "v")
 					this.pasteItem();
-				else if(e.key == "x") { }
+				else if(e.key == "x")
+					this.cutItem();
 				else if(e.key == "s"){
 					e.preventDefault();
 					this.save(true);
@@ -115,13 +116,19 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	pasteItem(){
-		let component = this.placingService.pasteItem();
+		let component = this.placingService.pasteItem(this.posX, this.posY);
 		if(component != null){ // Add component to list
 			let logicComponent = component.getLogicComponent();
 			this.allLogicComponents.push(logicComponent);
 			this.allComponents.push(component);
 		}
 	}
+
+	cutItem(){
+		this.copyItem();
+		this.delete();
+	}
+
 	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
 	ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
@@ -195,6 +202,14 @@ export class BoardComponent implements AfterViewChecked  {
 			,1);
 		}
 		this.selectionService.deleteSelection();
+	}
+
+	newFile(){
+		this.changeSystemName.emit("Untitled system");
+		this.systemName = "Untitled system";
+		this.clearBoard(true);
+		this.placingService.boardScale = 1;
+		this.board.style.transform = "";
 	}
 
 	save(showIcon = false){

@@ -9,6 +9,9 @@
                     File
                 </button>
                 <mat-menu #fileMenu="matMenu">
+                    <button mat-menu-item (click)="showConfirmDialog('Do you really want to create new file? All unsaved changes will be lost!', newFileDialog )">
+                        <span>New file</span>
+                    </button>
                     <button mat-menu-item (click)="saveFile.emit(name)">
                         <span>Save file</span>
                     </button>
@@ -23,17 +26,42 @@
                 </mat-menu>
             </li>
             <li>
-                <button mat-icon-button [matMenuTriggerFor]="viewMenu" aria-label="View menu">
-                    View
-                </button>
-                <mat-menu #viewMenu="matMenu">
-                </mat-menu>
-            </li>
-            <li>
                 <button mat-icon-button [matMenuTriggerFor]="editMenu" aria-label="Edit menu">
                     Edit
                 </button>
                 <mat-menu #editMenu="matMenu">
+                    <button mat-menu-item (click)="copy.emit()">
+                        <span>Copy</span>
+                    </button>
+                    <button mat-menu-item (click)="paste.emit()">
+                        <span>Paste</span>
+                    </button>
+                    <button mat-menu-item (click)="cut.emit()">
+                        <span>Cut</span>
+                    </button>
+                    <button mat-menu-item (click)="del.emit()">
+                        <span>Delete</span>
+                    </button>
+                    <hr class="line">
+                    <button mat-menu-item (click)="showConfirmDialog('Do you really want to clear the board? All unsaved changes will be lost!', clearBoardDialog)">
+                        <span>Clear board</span>
+                    </button>
+                </mat-menu>
+            </li>
+            <li>
+                <button mat-icon-button [matMenuTriggerFor]="viewMenu" aria-label="View menu">
+                    View
+                </button>
+                <mat-menu #viewMenu="matMenu">
+                    <button mat-menu-item (click)="fullscreen.emit()">
+                        <span>Go fullscreen</span>
+                    </button>
+                    <button mat-menu-item (click)="zoomIn.emit()">
+                        <span>Zoom in</span>
+                    </button>
+                    <button mat-menu-item (click)="zoomOut.emit()">
+                        <span>Zoom out</span>
+                    </button>
                 </mat-menu>
             </li>
             <li>
@@ -44,8 +72,20 @@
                     <button mat-menu-item (click)="onboardTutorial1.emit()">
                         <span>Quick introduction tutorial</span>
                     </button>
+                    <a mat-menu-item href="https://github.com/honzaap/Systemizer" target="_blank" >
+                        <span>GitHub</span>
+                    </a>
                 </mat-menu>
             </li>
         </ul>
     </nav>
 </header>
+<div class="confirm-dialog-container" (click.self)="closeDialog()" [style.display]="confirmDialogOpen ? 'flex' : 'none'">
+    <div class="confirm-dialog">
+        <p class="title">{{confirmDialogText}}</p>
+        <div class="buttons">
+            <button class="btn-cancel" (click)="closeDialog()">No</button>
+            <button class="btn-confirm" (click)="confirmDialog()">Yes</button>
+        </div>
+    </div>
+</div>

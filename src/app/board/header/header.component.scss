@@ -40,3 +40,62 @@ input[type="file"] {
     background-color: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.1);
 }
+.confirm-dialog-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;    
+}
+.confirm-dialog{
+    min-width: 350px;
+    max-width: 480px;
+    padding: 1.5em 1em;
+    text-align: center;
+    background-color: $bg-purple-dark;    
+    color: #fff;
+    & .title{
+        font-size: 1.2em;
+    }
+    & .buttons{
+        margin-top: 1.5em;
+        padding: 0.3em;
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+    }
+    & button{
+        padding: 0.3em 1.35em;
+        outline: none;
+        border: 0;
+        border-radius: 0.2em;
+        font-weight: 600;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: background-color 0.15s ease-in-out;
+        &.btn-cancel{
+            border: 0.15em solid $text-purple-light2;
+            color: $text-purple-light2;
+            background-color: transparent;
+            &:hover{
+                color: $bg-purple-dark;
+                background-color: $text-purple-light2;
+            }
+        }
+        &.btn-confirm{
+            background-color: $orange-light;
+            color: #fff;
+            border: 0.15em solid $orange-light;
+            &:hover{
+                border-color: $orange-light;
+                color: $orange-light;
+                background-color: transparent;
+            }
+        }
+    }
+}

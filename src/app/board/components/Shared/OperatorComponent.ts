@@ -95,15 +95,26 @@ export class OperatorComponent {
 	}
 
   	public handleMousemove = (event: MouseEvent): void => {
-		this.setPosition(this.LogicComponent.options.X - (this.prevX - event.clientX) / this.placingService.boardScale, this.LogicComponent.options.Y -  (this.prevY - event.clientY) / this.placingService.boardScale);
+		this.setPosition(
+			this.LogicComponent.options.X - (this.prevX - event.clientX) / this.placingService.boardScale, 
+			this.LogicComponent.options.Y - (this.prevY - event.clientY) / this.placingService.boardScale
+		);
+		
+		this.prevX = this.convertScaledPosition(event.clientX);
+		this.prevY = this.convertScaledPosition(event.clientY);
+	}
 
-		this.prevX = event.clientX;
-		this.prevY = event.clientY;
+	private convertPosition(number){
+		return Math.round(number / 10) * 10;
+	}
+
+	private convertScaledPosition(number){
+		return Math.round(number / (10 * this.placingService.boardScale)) * (10 * this.placingService.boardScale);
 	}
 
 	public setPosition(x: number, y: number){
-		this.LogicComponent.options.X =  Math.max(Math.min( this.maxX - this.anchorRect.width / this.placingService.boardScale,x), 0);
-		this.LogicComponent.options.Y = Math.max(Math.min( this.maxY - this.anchorRect.height / this.placingService.boardScale, y), 0);
+		this.LogicComponent.options.X = Math.max(Math.min( this.maxX - this.anchorRect.width  / this.placingService.boardScale, this.convertPosition(x)), 0);
+		this.LogicComponent.options.Y = Math.max(Math.min( this.maxY - this.anchorRect.height / this.placingService.boardScale, this.convertPosition(y)), 0);
 	}
 
 	public handleMouseup = (): void => {

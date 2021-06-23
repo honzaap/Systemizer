@@ -38,18 +38,10 @@ export class CreateComponent implements OnInit {
 		}
 	}
 
-	closeTutorialMenu(){
-		this.isTutorialMenuOpen = false;
+	newFile(){
+		this.board.newFile();
 	}
 
-	openTutorialMenu(){
-		this.isTutorialMenuOpen = true;
-	}
-
-	save(){
-		this.board.save(true);
-	}
-	
 	saveFile(name: string){
 		this.board.saveFile(name);
 	}
@@ -57,6 +49,50 @@ export class CreateComponent implements OnInit {
 	loadFile(json: string){
 		// Pass the file to board component
 		this.board.loadFromJson(json);
+	}
+
+	save(){
+		this.board.save(true);
+	}
+
+	copy(){
+		this.board.copyItem();
+	}
+
+	paste(){
+		this.board.pasteItem();
+	}
+
+	cut(){
+		this.board.cutItem();
+	}
+
+	deleteComponent(){
+		this.board.delete();
+	}
+
+	clearBoard(){
+		this.board.clearBoard(true);
+	}
+
+	fullscreen(){
+		document.body.requestFullscreen();
+	}
+
+	zoomIn(){
+		this.board.zoomIn();
+	}
+
+	zoomOut(){
+		this.board.zoomOut();
+	}
+
+	openTutorialMenu(){
+		this.isTutorialMenuOpen = true;
+	}
+
+	closeTutorialMenu(){
+		this.isTutorialMenuOpen = false;
 	}
 
 	changeSystemName(name: string){

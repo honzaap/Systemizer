@@ -10,12 +10,31 @@ import { SavingService } from 'src/app/saving.service';
 })
 export class HeaderComponent implements OnInit {
 	
-	@Output() onboardTutorial1 = new EventEmitter();
+	// File section events
+	@Output() newFile = new EventEmitter();
 	@Output() saveFile = new EventEmitter();
-	@Output() save = new EventEmitter();
 	@Output() loadFile = new EventEmitter();
+	@Output() save = new EventEmitter();
+
+	// Edit section events
+	@Output() copy = new EventEmitter();
+	@Output() paste = new EventEmitter();
+	@Output() cut = new EventEmitter();
+	@Output() del = new EventEmitter();
+	@Output() clearBoard = new EventEmitter();
+
+	// View section events
+	@Output() fullscreen = new EventEmitter();
+	@Output() zoomIn = new EventEmitter();
+	@Output() zoomOut = new EventEmitter();
+
+	// Help section events
+	@Output() onboardTutorial1 = new EventEmitter();
 
 	name = "Untitled System";
+	confirmDialogOpen = false;
+	confirmDialogText = "";
+	confirmDialogReturnFunction = () => {};
 
 	constructor(private placingService: PlacingService, private savingService: SavingService) { }
 
@@ -53,4 +72,28 @@ export class HeaderComponent implements OnInit {
 
 	ngOnInit(): void {
 	}
+
+	showConfirmDialog(text: string, returnFunction){
+		this.confirmDialogOpen = true;
+		this.confirmDialogText = text;
+		this.confirmDialogReturnFunction = returnFunction;
+	}
+
+	closeDialog(){
+		this.confirmDialogOpen = false;
+	}
+
+	confirmDialog(){
+		this.confirmDialogReturnFunction();
+		this.confirmDialogOpen = false;
+	}
+
+	newFileDialog(){
+		this.newFile.emit();
+	}
+
+	clearBoardDialog(){
+		this.clearBoard.emit();
+	}
+
 }

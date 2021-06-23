@@ -3,6 +3,7 @@ import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { API } from 'src/models/API';
 import { APIGateway } from 'src/models/APIGateway';
 import { Client } from 'src/models/Client';
+import { Cache } from 'src/models/Cache';
 import { Database } from 'src/models/Database';
 import { LoadBalancer } from 'src/models/LoadBalancer';
 import { MessageQueue } from 'src/models/MessageQueue';
