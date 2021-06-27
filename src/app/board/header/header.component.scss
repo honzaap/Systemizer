@@ -99,3 +99,74 @@ input[type="file"] {
         }
     }
 }
+
+.keyboard-shortcuts-window{
+    color: #fff;
+    position: absolute;
+    top: 15%;
+    bottom: 30%;
+    right: 25%;
+    left: 25%;
+    border: 0.2em solid $bg-purple-light;
+    background-color: $bg-purple-dark;
+    box-shadow: 0px 0px 25px 2px #000;
+    padding: 2em;
+    overflow-y: scroll;
+    & .keyboard-shortcuts-title{
+        margin-bottom: 1em;
+        display: block;
+        text-align: center;
+        font-size: 1.15em;
+    }
+    & .highlight{
+        color: $purple-dark;
+        font-weight: 400;
+    }
+    & .close{
+        outline: 0;
+        border: 0;
+        cursor: pointer;
+        position: absolute;
+        top: 0.25em;
+        right: 0.25em;
+        font-size: 1em;
+        color: #fff;
+        background-color: transparent;
+        width: 1.5em;
+        height: 1.5em;
+        transition: color 0.1s linear;
+        &:hover{
+            color: $purple-light;
+        }
+    }
+    & .shortcuts-list{
+        display: flex;
+        flex-flow: column;
+        gap: 0.7em;
+        align-items: center;
+        & li{
+            display: flex;
+            justify-content: flex-end;
+            width: 75%;
+            gap: 1.5em;
+            & p{
+                flex-grow: 1;
+                text-align: right;
+            }
+            & .highlight{
+                text-align: left;
+            }
+        }
+    }
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent
+    }
+}

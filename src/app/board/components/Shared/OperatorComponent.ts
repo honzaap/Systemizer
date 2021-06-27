@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ElementRef, ViewContainerRef } from "@angular/core";
+import { ChangesService } from "src/app/changes.service";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
@@ -13,7 +14,8 @@ import { LoadBalancerType } from "src/models/enums/LoadBalancerType";
 import { Protocol } from "src/models/enums/Protocol";
 import { ReplacementPolicy } from "src/models/enums/ReplacementPolicy";
 import { WritePolicy } from "src/models/enums/WritePolicy";
-import { getFormattedMethod } from "src/shared/ExtensionMethods";
+import { Options } from "src/models/Options";
+import { clone, getFormattedMethod } from "src/shared/ExtensionMethods";
 import { PortComponent } from "../port/port.component";
 
 interface Position{
@@ -49,6 +51,7 @@ export class OperatorComponent {
 
     public placingService: PlacingService;
     private selectionService: SelectionService;
+    private changesService: ChangesService;
 	private resolver: ComponentFactoryResolver;
 
 	conn: ViewContainerRef;
@@ -70,9 +73,12 @@ export class OperatorComponent {
 
 	public anchorRect: any;
 
-    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
+	public beforeOptions: Options;
+
+    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService) {
 		this.placingService = placingService;
         this.selectionService = selectionService;
+        this.changesService = changesService;
 		this.resolver = resolver
 	}
 
@@ -122,6 +128,11 @@ export class OperatorComponent {
 
 		this.board.removeEventListener( "mousemove", this.handleMousemove );
 		window.removeEventListener( "mouseup", this.handleMouseup );
+
+		if(this.beforeOptions.X !== this.LogicComponent.options.X || this.beforeOptions.Y !== this.LogicComponent.options.Y){
+			this.changesService.pushChange(this.LogicComponent, this.beforeOptions);
+			this.beforeOptions = clone(this.LogicComponent.options);
+		}		
 	}
 
 	public handleClick(){
@@ -219,6 +230,8 @@ export class OperatorComponent {
 		this.LogicComponent.onFailedConnect((data) => {
 			this.placingService.showSnack(data.message);
     	});
+
+		this.beforeOptions = clone(this.LogicComponent.options);
 
 		let inputPort = this.LogicComponent["inputPort"];
 		let outputPort = this.LogicComponent["outputPort"];

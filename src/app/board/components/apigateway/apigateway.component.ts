@@ -6,14 +6,13 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
 import { APIGateway } from 'src/models/APIGateway';
+import { ChangesService } from 'src/app/changes.service';
 
 @Component({
 	selector: 'apigateway',
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
-		inputPortRef: new ViewChild("inputPort"),
-		outputPortRef: new ViewChild("outputPort")
 	},
 	templateUrl: './apigateway.component.html',
 	styleUrls: ['./apigateway.component.scss']
@@ -26,8 +25,8 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 
 	connectableEndpoints: Endpoint[];
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService){
+		super(placingService, selectionService, resolver, changesService);
 	}
 
 	addAction(endpoint: Endpoint){

@@ -61,14 +61,25 @@ export function getFormattedMethod(method: HTTPMethod, isDatabase: boolean){
 }
 
 export function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-  
-  element.style.display = 'none';
-  document.body.appendChild(element);
-  
-  element.click();
-  
-  document.body.removeChild(element);
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    
+    element.click();
+    
+    document.body.removeChild(element);
+}
+
+export function clone(object: any): any {
+  var cloneObj = new (object.constructor as any);
+  for (var attribut in object) {
+    if (typeof object[attribut] === "object" && object[attribut] != null)
+      cloneObj[attribut] = clone(object[attribut]);
+    else
+      cloneObj[attribut] = object[attribut];
   }
+  return cloneObj;
+}

@@ -71,6 +71,14 @@ export class CreateComponent implements OnInit {
 		this.board.delete();
 	}
 
+	undo(){
+		this.board.undo();
+	}
+
+	redo(){
+		this.board.redo();
+	}
+
 	clearBoard(){
 		this.board.clearBoard(true);
 	}

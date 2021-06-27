@@ -42,6 +42,12 @@
                     <button mat-menu-item (click)="del.emit()">
                         <span>Delete</span>
                     </button>
+                    <button mat-menu-item (click)="undo.emit()">
+                        <span>Undo</span>
+                    </button>
+                    <button mat-menu-item (click)="redo.emit()">
+                        <span>Redo</span>
+                    </button>
                     <hr class="line">
                     <button mat-menu-item (click)="showConfirmDialog('Do you really want to clear the board? All unsaved changes will be lost!', clearBoardDialog)">
                         <span>Clear board</span>
@@ -75,6 +81,9 @@
                     <a mat-menu-item href="https://github.com/honzaap/Systemizer" target="_blank" >
                         <span>GitHub</span>
                     </a>
+                    <button mat-menu-item (click)="openKeyboardShortcuts()">
+                        <span>Keyboard shortcuts</span>
+                    </button>
                 </mat-menu>
             </li>
         </ul>
@@ -87,5 +96,20 @@
             <button class="btn-cancel" (click)="closeDialog()">No</button>
             <button class="btn-confirm" (click)="confirmDialog()">Yes</button>
         </div>
+    </div>
+</div>
+<div class="confirm-dialog-container" (click.self)="closeKeyboardShortcuts()" [style.display]="isKeyboardShortcutsOpen ? 'flex' : 'none'">
+    <div class="keyboard-shortcuts-window">
+        <span class="keyboard-shortcuts-title">Keyboard shortcuts</span>
+        <ul class="shortcuts-list">
+            <li><p class="highlight">CTRL C</p> <p>Copy component</p></li>
+            <li><p class="highlight">CTRL V</p> <p>Paste component</p></li>
+            <li><p class="highlight">DEL</p>    <p>Delete component</p></li>
+            <li><p class="highlight">CTRL +</p> <p>Zoom in on board</p></li>
+            <li><p class="highlight">CTRL -</p> <p>Zoom out of board</p></li>
+            <li><p class="highlight">CTRL Z</p> <p>Undo change</p></li>
+            <li><p class="highlight">CTRL Y</p> <p>Redo change</p></li>
+        </ul> 
+        <button class="close" (click)="closeKeyboardShortcuts()"><i class="fas fa-times"></i></button>
     </div>
 </div>

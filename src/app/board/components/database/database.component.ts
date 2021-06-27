@@ -6,6 +6,7 @@ import { Database, DatabaseOptions } from 'src/models/Database';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 import { DatabaseEndpoint } from 'src/models/Endpoint';
 import { Port } from 'src/models/Port';
+import { ChangesService } from 'src/app/changes.service';
 
 @Component({
 	selector: 'database',
@@ -13,8 +14,6 @@ import { Port } from 'src/models/Port';
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
 		actionsRef: new ViewChild("actions"),
-		inputPortRef: new ViewChild("inputPort"),
-		outputPortRef: new ViewChild("outputPort")
 	},
 	templateUrl: './database.component.html',
 	styleUrls: ['./database.component.scss']
@@ -26,8 +25,8 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService){
+		super(placingService, selectionService, resolver, changesService);
 	}
 
 	ngAfterViewInit(): void {

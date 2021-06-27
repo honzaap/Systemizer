@@ -21,6 +21,8 @@ export class HeaderComponent implements OnInit {
 	@Output() paste = new EventEmitter();
 	@Output() cut = new EventEmitter();
 	@Output() del = new EventEmitter();
+	@Output() undo = new EventEmitter();
+	@Output() redo = new EventEmitter();
 	@Output() clearBoard = new EventEmitter();
 
 	// View section events
@@ -34,6 +36,7 @@ export class HeaderComponent implements OnInit {
 	name = "Untitled System";
 	confirmDialogOpen = false;
 	confirmDialogText = "";
+	isKeyboardShortcutsOpen = false;
 	confirmDialogReturnFunction = () => {};
 
 	constructor(private placingService: PlacingService, private savingService: SavingService) { }
@@ -94,6 +97,14 @@ export class HeaderComponent implements OnInit {
 
 	clearBoardDialog(){
 		this.clearBoard.emit();
+	}
+
+	openKeyboardShortcuts(){
+		this.isKeyboardShortcutsOpen = true;
+	}
+
+	closeKeyboardShortcuts(){
+		this.isKeyboardShortcutsOpen = false;
 	}
 
 }

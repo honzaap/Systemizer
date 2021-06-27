@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { TextField } from 'src/models/TextField';
@@ -23,8 +24,8 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
   	@ViewChild("field") field: ElementRef;
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService) {
+		super(placingService, selectionService, resolver, changesService);
     	this.currentSelectionService = selectionService;
 	}
 

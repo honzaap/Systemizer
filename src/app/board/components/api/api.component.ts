@@ -8,6 +8,7 @@ import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMetho
 import { Protocol } from 'src/models/enums/Protocol';
 import { APIType } from 'src/models/enums/APIType';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
+import { ChangesService } from 'src/app/changes.service';
 
 @Component({
 	selector: 'api',
@@ -27,8 +28,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	connectableEndpoints: Endpoint[] = [];
 	consumeableEndpoints: Endpoint[] = [];
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService){
+		super(placingService, selectionService, resolver, changesService);
 	}
 
 	addAction(endpoint: Endpoint){

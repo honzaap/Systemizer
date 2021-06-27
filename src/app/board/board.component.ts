@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { download } from 'src/shared/ExtensionMethods';
+import { ChangesService } from '../changes.service';
 import { PlacingService } from '../placing.service';
 import { SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
@@ -46,7 +47,8 @@ export class BoardComponent implements AfterViewChecked  {
 	private selectionService: SelectionService, 
 	private snackBar: MatSnackBar,
 	private savingService: SavingService,
-	private changeRef: ChangeDetectorRef) { 
+	private changeRef: ChangeDetectorRef,
+	private changesService: ChangesService) { 
 		setInterval(()=>{
 			if(this.allLogicComponents.length != 0){
 				this.save();
@@ -102,6 +104,22 @@ export class BoardComponent implements AfterViewChecked  {
 				else if(e.key == "s"){
 					e.preventDefault();
 					this.save(true);
+				}
+				else if(e.key == "z"){
+					e.preventDefault();
+					this.undo();
+				}
+				else if(e.key == "y"){
+					e.preventDefault();
+					this.redo();
+				}
+				else if(e.key == "+"){
+					e.preventDefault();
+					this.zoomIn();
+				}
+				else if(e.key == "-"){
+					e.preventDefault();
+					this.zoomOut();
 				}
 			}
 			if(e.key === 'Delete')
@@ -188,6 +206,14 @@ export class BoardComponent implements AfterViewChecked  {
 	zoomIn(){
 		this.placingService.boardScale = Math.min(this.placingService.boardScale + 0.1,2);
 		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+	}
+
+	undo(){
+		this.changesService.undo();
+	}
+
+	redo(){
+		this.changesService.redo();
 	}
 
 	delete(){

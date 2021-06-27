@@ -5,6 +5,7 @@ import { Type } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { clone } from 'src/shared/ExtensionMethods';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
 
@@ -88,7 +89,7 @@ export class PlacingService{
 
 	pasteItem(boardPositionX = 0, boardPositionY = 0){
 		if(this.copiedItem != null){
-			let options = this.clone(this.copiedItemOptions);
+			let options = clone(this.copiedItemOptions);
 
 			let shiftX = boardPositionX; // Position of board from left side of screen in pixels
 			let shiftY = boardPositionY; // Position of board from top of screen in pixels
@@ -150,17 +151,6 @@ export class PlacingService{
 
 			return this.createComponent(this.copiedItem, pasteX, pasteY, options);
 		}
-	}
-
-	public clone(object: any): any {
-		var cloneObj = new (object.constructor as any);
-		for (var attribut in object) {
-			if (typeof object[attribut] === "object" && object[attribut] != null)
-				cloneObj[attribut] = this.clone(object[attribut]);
-			else
-				cloneObj[attribut] = object[attribut];
-		}
-		return cloneObj;
 	}
 
 	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent){

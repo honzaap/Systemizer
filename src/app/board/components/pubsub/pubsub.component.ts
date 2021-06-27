@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Endpoint } from 'src/models/Endpoint';
@@ -13,8 +14,6 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
-		inputPortRef: new ViewChild("inputPort"),
-		outputPortRef: new ViewChild("outputPort")
 	},
   	styleUrls: ['./pubsub.component.scss']
 })
@@ -24,8 +23,8 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService){
+		super(placingService, selectionService, resolver, changesService);
   	}
 
 	ngAfterViewInit(): void {
