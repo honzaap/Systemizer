@@ -48,7 +48,10 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	}
 
 	addEndpoint(){
-		this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET]));
+		if(this.LogicApi.options.isConsumer)
+			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH]));
+		else
+			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET]));
 	}
 
 	removeEndpoint(endpoint: Endpoint){

@@ -157,23 +157,26 @@ export class API extends EndpointOperator implements IDataOperator{
             this.inputPort.connections.splice(i, 1);
 
         let endpoints = (consumerConnection.getOtherPort(this.inputPort).parent.options as EndpointOptions).endpoints;
-        if(subscriber){
-            if(endpoints.length != 0){
-                if(this.options.isConsumer){
-                    this.options.endpoints.push(new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
+        if(this.options.endpoints.filter(ep => ep.url === endpoints[0].url).length == 0){
+            if(subscriber){
+                if(endpoints.length != 0){
+                    if(this.options.isConsumer){
+                        this.options.endpoints.push(new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
+                    }
+                    else
+                        this.options.endpoints = [ new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])];
                 }
-                else
-                    this.options.endpoints = [ new Endpoint(endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])];
+                else if(endpoints.length == 0 && !this.options.isConsumer)
+                    this.options.endpoints = [];
             }
-            else if(endpoints.length == 0 && !this.options.isConsumer)
-                this.options.endpoints = [];
+            else{
+                if(this.options.isConsumer)
+                    this.options.endpoints.push(endpoints[0]);
+                else
+                    this.options.endpoints = [endpoints[0]];
+            }
         }
-        else{
-            if(this.options.isConsumer)
-                this.options.endpoints.push(endpoints[0]);
-            else
-                this.options.endpoints = [endpoints[0]];
-        }
+        
         this.options.isConsumer = true;
         if(subscriber) this.options.isSubscriber = true;
     }
