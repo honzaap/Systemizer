@@ -13,8 +13,6 @@
 
 Systemizer is a system design tool used to create and simulate large scale distributed systems.
 
-<h1 align="center">Issues and documentation coming soon!</h1>
-
 ### Want to try Systemizer?
 Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/">github pages</a>.
 
@@ -31,3 +29,9 @@ Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/
 3) run `npm install`
 4) run `ng serve`
 5) Systemize!
+
+## Documentation
+- Documentation can be found in the <a href="https://github.com/honzaap/Systemizer/wiki">Wiki section</a> of this repo.
+## Contributing
+- To learn about contributing, visit the <a href="https://github.com/honzaap/Systemizer/wiki/how-to-contribute">How to contribute</a> section.
+- You can also check <a href="https://github.com/honzaap/Systemizer/issues">Issues</a> to see if there is anything you want to help with.
