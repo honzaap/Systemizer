@@ -18,7 +18,7 @@ class="anchor component"
     <div #options>
         <div class="options-container">
             <div>
-                <span class="property-name">Type:</span>
+                <span class="property-name">Type: <info-tooltip [Message]="'Changes the type of the load balancer. This can affect available balancing algorithms.'"></info-tooltip></span>
                 <div>
                     <mat-form-field appearance="fill" class="action-endpoint">
                         <mat-select (selectionChange)="handleTypeChange()" [(ngModel)]="LogicLoadBalancer.options.type">
@@ -28,7 +28,7 @@ class="anchor component"
                 </div>
             </div>
             <div>
-                <span class="property-name">Balancing Algorithm:</span>
+                <span class="property-name">Balancing Algorithm: <info-tooltip [Message]="'Changes the balancing algorithm of the load balancer. This changes the data routing behaviour.'"></info-tooltip></span>
                 <div>
                     <mat-form-field appearance="fill" class="action-endpoint">
                         <mat-select [(ngModel)]="LogicLoadBalancer.options.algorithm">

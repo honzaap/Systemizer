@@ -18,7 +18,7 @@ class="anchor component"
     <div #options>
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints:</span>
+                <span class="property-name">Endpoints: <info-tooltip [Message]="'List of endpoints the web server has available (By default set to /).'"></info-tooltip></span>
             </div>
             <div class="options-endpoints">
                 <div class="options-endpoint" *ngFor="let endpoint of this.LogicWebServer.options.endpoints">

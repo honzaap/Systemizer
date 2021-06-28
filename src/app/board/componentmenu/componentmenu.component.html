@@ -22,7 +22,7 @@
                 <div class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
                     <span class="caption">{{ item.mark }}</span>
                     <img src="{{ item.imageUrl }}">
-                    <button class="info" (click)="showInfo(item)"><i class="far fa-question-circle"></i></button>
+                    <button *ngIf="!viewingService.isHelpersDisabled()" class="info" (click)="showInfo(item)"><i class="far fa-question-circle"></i></button>
                 </div>
                 <div class="section-item fill">
                 </div>

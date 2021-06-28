@@ -19,7 +19,7 @@ class="anchor component"
         <!-- REST ENDPOINTS -->
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints (REST):</span>
+                <span class="property-name">Endpoints (REST): <info-tooltip [Message]="'List of REST endpoints the gateway has available. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.restEndpoints.length}}]</span>
                     <span class="button-icon" (click)="addRestEndpoint()"><i class="fas fa-plus"></i></span>
@@ -42,7 +42,7 @@ class="anchor component"
                         </div>
                         <div class="options-endpoint-actions-container">
                             <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions:</span>
+                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                 <span class="action-method"></span>
                                 <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                             </div>
@@ -78,7 +78,7 @@ class="anchor component"
         <!-- RPC ENDPOINTS -->
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints (RPC):</span>
+                <span class="property-name">Endpoints (RPC): <info-tooltip [Message]="'List of RPC endpoints the gateway has available. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.rpcEndpoints.length}}]</span>
                     <span class="button-icon" (click)="addRpcEndpoint()"><i class="fas fa-plus"></i></span>
@@ -102,7 +102,7 @@ class="anchor component"
                         </div>
                         <div class="options-endpoint-actions-container">
                             <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions:</span>
+                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                 <span class="action-method"></span>
                                 <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                             </div>
@@ -139,7 +139,7 @@ class="anchor component"
         <!-- gRPC ENDPOINTS -->
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints (gRPC):</span>
+                <span class="property-name">Endpoints (gRPC): <info-tooltip [Message]="'List of gRPC endpoints the gateway has available. Click the dropdown to show allowed methods, gRPC mode and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.grpcEndpoints.length}}]</span>
                     <span class="button-icon" (click)="addGrpcEndpoint()"><i class="fas fa-plus"></i></span>
@@ -168,7 +168,7 @@ class="anchor component"
                         </div>
                         <div class="options-endpoint-actions-container">
                             <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions:</span>
+                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                 <span class="action-method"></span>
                                 <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                             </div>
@@ -205,7 +205,7 @@ class="anchor component"
         <!-- GraphQL ENDPOINTS -->
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints (GraphQL):</span>
+                <span class="property-name">Endpoints (GraphQL): <info-tooltip [Message]="'A GraphQL endpoint. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.graphqlEndpoints.length}}]</span>
                     <span *ngIf="LogicApiGateway.options.type != APIType.GraphQL && LogicApiGateway.options.graphqlEndpoints.length == 0" class="button-icon" (click)="addGraphqlEndpoint()"><i class="fas fa-plus"></i></span>
@@ -229,7 +229,7 @@ class="anchor component"
                         </div>
                         <div class="options-endpoint-actions-container">
                             <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions:</span>
+                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                 <span class="action-method"></span>
                                 <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                             </div>
@@ -266,7 +266,7 @@ class="anchor component"
         <!-- WebSockets ENDPOINTS -->
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints (WebSockets):</span>
+                <span class="property-name">Endpoints (WebSockets): <info-tooltip [Message]="'List of WebSocket endpoints used for bidirectional streaming. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.websocketsEndpoints.length}}]</span>
                     <span class="button-icon" (click)="addWebsocketsEndpoint()"><i class="fas fa-plus"></i></span>
@@ -289,7 +289,7 @@ class="anchor component"
                         </div>
                         <div class="options-endpoint-actions-container">
                             <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions:</span>
+                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                 <span class="action-method"></span>
                                 <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                             </div>

@@ -15,6 +15,7 @@ import { PubsubComponent } from '../components/pubsub/pubsub.component';
 import { TextfieldComponent } from '../components/textfield/textfield.component';
 import { WebserverComponent } from '../components/webserver/webserver.component';
 import { PlacingService } from '../../placing.service';
+import { ViewingService } from 'src/app/viewing.service';
 
 class MenuItem<T>{
 	component: T;
@@ -65,7 +66,7 @@ export class ComponentmenuComponent implements OnInit {
 	@ViewChild("board", { read: ViewContainerRef }) connectionRef;
 	@ViewChild("placingItemRef") placingItemRef;
 
-	constructor(private placingService: PlacingService) 
+	constructor(private placingService: PlacingService, public viewingService: ViewingService) 
 	{
 		// Create Categories
 		this.allCategories.push(new Category("Client-side",[

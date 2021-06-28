@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
+import { ViewingService } from 'src/app/viewing.service';
 
 @Component({
 	selector: 'board-header',
@@ -37,9 +38,12 @@ export class HeaderComponent implements OnInit {
 	confirmDialogOpen = false;
 	confirmDialogText = "";
 	isKeyboardShortcutsOpen = false;
+	isHelpersDisabled: boolean;
 	confirmDialogReturnFunction = () => {};
 
-	constructor(private placingService: PlacingService, private savingService: SavingService) { }
+	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { 
+		this.isHelpersDisabled = viewingService.isHelpersDisabled();
+	}
 
 	load(file){
 		if(file.files.length == 0)
@@ -105,6 +109,11 @@ export class HeaderComponent implements OnInit {
 
 	closeKeyboardShortcuts(){
 		this.isKeyboardShortcutsOpen = false;
+	}
+
+	toggleHelpersDisabled(){
+		this.isHelpersDisabled = !this.isHelpersDisabled;
+		this.viewingService.setHelpersDisabled(this.isHelpersDisabled);
 	}
 
 }

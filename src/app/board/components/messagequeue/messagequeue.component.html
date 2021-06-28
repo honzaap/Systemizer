@@ -31,7 +31,7 @@ class="anchor component"
     <div #options>
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints:</span>
+                <span class="property-name">Endpoints: <info-tooltip [Message]="'A message queue endpoint. The message queue will publish data to this endpoint (By default set to name of the component).'"></info-tooltip></span>
             </div>
             <div class="options-endpoints">
                 <div class="options-endpoint" *ngFor="let endpoint of this.LogicMessageQueue.options.endpoints">

@@ -1,0 +1,15 @@
+@import "../../colors.scss";
+
+:host{
+    position: relative;
+}
+
+.property-info-button{
+    font-size: 0.7rem;
+    vertical-align: top;
+    color: $purple-light;
+    cursor: pointer;
+    &:hover{
+        color: $purple-dark;
+    }
+}

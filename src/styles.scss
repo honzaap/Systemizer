@@ -192,7 +192,7 @@ li{
     bottom: 30%;
     right: 0;
     min-height: 350px;
-    width: 18rem;
+    width: 18.5rem;
     padding-bottom: 2em;
     overflow-y: scroll;
     background-color: $bg-purple-light;
@@ -458,6 +458,12 @@ input, select, option{
     font-size:1rem;
     width: 100%;
     min-width: 0;
+}
+mat-tooltip-component .mat-tooltip{
+    font-size: 0.75rem;
+    max-width: 300px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
 }
 
 .fs-1{

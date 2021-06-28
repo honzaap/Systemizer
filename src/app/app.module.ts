@@ -42,6 +42,8 @@ import { TutorialControlsComponent } from './board/tutorials/tutorial-controls/t
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { GettingStartedComponent } from './pages/getting-started/getting-started.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { InfoTooltipComponent } from './info-tooltip/info-tooltip.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -71,7 +73,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     PagesHeaderComponent,
     TutorialControlsComponent,
     GettingStartedComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    InfoTooltipComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     BrowserAnimationsModule,
     MatExpansionModule,
     MatMenuModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [

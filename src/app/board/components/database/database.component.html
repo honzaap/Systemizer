@@ -17,7 +17,7 @@ class="anchor component"
 <div style="display:none">
     <div #options>
         <div class="options-type-container">
-            <span class="property-name">Type:</span>
+            <span class="property-name">Type: <info-tooltip [Message]="'Changes the type of the database. This does not have any effect on the visualization.'"></info-tooltip></span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
                     <mat-select (selectionChange)="changeDatabaseType()" [disabled]="LogicDatabase.options.isShard" [(ngModel)]="LogicDatabase.options.type">
@@ -28,7 +28,10 @@ class="anchor component"
         </div>
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
-                <span class="property-name">Endpoints:</span>
+                <span *ngIf="LogicDatabase.options.isShard; else defaultEpInfo" class="property-name">Endpoints: <info-tooltip [Message]="'Database endpoint that data will be sent to (Set by default to /shard). '"></info-tooltip></span>
+                <ng-template #defaultEpInfo>
+                    <span class="property-name">Endpoints: <info-tooltip [Message]="'Database endpoint that data will be sent to (Set by default to /database). '"></info-tooltip></span>
+                </ng-template>
             </div>
             <div class="options-endpoints">
                 <div class="options-endpoint" *ngFor="let endpoint of this.LogicDatabase.options.endpoints">

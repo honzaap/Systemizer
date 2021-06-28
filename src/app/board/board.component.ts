@@ -95,31 +95,36 @@ export class BoardComponent implements AfterViewChecked  {
 
 		window.onkeydown = (e:KeyboardEvent)=>{
 			if(e.ctrlKey){
-				if(e.key == "c")
-					this.copyItem()
-				else if(e.key == "v")
-					this.pasteItem();
-				else if(e.key == "x")
-					this.cutItem();
-				else if(e.key == "s"){
-					e.preventDefault();
-					this.save(true);
-				}
-				else if(e.key == "z"){
-					e.preventDefault();
-					this.undo();
-				}
-				else if(e.key == "y"){
-					e.preventDefault();
-					this.redo();
-				}
-				else if(e.key == "+"){
-					e.preventDefault();
-					this.zoomIn();
-				}
-				else if(e.key == "-"){
-					e.preventDefault();
-					this.zoomOut();
+				switch(e.key){
+					case "c":
+						this.copyItem();
+						break;
+					case "v":
+						this.pasteItem();
+						break;
+					case "x":
+						this.cutItem();
+						break;
+					case "s":
+						e.preventDefault();
+						this.save(true);
+						break;
+					case "z":
+						e.preventDefault();
+						this.undo();
+						break;
+					case "y":
+						e.preventDefault();
+						this.redo();
+						break;
+					case "+":
+						e.preventDefault();
+						this.zoomIn();
+						break;
+					case "-":
+						e.preventDefault();
+						this.zoomOut();
+						break;
 				}
 			}
 			if(e.key === 'Delete')

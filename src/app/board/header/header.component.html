@@ -68,6 +68,13 @@
                     <button mat-menu-item (click)="zoomOut.emit()">
                         <span>Zoom out</span>
                     </button>
+                    <hr class="line">
+                    <button mat-menu-item (click)="toggleHelpersDisabled()">
+                        <span *ngIf="isHelpersDisabled; else helpersEnabled">Enable <i class="far fa-question-circle"></i> helpers</span>
+                        <ng-template #helpersEnabled>
+                            <span>Disable <i class="far fa-question-circle"></i> helpers</span>
+                        </ng-template>
+                    </button>
                 </mat-menu>
             </li>
             <li>

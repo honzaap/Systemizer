@@ -18,7 +18,7 @@ class="anchor component"
     <div #options>
         <div *ngIf="!LogicApi.options.isConsumer; else consumerEndpoint">
             <div class="options-type-container">
-                <span class="property-name">Type:</span>
+                <span class="property-name">Type: <info-tooltip [Message]="'Changes the type of an API. This can change the behaviour of endpoints.'"></info-tooltip></span>
                 <div>
                     <mat-form-field appearance="fill" class="action-endpoint">
                         <mat-select (selectionChange)="handleTypeChange()"  [(ngModel)]="LogicApi.options.type">
@@ -29,7 +29,7 @@ class="anchor component"
             </div>
             <div class="options-endpoints-container">
                 <div class="options-endpoints-top">
-                    <span class="property-name">Endpoints:</span>
+                    <span class="property-name">Endpoints: <info-tooltip [Message]="'List of endpoints the API has available. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                     <span *ngIf="LogicApi.options.type != APIType.GraphQL" class="button-icon" (click)="addEndpoint()"><i class="fas fa-plus"></i></span>
                 </div>
                 <div class="options-endpoints">
@@ -65,7 +65,7 @@ class="anchor component"
                             </div>
                             <div class="options-endpoint-actions-container" *ngIf="endpoint.grpcMode == gRPCMode['Unary']">
                                 <div class="options-endpoint-action">
-                                    <span class="property-name action-endpoint">Actions:</span>
+                                    <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                     <span class="action-method"></span>
                                     <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                                 </div>
@@ -101,7 +101,7 @@ class="anchor component"
             <div>
                 <div class="options-endpoints-container">
                     <div class="options-endpoints-top">
-                        <span class="property-name">Consumer Endpoints:</span>
+                        <span class="property-name">Consumer Endpoints: <info-tooltip [Message]="'List of endpoints that are being consumed. Click the drowdown to show actions.'"></info-tooltip></span>
                         <span class="button-icon" (click)="addEndpoint()"><i class="fas fa-plus"></i></span>
                     </div>
                     <div class="options-endpoints">
@@ -118,7 +118,7 @@ class="anchor component"
                                 </mat-expansion-panel-header>
                                 <div class="options-endpoint-actions-container">
                                     <div class="options-endpoint-action">
-                                        <span class="property-name action-endpoint">Actions:</span>
+                                        <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
                                         <span class="action-method"></span>
                                         <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
                                     </div>

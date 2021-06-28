@@ -18,7 +18,7 @@ class="anchor component"
     <div #options>
         <div>
             <div class="options-endpoint">
-                <span class="property-name endpoint-title">Target Endpoint:</span>
+                <span class="property-name endpoint-title">Target Endpoint: <info-tooltip [Message]="'The endpoint that data will be sent to using selected method.'"></info-tooltip></span>
                 <div class="endpoint-protocol">
                     <span>{{ Protocol[protocol] }}</span>
                 </div>
