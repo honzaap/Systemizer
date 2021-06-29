@@ -44,6 +44,7 @@ import { GettingStartedComponent } from './pages/getting-started/getting-started
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { InfoTooltipComponent } from './info-tooltip/info-tooltip.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { TitleComponent } from './board/components/Shared/title/title.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     TutorialControlsComponent,
     GettingStartedComponent,
     LandingPageComponent,
-    InfoTooltipComponent
+    InfoTooltipComponent,
+    TitleComponent
   ],
   imports: [
     BrowserModule,

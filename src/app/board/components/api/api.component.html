@@ -1,16 +1,12 @@
-<input [style.left.px]="LogicApi.options.X-20"
-[style.top.px]="LogicApi.options.Y-20" 
-#compTitle type="text" class="component-title" [(ngModel)]="LogicApi.options.title" spellcheck="false">
 <div
 #anchorRef
-(mousedown)="handleMousedown( $event )"
-(click)="handleClick()"
 class="anchor component"
 [style.left.px]="LogicApi.options.X "
 [style.top.px]="LogicApi.options.Y"
 >
     <template #conn></template>
-    <div class="img-container">
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
         <img src="./assets/api.svg">
     </div>
 </div>

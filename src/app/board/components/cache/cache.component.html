@@ -1,16 +1,12 @@
-<input [style.left.px]="LogicCache.options.X-20"
-[style.top.px]="LogicCache.options.Y-20" 
-#compTitle type="text" class="component-title" [(ngModel)]="LogicCache.options.title" spellcheck="false">
 <div
 #anchorRef
-(mousedown)="handleMousedown( $event )"
-(click)="handleClick()"
 class="anchor component"
 [style.left.px]="LogicCache.options.X"
 [style.top.px]="LogicCache.options.Y"
 >
     <template #conn></template>
-    <div class="img-container">
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
         <img src="./assets/cache.svg">
     </div>  
 </div>

@@ -40,9 +40,6 @@ html{
     }
 }
 .component{
-    &:hover{
-        cursor: move;
-    }
     position: absolute;
     width: 40px;
     height: 40px;
@@ -52,13 +49,17 @@ html{
     z-index: 3;
     & .img-container{
         position: absolute;
-        top: 7px;
-        bottom: 7px;
-        left: 7px;
-        right: 7px;
+        padding: 7px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         display: flex;
         justify-content: center;
         align-items: center;
+        &:hover{
+            cursor: move;
+        }
     }
     &.anim{
         animation: receivedatabg 0.5s linear; 
@@ -95,24 +96,6 @@ html{
         &.error{
             color:rgb(175, 38, 38);
         }
-    }
-}
-.component-title{
-    position: absolute;
-    font-size: 0.6rem;
-    z-index: 100;
-    width: 80px;
-    z-index: 3;
-    overflow: visible;
-    background-color: transparent;
-    color: rgba(255, 255, 255, 0.7);
-    outline: none;
-    text-align: center;
-    border: none;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.1s linear;
-    &:hover{
-        border-color: rgba(2, 86, 143,0.45);
     }
 }
 .topic-expansion-header{

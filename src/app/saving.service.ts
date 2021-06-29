@@ -21,7 +21,7 @@ export class SavingService {
 
 	constructor() { }
 
-  	getBoardJson(allLogicComponents: any[], systemName: string){
+  	getBoardJson(allLogicComponents: IDataOperator[], systemName: string){
 		let jsonReadyComponents = [];
 		let wasError = false;
 		for(let component of allLogicComponents){
@@ -92,7 +92,7 @@ export class SavingService {
 		return "Client";
 	}
 
-	save(allLogicComponents: any[]){
+	save(allLogicComponents: IDataOperator[]){
 		localStorage.setItem(this.LOCALSTORAGE_AUTOSAVE_KEY, this.getBoardJson(allLogicComponents, this.systemName));
 	}
 }

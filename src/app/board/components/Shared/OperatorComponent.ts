@@ -17,6 +17,7 @@ import { WritePolicy } from "src/models/enums/WritePolicy";
 import { Options } from "src/models/Options";
 import { clone, getFormattedMethod } from "src/shared/ExtensionMethods";
 import { PortComponent } from "../port/port.component";
+import { TitleComponent } from "./title/title.component";
 
 interface Position{
     top:number;
@@ -209,7 +210,7 @@ export class OperatorComponent {
 		this.destroyComponent();
 	}
 
-	Init(conn: ViewContainerRef): void {
+	Init(conn: ViewContainerRef, generateTitle: boolean = true): void {
 		this.conn = conn;
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
@@ -239,6 +240,10 @@ export class OperatorComponent {
 		if(this.conn == null)
 			return;
 
+		
+		if(generateTitle)
+			setTimeout(()=>{this.generateTitle();}, 100); 
+
 		if(inputPort != null)
 			this.createPort(false);
 		if(outputPort != null)
@@ -264,6 +269,13 @@ export class OperatorComponent {
 			this.outputPortRef = ref.instance;
 		else
 			this.inputPortRef = ref.instance;
+	}
+
+	generateTitle(){
+		let factory  = this.resolver.resolveComponentFactory(TitleComponent);
+		let ref = this.conn.createComponent(factory);
+
+		ref.instance.Model = this.LogicComponent;
 	}
 
 	formatMethod(method: HTTPMethod, isDatabase: boolean){

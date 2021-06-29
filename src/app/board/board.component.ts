@@ -1,6 +1,6 @@
 import { AfterViewChecked, EventEmitter, Output, ViewContainerRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';

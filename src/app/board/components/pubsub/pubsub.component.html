@@ -1,16 +1,13 @@
-<input [style.left.px]="LogicPubSub.options.X-20"
-[style.top.px]="LogicPubSub.options.Y-20" 
-#compTitle type="text" class="component-title" [(ngModel)]="LogicPubSub.options.title" spellcheck="false">
 <div
 #anchorRef
-(mousedown)="handleMousedown( $event )"
-(click)="handleClick()"
+
 class="anchor component"
 [style.left.px]="LogicPubSub.options.X"
 [style.top.px]="LogicPubSub.options.Y"
 >
     <template #conn></template>
-    <div class="img-container">
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
         <img src="./assets/pubsub.svg">
     </div>   
 </div>

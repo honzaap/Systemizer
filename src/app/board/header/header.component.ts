@@ -39,10 +39,12 @@ export class HeaderComponent implements OnInit {
 	confirmDialogText = "";
 	isKeyboardShortcutsOpen = false;
 	isHelpersDisabled: boolean;
+	isTitlesHidden: boolean;
 	confirmDialogReturnFunction = () => {};
 
 	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
+		this.isTitlesHidden = viewingService.isTitlesHidden();
 	}
 
 	load(file){
@@ -116,4 +118,8 @@ export class HeaderComponent implements OnInit {
 		this.viewingService.setHelpersDisabled(this.isHelpersDisabled);
 	}
 
+	toggleTitlesHidden(){
+		this.isTitlesHidden = !this.isTitlesHidden;
+		this.viewingService.setTitlesHidden(this.isTitlesHidden);
+	}
 }

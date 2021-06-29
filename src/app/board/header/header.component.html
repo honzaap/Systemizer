@@ -75,6 +75,12 @@
                             <span>Disable <i class="far fa-question-circle"></i> helpers</span>
                         </ng-template>
                     </button>
+                    <button mat-menu-item (click)="toggleTitlesHidden()">
+                        <span *ngIf="isTitlesHidden; else titlesVisible">Show titles</span>
+                        <ng-template #titlesVisible>
+                            <span>Hide titles</span>
+                        </ng-template>
+                    </button>
                 </mat-menu>
             </li>
             <li>

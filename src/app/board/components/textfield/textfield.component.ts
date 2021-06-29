@@ -30,7 +30,7 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
 	}
 
 	ngAfterViewInit(): void {
-		super.Init(this.conn);
+		super.Init(this.conn, false);
   	}
 
 	ngOnInit(){

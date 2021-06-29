@@ -1,16 +1,12 @@
-<input [style.left.px]="LogicClient.options.X-20"
-[style.top.px]="LogicClient.options.Y-20" 
-#compTitle type="text" class="component-title" [(ngModel)]="LogicClient.options.title" spellcheck="false">
 <div
 #anchorRef
-(mousedown)="handleMousedown( $event )"
-(click)="handleClick()"
 class="anchor component"
 [style.left.px]="LogicClient.options.X "
 [style.top.px]="LogicClient.options.Y"
 >
     <template #conn></template>
-    <div class="img-container">
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
         <img src="./assets/client.svg">
     </div>    
 </div>

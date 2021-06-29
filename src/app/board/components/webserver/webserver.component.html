@@ -1,16 +1,12 @@
-<input [style.left.px]="LogicWebServer.options.X-20"
-[style.top.px]="LogicWebServer.options.Y-20" 
-#compTitle type="text" class="component-title" [(ngModel)]="LogicWebServer.options.title" spellcheck="false">
 <div
 #anchorRef
-(mousedown)="handleMousedown( $event )"
-(click)="handleClick()"
 class="anchor component"
 [style.left.px]="LogicWebServer.options.X"
 [style.top.px]="LogicWebServer.options.Y"
 >
     <template #conn></template>
-    <div class="img-container">
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
         <img src="./assets/webserver.svg">
     </div>  
 </div>
