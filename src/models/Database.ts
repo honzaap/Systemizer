@@ -28,7 +28,6 @@ export class Database extends EndpointOperator implements IDataOperator{
         this.outputPort = null;//new Port(this,true,true);      
         this.options = new DatabaseOptions();  
         this.options.title = "Database";
-        this.originID = UUID();
         
         this.options.endpoints = [
             new DatabaseEndpoint("/database")    
@@ -38,16 +37,9 @@ export class Database extends EndpointOperator implements IDataOperator{
     async receiveData(request: RequestData, fromOutput = false) {
         if(fromOutput) 
             return;
-        // Checking for 404
-        let hasEndpoint = false;
-        for(let endpoint of this.options.endpoints){
-            if(endpoint.url === request.header.endpoint.endpoint.url)
-                hasEndpoint = true;
-         }
-        if(!hasEndpoint){
-            this.fireShowStatusCode(HTTPStatus["Not Found"])
+        let targetEndpoint = this.getTargetEndpoint(request);
+        if(targetEndpoint == null)
             return;
-        }
 
         this.fireReceiveData(request);
         if(this.options.isMasterShard){
@@ -70,13 +62,7 @@ export class Database extends EndpointOperator implements IDataOperator{
             }
         }
         this.connectionTable[request.requestId] = request.origin;
-        let response = new RequestData();
-        response.header = new RequestDataHeader(request.header.endpoint, Protocol.HTTP);
-        response.origin = request.origin;
-        response.originID = this.originID;
-        response.requestId = UUID();
-        response.responseId = request.requestId;
-        await this.sendData(response);
+        await this.sendData(this.getResponse(request));
     }
 
     onConnectionUpdate(wasOutput: boolean = false){

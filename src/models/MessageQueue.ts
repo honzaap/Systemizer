@@ -26,7 +26,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         this.outputPort = new Port(this, true, true);        
         this.options = new MessageQueueOptions();
         this.options.title = "Message Queue";
-        this.originID = UUID();
 
         this.options.endpoints = [
             new MQEndpoint()

@@ -20,7 +20,6 @@ export class Client extends LogicComponent implements IDataOperator{
         this.outputPort = new Port(this, true, false);        
         this.options = new ClientOptions();
         this.options.title = "Client";
-        this.originID = UUID();
     }
 
     receiveData(data: RequestData): void {

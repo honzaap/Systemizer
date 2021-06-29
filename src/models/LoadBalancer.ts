@@ -26,7 +26,6 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
         this.outputPort = new Port(this, true, true);        
         this.options = new LoadBalancerOptions();
         this.options.title = "Load Balancer";
-        this.originID = UUID();
     }
 
     async receiveData(data: RequestData, fromOutput:boolean) {

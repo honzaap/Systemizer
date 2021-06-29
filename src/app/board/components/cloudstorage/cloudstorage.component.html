@@ -1,0 +1,39 @@
+<div
+#anchorRef
+class="anchor component"
+[style.left.px]="LogicCloudStorage.options.X"
+[style.top.px]="LogicCloudStorage.options.Y"
+>
+    <template #conn></template>
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
+        <img src="./assets/cloudstorage.svg">
+    </div>  
+</div>
+<div style="display:none">
+    <div #options>
+        <div class="options-endpoints-container">
+            <div class="options-endpoints-top">
+                <span class="property-name">Endpoints: <info-tooltip [Message]="'A cloud storage endpoint. By default set to /cloud'"></info-tooltip></span>
+            </div>
+            <div class="options-endpoints">
+                <div class="options-endpoint" *ngFor="let endpoint of this.LogicCloudStorage.options.endpoints">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="options-endpoint-menu-top">
+                            <mat-form-field class="endpoint-method" appearance="fill">
+                                <mat-select disabled [(ngModel)]="endpoint.supportedMethods" multiple>
+                                    <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ HTTPMethod[method] }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

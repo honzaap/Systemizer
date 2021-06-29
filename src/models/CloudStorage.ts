@@ -9,21 +9,21 @@ import { HTTPMethod } from "./enums/HTTPMethod";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 
-export class WebServer extends EndpointOperator implements IDataOperator{
+export class CloudStorage extends EndpointOperator implements IDataOperator{
 
     inputPort: Port;
-    options: WebServerOptions;
+    options: CloudStorageOptions;
     connectionTable: { [id:string]: Connection } = {};
     originID: string;
 
     constructor() {
         super();
         this.inputPort = new Port(this,false,true);      
-        this.options = new WebServerOptions();  
-        this.options.title = "Web Server";
+        this.options = new CloudStorageOptions();  
+        this.options.title = "Cloud Storage";
         
         this.options.endpoints = [
-            new Endpoint("/",[HTTPMethod.GET])    
+            new Endpoint("/cloud",[HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE])    
         ]
     }
 
@@ -57,5 +57,5 @@ export class WebServer extends EndpointOperator implements IDataOperator{
     }
 }
 
-export class WebServerOptions extends EndpointOptions{
+export class CloudStorageOptions extends EndpointOptions{
 }

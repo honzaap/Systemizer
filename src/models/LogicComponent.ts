@@ -1,9 +1,12 @@
 import { IDataOperator, ReceiveDataEvent, ShowStatusCodeEvent, FailedConnectEvent } from "src/interfaces/IDataOperator";
+import { UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { Port } from "./Port";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 
 export class LogicComponent {
+
+    originID: string = UUID();
 
     connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
         let otherPort = operator.getPort(connectingToOutput);

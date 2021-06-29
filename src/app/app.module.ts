@@ -45,6 +45,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { InfoTooltipComponent } from './info-tooltip/info-tooltip.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { TitleComponent } from './board/components/Shared/title/title.component';
+import { CloudStorageComponent } from './board/components/cloudstorage/cloudstorage.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { TitleComponent } from './board/components/Shared/title/title.component'
     GettingStartedComponent,
     LandingPageComponent,
     InfoTooltipComponent,
-    TitleComponent
+    TitleComponent,
+    CloudStorageComponent
   ],
   imports: [
     BrowserModule,

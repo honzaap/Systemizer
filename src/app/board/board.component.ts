@@ -13,6 +13,7 @@ import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
 import { CacheComponent } from './components/cache/cache.component';
 import { ClientComponent } from './components/client/client.component';
+import { CloudStorageComponent } from './components/cloudstorage/cloudstorage.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { LoadbalancerComponent } from './components/loadbalancer/loadbalancer.component';
 import { MessagequeueComponent } from './components/messagequeue/messagequeue.component';
@@ -379,6 +380,8 @@ export class BoardComponent implements AfterViewChecked  {
 				return ApiGatewayComponent;
 			case "Cache":
 				return CacheComponent;
+			case "CloudStorage":
+				return CloudStorageComponent;
 			case "Database":
 				return DatabaseComponent;
 			case "LoadBalancer":

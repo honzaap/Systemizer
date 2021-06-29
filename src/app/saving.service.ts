@@ -10,6 +10,7 @@ import { MessageQueue } from 'src/models/MessageQueue';
 import { PubSub } from 'src/models/PubSub';
 import { TextField } from 'src/models/TextField';
 import { WebServer } from 'src/models/WebServer';
+import { CloudStorage } from 'src/models/CloudStorage';
 
 @Injectable({
   	providedIn: 'root'
@@ -68,7 +69,7 @@ export class SavingService {
 		return file;
 	}
 
-	private getComponentType(component: any){
+	private getComponentType(component: any){ // constructor.name doesn't work in prod if sourceMap isn't turned on
 		if(component instanceof API)
 			return "API";
 		else if(component instanceof APIGateway)
@@ -77,6 +78,8 @@ export class SavingService {
 			return "Client";
 		else if(component instanceof Cache)
 			return "Cache";
+		else if(component instanceof CloudStorage)
+			return "CloudStorage"
 		else if(component instanceof Database)
 			return "Database";
 		else if(component instanceof LoadBalancer)

@@ -26,7 +26,6 @@ export class API extends EndpointOperator implements IDataOperator{
         this.outputPort = new Port(this, true, true);       
         this.options = new APIOptions(); 
         this.options.title = "API";
-        this.originID = UUID();
         let initialEndpoint = new Endpoint("api/posts", [HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE,])
         initialEndpoint.protocol = Protocol.HTTP;
         this.options.endpoints = [
@@ -47,34 +46,9 @@ export class API extends EndpointOperator implements IDataOperator{
             if(data.requestId == "" || data.requestId == null) throw new Error("Request ID can not be null");
             if(data.header.endpoint == null) throw new Error("Endpoint can not be null")
 
-            // Checking for 404 and 405
-            let hasEndpoint = false;
-            let notAllowed = false;
-            let targetEndpoint: Endpoint;
-            let targetUrl = data.header.endpoint.endpoint.url;
-
-            this.options.endpoints.filter(endpoint => 
-                endpoint.url == targetUrl
-            ).forEach(endpoint => {
-                hasEndpoint = true;
-                if(endpoint.supportedMethods.indexOf(data.header.endpoint.method) == -1)
-                    notAllowed = true;
-                else{
-                    // Found wanted endpoint
-                    notAllowed = false;
-                    targetEndpoint = endpoint;
-                    return;
-                }
-            })
-
-            if(!hasEndpoint){
-                this.fireShowStatusCode(HTTPStatus["Not Found"])
+            let targetEndpoint = this.getTargetEndpoint(data);
+            if(targetEndpoint == null)
                 return;
-            }
-            if(notAllowed){
-                this.fireShowStatusCode(HTTPStatus["Method Not Allowed"]);
-                return;
-            }
 
             this.fireReceiveData(data);
             if(this.connectionTable[data.requestId] != null){ // Check if the api is already streaming to this connection
@@ -88,13 +62,8 @@ export class API extends EndpointOperator implements IDataOperator{
                 this.connectionTable[data.requestId] = data.origin; // Save connection to request package
                 if(data.header.stream){
                     if(targetEndpoint.grpcMode != gRPCMode.Unary || targetEndpoint.protocol == Protocol.WebSockets){
-                        // Client wants to strat stream
-                        let response = new RequestData();
-                        response.header = new RequestDataHeader(data.header.endpoint, targetEndpoint.protocol, true);
-                        response.origin = data.origin;
-                        response.originID = this.originID;
-                        response.responseId = data.requestId;
-                        this.stream(response, targetEndpoint);
+                        // Client wants to start stream
+                        this.stream(this.getResponse(data), targetEndpoint);
                     }
                     return;
                 }
@@ -132,14 +101,7 @@ export class API extends EndpointOperator implements IDataOperator{
 
             // Send response back to client
             if(!this.options.isConsumer){
-                let response = new RequestData();
-                response.header = new RequestDataHeader(data.header.endpoint,targetEndpoint.protocol);
-
-                response.origin = data.origin;
-                response.originID = this.originID;
-                response.requestId = UUID();
-                response.responseId = data.requestId;
-                await this.sendData(response);
+                await this.sendData(this.getResponse(data));
             }
         }
     }

@@ -28,6 +28,7 @@ a.highlight{
 .components{
     display: flex;
     margin-top: 4em;
+    font-size: 19px;
     justify-content: space-evenly;
     & > div{
         flex-basis: 45%;
@@ -45,7 +46,7 @@ a.highlight{
     }
     & .component-container{
         & .title{
-            font-size: 0.8em;
+            font-size: 12px;
             margin-bottom: 0.2em;
             display: block;
             color: #c0c0c0;
@@ -54,24 +55,24 @@ a.highlight{
     & .component-body{
         background-color: $bg-purple-darker;
         padding: 0.5em;
-        width: 3rem;
+        width: 3em;
         border-radius: 0.3em;
-        height: 3rem;
+        height: 3em;
         position: relative;
         margin: 0 auto;
         &.long{
-            width: 6rem;
+            width: 6em;
             & img{
-                margin-left: 1.5rem;
+                margin-left: 1.5em;
             }
         }
         &.high{
-            height: 6rem;
+            height: 6em;
             & img{
-                margin-top: 1.5rem;
+                margin-top: 1.5em;
             }
             & .port{
-                top: 2.5rem;
+                top: 2.5em;
             }
         }
         &.mq{
@@ -80,23 +81,23 @@ a.highlight{
             gap: 2px;
         }
         & .cell{
-            width: 0.55rem;
+            width: 0.55em;
             height: 100%;
             background-color: rgba(255, 255, 255, 0.1);
         }
         & .port{
-            width: 1rem;
-            height: 1rem;
+            width: 1em;
+            height: 1em;
             border-radius: 50%;
-            border: 0.2rem solid $orange-light;
+            border: 0.2em solid $orange-light;
             background-color: $bg-purple-darker;
             position: absolute;
-            top: 1rem;
+            top: 1em;
             &.left{
-                left: -1.25rem;
+                left: -1.25em;
             }
             &.right{
-                right: -1.25rem;
+                right: -1.25em;
             }
         }
     }

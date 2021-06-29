@@ -16,7 +16,6 @@ export class TextField extends LogicComponent implements IDataOperator{
         super();
         this.options = new TextFieldOptions();
         this.options.title = "Text Field";
-        this.originID = UUID();
     }
     
     receiveData(data: RequestData, fromOutput: boolean): void { 

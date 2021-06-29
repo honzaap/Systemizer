@@ -16,6 +16,7 @@ import { TextfieldComponent } from '../components/textfield/textfield.component'
 import { WebserverComponent } from '../components/webserver/webserver.component';
 import { PlacingService } from '../../placing.service';
 import { ViewingService } from 'src/app/viewing.service';
+import { CloudStorageComponent } from '../components/cloudstorage/cloudstorage.component';
 
 class MenuItem<T>{
 	component: T;
@@ -77,9 +78,10 @@ export class ComponentmenuComponent implements OnInit {
 			new MenuItem(ApiGatewayComponent, "Web API Gateway", "GW","./assets/apigateway.svg", '<p>API gateway is used to reduce number of requests, the client needs to send.</p><p>Use the input port to connect a client and the output port to connect other services and APIs.</p><p>There are 5 types of endpoints available, every type has some unique properties. Each endpoint can have actions that will be triggered on each request. For more info about each endpoint type, use the <span class="highlight">?</span> icon.</p>'),
 			new MenuItem(ApiComponent, "Web API Service", "API","./assets/api.svg", '<p>API is general component to simulate any API or microservice.</p> <p>Use the input port to connect a client and the output port to connect other services and APIs. </p> <p>API can be of 5 available types, each used for different purposes. You can add any number of endpoints that can have different actions like sending new requests to other APIs or storing data to database.</p>'),
 		]));
-		this.allCategories.push(new Category("Databases",[
+		this.allCategories.push(new Category("Storage",[
 			new MenuItem(DatabaseComponent, "SQL Database", "SQL","./assets/database.svg", '<p>Database component simulates a database server with one default endpoint.</p> <p>Use the input port to connect services to database and receive data through.</p> <p>You can use the <span class="highlight">Shard Database</span> action to shard the database and create 3 default shards. </p>',{ type: DatabaseType.SQL }),
 			new MenuItem(DatabaseComponent, "NoSQL Database", "NoSQL","./assets/database.svg",'<p>Database component simulates a database server with one default endpoint.</p> <p>Use the input port to connect services to database and receive data through.</p> <p>You can use the <span class="highlight">Shard Database</span> action to shard the database and create 3 default shards. </p>', { type: DatabaseType.NoSQL }),
+			new MenuItem(CloudStorageComponent, "Cloud Storage", "CLOUD","./assets/cloudstorage.svg",'<p>Cloud storage component simulates any cloud storage with one default endpoint.</p> <p>Use the input port to connect services to cloud and receive data through.</p>'),
 		]));
 		this.allCategories.push(new Category("Caches",[
 			new MenuItem(CacheComponent, "Write-Through Cache", "WT","./assets/cache.svg", '<p>Cache component simulates a distributed cache with a <span class="underline">random</span> hit/miss chance.</p> <p>Receive data through input port. The output port is connected to <span class="highlight">Database</span>.</p> <p>You can change Write and Replacement policies to better specify the behaviour of your cache.</p>', { writePolicy: WritePolicy['Write-Through'] }),

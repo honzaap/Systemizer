@@ -24,7 +24,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
         this.outputPort = new Port(this, true, true);       
         this.options = new APIGatewayOptions(); 
         this.options.title = "API Gateway";
-        this.originID = UUID();
     }
 
     async receiveData(data: RequestData, fromOutput:boolean) {
@@ -73,35 +72,9 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(data.requestId == "" || data.requestId == null) throw new Error("Request ID can not be null");
             if(data.header.endpoint == null) throw new Error("Endpoint can not be null")
 
-            // Checking for 404 and 405
-            let hasEndpoint = false;
-            let notAllowed = false;
-            let targetEndpoint: Endpoint;
-            let targetUrl = data.header.endpoint.endpoint.url;
-
-            this.getEndpoints().filter(endpoint => 
-                endpoint.url == targetUrl
-            ).forEach(endpoint => {
-                hasEndpoint = true;
-                if(endpoint.supportedMethods.indexOf(data.header.endpoint.method) == -1){
-                    notAllowed = true;
-                }
-                else{
-                    // Found wanted endpoint
-                    notAllowed = false;
-                    targetEndpoint = endpoint;
-                    return;
-                }
-            })
-
-            if(!hasEndpoint){
-                this.fireShowStatusCode(HTTPStatus["Not Found"])
+            let targetEndpoint = this.getTargetEndpoint(data);
+            if(targetEndpoint == null)
                 return;
-            }
-            if(notAllowed){
-                this.fireShowStatusCode(HTTPStatus["Method Not Allowed"]);
-                return;
-            }
 
             this.fireReceiveData(data);
             let sendResponse = false;
@@ -158,13 +131,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(targetEndpoint.grpcMode == gRPCMode["Server Streaming"]) {
                 if(isFirstStreamRequest){
                     // Initiate server stream 
-                    let response = new RequestData();
-                    response.header = new RequestDataHeader(data.header.endpoint, targetEndpoint.protocol, data.header.stream);
-                    response.origin = data.origin;
-                    response.originID = this.originID;
-                    response.requestId = UUID();
-                    response.responseId = data.requestId;
-                    this.serverStream(response, targetEndpoint);
+                    this.serverStream(this.getResponse(data), targetEndpoint);
                 }
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
@@ -172,13 +139,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(sendResponse){
                 // Send response back
                 this.connectionTable[data.requestId] = data.origin;
-                let response = new RequestData();
-                response.header = new RequestDataHeader(data.header.endpoint, targetEndpoint.protocol, data.header.stream);
-                response.origin = data.origin;
-                response.originID = this.originID;
-                response.requestId = UUID();
-                response.responseId = data.requestId;
-                await this.sendData(response);
+                await this.sendData(this.getResponse(data));
             }
         }
     }
@@ -203,7 +164,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
 
     async serverStream(data: RequestData, streamingEndpoint: Endpoint){
         await sleep(700);
-        if(streamingEndpoint.actions.length == 0 || this.connectionTable[data.responseId] == null || (
+        if(streamingEndpoint.actions.filter(action => action.endpoint.grpcMode != gRPCMode["Server Streaming"]).length == 0 || this.connectionTable[data.responseId] == null || (
             streamingEndpoint.grpcMode != gRPCMode["Server Streaming"]) ||
             this.getEndpoints().indexOf(streamingEndpoint) == -1) return;
 

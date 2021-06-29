@@ -22,7 +22,6 @@ export class PubSub extends EndpointOperator implements IDataOperator{
         this.outputPort = new Port(this, true, true);        
         this.options = new PubSubOptions();
         this.options.title = "Pub/Sub Model";
-        this.originID = UUID();
 
         this.options.endpoints = [
             new Endpoint("post.postCreated", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE])

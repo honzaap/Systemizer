@@ -26,7 +26,6 @@ export class Cache extends LogicComponent implements IDataOperator{
         this.outputPort = new Port(this,true,false);      
         this.options = new CacheOptions();  
         this.options.title = "Cache";
-        this.originID = UUID();
     }
 
     async receiveData(request: RequestData, fromOutput = false) {
