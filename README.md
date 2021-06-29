@@ -19,7 +19,7 @@ Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/
 ![Gif of Systemizer](https://honzaap.github.io/Systemizer/assets/gifs/tutorial0.gif)
 
 ### How does Systemizer work?
-  * Select a compoennt. This can be an **API**, **Client**, **Message Queue**, you name it.
+  * Select a component. This can be an **API**, **Client**, **Message Queue**, you name it.
   * Create customizable endpoints, and connect components together.
   * Send data to endpoints and watch the data flow of your system.
 
