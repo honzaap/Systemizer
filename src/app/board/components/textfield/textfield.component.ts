@@ -56,4 +56,9 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
 	toggleItalic(){
 		this.LogicTextField.options.isItalic = !this.LogicTextField.options.isItalic;
 	}
+
+	resize(e){
+		this.LogicTextField.options.width = e.width;
+		this.LogicTextField.options.height = e.height;
+	}
 }

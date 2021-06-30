@@ -41,6 +41,8 @@ export class TextField extends LogicComponent implements IDataOperator{
 }
 
 export class TextFieldOptions extends Options{
+    width: number = 140;
+    height: number = 60;
     fontSize: number = 12;
     isBold: boolean = false;
     isItalic: boolean = false;

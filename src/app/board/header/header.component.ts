@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
-import { SavingService } from 'src/app/saving.service';
+import { ExportPngOptions, SavingService } from 'src/app/saving.service';
 import { ViewingService } from 'src/app/viewing.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class HeaderComponent implements OnInit {
 	@Output() saveFile = new EventEmitter();
 	@Output() loadFile = new EventEmitter();
 	@Output() save = new EventEmitter();
+	@Output() exportPng = new EventEmitter();
 
 	// Edit section events
 	@Output() copy = new EventEmitter();
@@ -38,8 +39,10 @@ export class HeaderComponent implements OnInit {
 	confirmDialogOpen = false;
 	confirmDialogText = "";
 	isKeyboardShortcutsOpen = false;
+	isExportPngDialogOpen = false;
 	isHelpersDisabled: boolean;
 	isTitlesHidden: boolean;
+	exportPngOptions: ExportPngOptions = new ExportPngOptions();
 	confirmDialogReturnFunction = () => {};
 
 	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { 
@@ -103,6 +106,19 @@ export class HeaderComponent implements OnInit {
 
 	clearBoardDialog(){
 		this.clearBoard.emit();
+	}
+
+	exportAsPng(){
+		this.exportPng.emit(this.exportPngOptions);
+		this.closeExportPngDialog();
+	}
+
+	openExportPngDialog(){
+		this.isExportPngDialogOpen = true;
+	}
+
+	closeExportPngDialog(){
+		this.isExportPngDialogOpen = false;
 	}
 
 	openKeyboardShortcuts(){

@@ -7,7 +7,7 @@ import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { download } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
 import { PlacingService } from '../placing.service';
-import { SavingService } from '../saving.service';
+import { ExportPngOptions, SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
@@ -158,6 +158,10 @@ export class BoardComponent implements AfterViewChecked  {
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
 		this.loadLatestBoard();
+	}
+
+	async getBoardCanvas(options: ExportPngOptions){
+		return await this.savingService.getCanvas(this.allLogicComponents, options);
 	}
 
 	loadLatestBoard(){

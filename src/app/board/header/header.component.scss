@@ -98,6 +98,17 @@ input[type="file"] {
             }
         }
     }
+    & label{
+        display: flex;
+        margin: 0.4em 0;
+        & input{
+            width: auto;
+            flex-basis: 20%;
+        }
+        & span{
+            flex-grow: 1;
+        }
+    }
 }
 
 .keyboard-shortcuts-window{

@@ -7,7 +7,11 @@ class="anchor component"
 [style.top.px]="LogicTextField.options.Y" 
 >
     <template #conn></template>
-    <textarea [class.bold]="LogicTextField.options.isBold" [class.italic]="LogicTextField.options.isItalic" [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img"></textarea>
+    <textarea [class.bold]="LogicTextField.options.isBold" [class.italic]="LogicTextField.options.isItalic" 
+    [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" 
+    [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img"
+    [style.width]="LogicTextField.options.width+'px'" [style.height]="LogicTextField.options.height+'px'"
+    (resize)="resize($event)"></textarea>
 </div>
 <div style="display:none">
     <div #options>

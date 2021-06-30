@@ -73,6 +73,19 @@ export function download(filename, text) {
     document.body.removeChild(element);
 }
 
+export function downloadPng(filename, image) {
+  var element = document.createElement('a');
+  element.setAttribute('href', image);
+  element.setAttribute('download', filename);
+  
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  
+  element.click();
+  
+  document.body.removeChild(element);
+}
+
 export function clone(object: any): any {
   var cloneObj = new (object.constructor as any);
   for (var attribut in object) {

@@ -23,6 +23,15 @@
                     <button mat-menu-item (click)="save.emit(name)">
                         <span>Save</span>
                     </button>
+                    <hr class="line">
+                    <button mat-menu-item mat-icon-button [matMenuTriggerFor]="exportMenu" aria-label="Export menu">
+                        Export
+                    </button>
+                    <mat-menu #exportMenu="matMenu">
+                        <button mat-menu-item (click)="openExportPngDialog()">
+                            <span>Export as PNG</span>
+                        </button>
+                    </mat-menu>
                 </mat-menu>
             </li>
             <li>
@@ -124,5 +133,26 @@
             <li><p class="highlight">CTRL Y</p> <p>Redo change</p></li>
         </ul> 
         <button class="close" (click)="closeKeyboardShortcuts()"><i class="fas fa-times"></i></button>
+    </div>
+</div>
+<div class="confirm-dialog-container" (click.self)="closeExportPngDialog()" [style.display]="isExportPngDialogOpen ? 'flex' : 'none'">
+    <div class="confirm-dialog">
+        <p class="title">Export as PNG</p>
+        <label>
+            <span>Transparent background: </span>
+            <input type="checkbox" [(ngModel)]="exportPngOptions.transparentBackground">
+        </label>
+        <label>
+            <span>Capture only used area: </span>
+            <input type="checkbox" [(ngModel)]="exportPngOptions.captureUsed">
+        </label>
+        <label>
+            <span>Show component titles: </span>
+            <input type="checkbox" [(ngModel)]="exportPngOptions.showTitles">
+        </label>
+        <div class="buttons">
+            <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
+            <button class="btn-confirm" (click)="exportAsPng()">Download</button>
+        </div>
     </div>
 </div>
