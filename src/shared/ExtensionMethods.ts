@@ -1,4 +1,4 @@
-import { EndpointActionHTTPMethod, HTTPMethod } from "src/models/enums/HTTPMethod";
+import { HTTPMethod } from "src/models/enums/HTTPMethod";
 
 export function UUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -21,43 +21,17 @@ export function sleep (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+let formattedDbMethod ={
+  "Inherit": "Inherit",
+  "GET": "SELECT",
+  "POST": "INSERT",
+  "PUT": "UPDATE",
+  "PATCH": "UPDATE",
+  "DELETE": "DELETE"
+}
+
 export function getFormattedMethod(method: HTTPMethod, isDatabase: boolean){
-  if(isDatabase){
-    switch(method.toString()){
-      case "Inherit":
-        return "Inherit";
-      case "GET":
-        return "SELECT";
-      case "POST":
-        return "INSERT";
-      case "PUT":
-        return "UPDATE";
-      case "PATCH":
-        return "UPDATE";
-      case "DELETE":
-        return "DELETE";
-      default: 
-        return "INSERT"
-    }
-  }
-  else{
-    switch(method.toString()){
-      case "Inherit":
-        return "Inherit";
-      case "GET":
-        return "GET";
-      case "POST":
-        return "POST";
-      case "PUT":
-        return "PUT";
-      case "PATCH":
-        return "PATCH";
-      case "DELETE":
-        return "DELETE";
-      default: 
-        return "GET"
-    }
-  }
+  return isDatabase ? formattedDbMethod[method.toString()] : method.toString();
 }
 
 export function download(filename, text) {
@@ -76,6 +50,37 @@ export function download(filename, text) {
 export function downloadPng(filename, image) {
   var element = document.createElement('a');
   element.setAttribute('href', image);
+  element.setAttribute('download', filename);
+  
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  
+  element.click();
+  
+  document.body.removeChild(element);
+}
+
+export function downloadSvg(filename, svg) {
+
+  var serializer = new XMLSerializer();
+  var source = serializer.serializeToString(svg);
+  
+  //add name spaces.
+  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+      source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+      source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+  }
+  
+  //add xml declaration
+  source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+  
+  //convert svg source to URI data scheme.
+  var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+  
+  var element = document.createElement('a');
+  element.setAttribute('href', url);
   element.setAttribute('download', filename);
   
   element.style.display = 'none';

@@ -1,12 +1,11 @@
-import { ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Database, DatabaseOptions } from 'src/models/Database';
-import { OperatorComponent } from '../Shared/OperatorComponent';
 import { DatabaseEndpoint } from 'src/models/Endpoint';
 import { Port } from 'src/models/Port';
-import { ChangesService } from 'src/app/changes.service';
+import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'database',

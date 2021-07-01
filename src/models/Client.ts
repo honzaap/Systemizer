@@ -1,13 +1,12 @@
-import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
-import { Connection } from "./Connection";
-import { RequestData } from "./RequestData";
+import { IDataOperator } from "src/interfaces/IDataOperator";
+import { arrayEquals } from "src/shared/ExtensionMethods";
+import { Endpoint, EndpointRef } from "./Endpoint";
+import { gRPCMode } from "./enums/gRPCMode";
+import { Protocol } from "./enums/Protocol";
+import { LogicComponent } from "./LogicComponent";
 import { Options } from "./Options";
 import { Port } from "./Port";
-import { Protocol } from "./enums/Protocol";
-import { Endpoint, EndpointRef } from "./Endpoint";
-import { arrayEquals, UUID } from "src/shared/ExtensionMethods";
-import { gRPCMode } from "./enums/gRPCMode";
-import { LogicComponent } from "./LogicComponent";
+import { RequestData } from "./RequestData";
 
 export class Client extends LogicComponent implements IDataOperator{
 

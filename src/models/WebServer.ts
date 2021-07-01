@@ -1,13 +1,10 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
-import { RequestData, RequestDataHeader } from "./RequestData";
-import { Port } from "./Port";
-import { UUID } from "src/shared/ExtensionMethods";
-import { Protocol } from "./enums/Protocol";
+import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
 import { Endpoint } from "./Endpoint";
 import { HTTPMethod } from "./enums/HTTPMethod";
-import { HTTPStatus } from "./enums/HTTPStatus";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { Port } from "./Port";
+import { RequestData } from "./RequestData";
 
 export class WebServer extends EndpointOperator implements IDataOperator{
 

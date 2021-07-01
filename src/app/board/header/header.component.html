@@ -31,6 +31,9 @@
                         <button mat-menu-item (click)="openExportPngDialog()">
                             <span>Export as PNG</span>
                         </button>
+                        <button mat-menu-item (click)="openExportSvgDialog()">
+                            <span>Export as SVG</span>
+                        </button>
                     </mat-menu>
                 </mat-menu>
             </li>
@@ -153,6 +156,19 @@
         <div class="buttons">
             <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsPng()">Download</button>
+        </div>
+    </div>
+</div>
+<div class="confirm-dialog-container" (click.self)="closeExportSvgDialog()" [style.display]="isExportSvgDialogOpen ? 'flex' : 'none'">
+    <div class="confirm-dialog">
+        <p class="title">Export as SVG</p>
+        <label>
+            <span>Show component titles: </span>
+            <input type="checkbox" [(ngModel)]="exportSvgOptions.showTitles">
+        </label>
+        <div class="buttons">
+            <button class="btn-cancel" (click)="closeExportSvgDialog()">Cancel</button>
+            <button class="btn-confirm" (click)="exportAsSvg()">Download</button>
         </div>
     </div>
 </div>

@@ -1,13 +1,12 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
-import { Connection } from "./Connection";
-import { RequestData, RequestDataHeader } from "./RequestData";
-import { Port } from "./Port";
 import { UUID } from "src/shared/ExtensionMethods";
-import { Protocol } from "./enums/Protocol";
-import { DatabaseEndpoint, Endpoint, EndpointRef } from "./Endpoint";
-import { HTTPStatus } from "./enums/HTTPStatus";
+import { Connection } from "./Connection";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { DatabaseEndpoint, Endpoint, EndpointRef } from "./Endpoint";
 import { DatabaseType } from "./enums/DatabaseType";
+import { Protocol } from "./enums/Protocol";
+import { Port } from "./Port";
+import { RequestData, RequestDataHeader } from "./RequestData";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 
 interface RemoveShardEvent{

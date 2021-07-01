@@ -1,11 +1,11 @@
 import { ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { downloadPng } from 'src/shared/ExtensionMethods';
+import { downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
 import { BoardComponent } from '../board/board.component';
 import { HeaderComponent } from '../board/header/header.component';
 import { PlacingService } from '../placing.service';
-import { ExportPngOptions } from '../saving.service';
+import { ExportPngOptions, ExportSvgOptions } from '../export.service';
 
 @Component({
 	selector: 'app-create',
@@ -65,6 +65,15 @@ export class CreateComponent implements OnInit {
 			return;
 		}
 		downloadPng(this.header.name+".png", canvas.toDataURL('image/png', 1));
+	}
+
+	async exportSvg(options: ExportSvgOptions){
+		let svg = await this.board.getBoardSvg(options);
+		if(svg == null){
+			this.placingService.showSnack("You can't export an empty board.");
+			return;
+		}
+		downloadSvg(this.header.name+".svg", svg);
 	}
 
 	copy(){

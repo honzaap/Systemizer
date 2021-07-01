@@ -1,22 +1,20 @@
-import { ViewContainerRef, ViewEncapsulation  } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { ViewingService } from 'src/app/viewing.service';
 import { DatabaseType } from 'src/models/enums/DatabaseType';
 import { LoadBalancerType } from 'src/models/enums/LoadBalancerType';
 import { WritePolicy } from 'src/models/enums/WritePolicy';
+import { PlacingService } from '../../placing.service';
 import { ApiComponent } from '../components/api/api.component';
 import { ApiGatewayComponent } from '../components/apigateway/apigateway.component';
 import { CacheComponent } from '../components/cache/cache.component';
 import { ClientComponent } from '../components/client/client.component';
+import { CloudStorageComponent } from '../components/cloudstorage/cloudstorage.component';
 import { DatabaseComponent } from '../components/database/database.component';
 import { LoadbalancerComponent } from '../components/loadbalancer/loadbalancer.component';
 import { MessagequeueComponent } from '../components/messagequeue/messagequeue.component';
 import { PubsubComponent } from '../components/pubsub/pubsub.component';
 import { TextfieldComponent } from '../components/textfield/textfield.component';
 import { WebserverComponent } from '../components/webserver/webserver.component';
-import { PlacingService } from '../../placing.service';
-import { ViewingService } from 'src/app/viewing.service';
-import { CloudStorageComponent } from '../components/cloudstorage/cloudstorage.component';
 
 class MenuItem<T>{
 	component: T;

@@ -1,7 +1,4 @@
-import { ChangeDetectorRef, ElementRef } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SelectionService } from 'src/app/selection.service';
 import { Connection } from 'src/models/Connection';
 import { PortComponent } from '../port/port.component';

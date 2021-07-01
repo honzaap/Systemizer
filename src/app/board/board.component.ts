@@ -1,13 +1,12 @@
-import { AfterViewChecked, EventEmitter, Output, ViewContainerRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { download } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
+import { ExportPngOptions, ExportService, ExportSvgOptions } from '../export.service';
 import { PlacingService } from '../placing.service';
-import { ExportPngOptions, SavingService } from '../saving.service';
+import { SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
@@ -43,13 +42,65 @@ export class BoardComponent implements AfterViewChecked  {
 	systemName: string = "";
 
 	AUTOSAVE_INTERVAL = 30;
+	/**
+	 * Converting types of logic component to angular component
+	 */
+	componentTypes = { 
+		Client: ClientComponent,
+		API: ApiComponent,
+		APIGateway: ApiGatewayComponent,
+		Cache: CacheComponent,
+		CloudStorage: CloudStorageComponent,
+		Database: DatabaseComponent,
+		LoadBalancer: LoadbalancerComponent,
+		MessageQueue: MessagequeueComponent,
+		PubSub: PubsubComponent,
+		TextField: TextfieldComponent,
+		WebServer: WebserverComponent
+	}
+
+	/**
+	 * Dictionary of keys witht assigned function when pressed with ctrl key
+	 */
+	controlShortcuts = { 
+		"c": (e: Event) => {
+			this.copyItem();
+		},
+		"v": (e: Event) => {
+			this.pasteItem();
+		},
+		"x": (e: Event) => {
+			this.cutItem();
+		},
+		"s": (e: Event) => {
+			e.preventDefault();
+			this.save(true);
+		},
+		"z": (e: Event) => {
+			e.preventDefault();
+			this.undo();
+		},
+		"y": (e: Event) => {
+			e.preventDefault();
+			this.redo();
+		},
+		"+": (e: Event) => {
+			e.preventDefault();
+			this.zoomIn();
+		},
+		"-": (e: Event) => {
+			e.preventDefault();
+			this.zoomOut();
+		}
+	}
 
 	constructor(private placingService : PlacingService,
 	private selectionService: SelectionService, 
 	private snackBar: MatSnackBar,
 	private savingService: SavingService,
 	private changeRef: ChangeDetectorRef,
-	private changesService: ChangesService) { 
+	private changesService: ChangesService,
+	private exportService: ExportService) { 
 		setInterval(()=>{
 			if(this.allLogicComponents.length != 0){
 				this.save();
@@ -85,48 +136,17 @@ export class BoardComponent implements AfterViewChecked  {
 		this.board.addEventListener("mouseup",(e)=>{
 			if(this.placingService.isCreating){
 				let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
-				if(component != null){ // Add component to list
-					let logicComponent = component.getLogicComponent();
-					this.allLogicComponents.push(logicComponent);
-					this.allComponents.push(component);
-				}
+				console.log(component);
+				let logicComponent = component.getLogicComponent();
+				this.allLogicComponents.push(logicComponent);
+				this.allComponents.push(component);
 				this.placingService.stopCreating();
 			}
 		})
 
-		window.onkeydown = (e:KeyboardEvent)=>{
-			if(e.ctrlKey){
-				switch(e.key){
-					case "c":
-						this.copyItem();
-						break;
-					case "v":
-						this.pasteItem();
-						break;
-					case "x":
-						this.cutItem();
-						break;
-					case "s":
-						e.preventDefault();
-						this.save(true);
-						break;
-					case "z":
-						e.preventDefault();
-						this.undo();
-						break;
-					case "y":
-						e.preventDefault();
-						this.redo();
-						break;
-					case "+":
-						e.preventDefault();
-						this.zoomIn();
-						break;
-					case "-":
-						e.preventDefault();
-						this.zoomOut();
-						break;
-				}
+		window.onkeydown = (e: KeyboardEvent)=>{
+			if(e.ctrlKey && this.controlShortcuts[e.key]){
+				this.controlShortcuts[e.key](e);
 			}
 			if(e.key === 'Delete')
 				this.delete();
@@ -161,7 +181,11 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	async getBoardCanvas(options: ExportPngOptions){
-		return await this.savingService.getCanvas(this.allLogicComponents, options);
+		return await this.exportService.getCanvas(this.allLogicComponents, options);
+	}
+
+	async getBoardSvg(options: ExportSvgOptions){
+		return await this.exportService.getSvg(this.allLogicComponents, options);
 	}
 
 	loadLatestBoard(){
@@ -375,30 +399,6 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	getComponentTypeFromName(name: string){
-		switch(name){
-			case "Client":
-				return ClientComponent;
-			case "API":
-				return ApiComponent;
-			case "APIGateway":
-				return ApiGatewayComponent;
-			case "Cache":
-				return CacheComponent;
-			case "CloudStorage":
-				return CloudStorageComponent;
-			case "Database":
-				return DatabaseComponent;
-			case "LoadBalancer":
-				return LoadbalancerComponent;
-			case "MessageQueue":
-				return MessagequeueComponent;
-			case "PubSub":
-				return PubsubComponent;
-			case "TextField":
-				return TextfieldComponent;
-			case "WebServer":
-				return WebserverComponent;
-		}
-		return null;
+		return this.componentTypes[name];
 	}
 }

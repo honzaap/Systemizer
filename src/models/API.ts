@@ -1,17 +1,16 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
-import { Connection } from "./Connection";
-import { RequestData, RequestDataHeader } from "./RequestData";
-import { Port } from "./Port";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
-import { Endpoint, EndpointRef } from "./Endpoint";
+import { Connection } from "./Connection";
 import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
-import { Protocol } from "./enums/Protocol";
-import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
-import { HTTPStatus } from "./enums/HTTPStatus";
+import { Endpoint, EndpointRef } from "./Endpoint";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
+import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
+import { Protocol } from "./enums/Protocol";
 import { MessageQueue } from "./MessageQueue";
+import { Port } from "./Port";
 import { PubSub } from "./PubSub";
+import { RequestData, RequestDataHeader } from "./RequestData";
 
 export class API extends EndpointOperator implements IDataOperator{
 

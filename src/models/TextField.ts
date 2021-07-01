@@ -1,5 +1,4 @@
 import { IDataOperator, ShowStatusCodeEvent } from "src/interfaces/IDataOperator";
-import { UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { Endpoint } from "./Endpoint";
 import { LogicComponent } from "./LogicComponent";

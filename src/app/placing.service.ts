@@ -1,8 +1,4 @@
-import { ComponentFactory, ViewContainerRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
-import { ComponentRef } from '@angular/core';
-import { Type } from '@angular/core';
-import { Injectable } from '@angular/core';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { clone } from 'src/shared/ExtensionMethods';
 import { ConnectionComponent } from './board/components/connection/connection.component';

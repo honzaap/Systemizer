@@ -1,10 +1,9 @@
-import { ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
+import { Cache } from "src/models/Cache";
 import { OperatorComponent } from '../Shared/OperatorComponent';
-import { Cache } from "src/models/Cache"
-import { ChangesService } from 'src/app/changes.service';
 
 @Component({
     selector: 'cache',

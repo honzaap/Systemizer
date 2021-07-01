@@ -1,14 +1,14 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
-import { Endpoint, EndpointAction, MQEndpoint } from 'src/models/Endpoint';
-import { OperatorComponent } from '../Shared/OperatorComponent';
-import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
-import { Protocol } from 'src/models/enums/Protocol';
+import { Endpoint, EndpointAction } from 'src/models/Endpoint';
 import { APIType } from 'src/models/enums/APIType';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
-import { ChangesService } from 'src/app/changes.service';
+import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
+import { Protocol } from 'src/models/enums/Protocol';
+import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'api',

@@ -1,12 +1,12 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
+import { APIGateway } from 'src/models/APIGateway';
 import { Endpoint, EndpointAction } from 'src/models/Endpoint';
-import { OperatorComponent } from '../Shared/OperatorComponent';
 import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
-import { APIGateway } from 'src/models/APIGateway';
-import { ChangesService } from 'src/app/changes.service';
+import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'apigateway',

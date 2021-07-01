@@ -1,14 +1,13 @@
+import * as objectHash from 'object-hash';
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
-import { RequestData } from "./RequestData";
-import { Options } from "./Options";
-import { Port } from "./Port";
 import { Endpoint } from "./Endpoint";
-import { UUID } from "src/shared/ExtensionMethods";
 import { BalancingAlgorithm } from "./enums/BalancingAlgorithm";
 import { LoadBalancerType } from "./enums/LoadBalancerType";
-import * as objectHash from 'object-hash'
 import { LogicComponent } from "./LogicComponent";
+import { Options } from "./Options";
+import { Port } from "./Port";
+import { RequestData } from "./RequestData";
 
 export class LoadBalancer extends LogicComponent implements IDataOperator{
     inputPort: Port;

@@ -1,5 +1,4 @@
-import { ComponentFactoryResolver, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
