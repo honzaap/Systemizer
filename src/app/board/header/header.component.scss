@@ -103,10 +103,11 @@ input[type="file"] {
         margin: 0.4em 0;
         & input{
             width: auto;
-            flex-basis: 20%;
+            flex-basis: 25%;
         }
         & span{
             flex-grow: 1;
+            text-align: right;
         }
     }
 }

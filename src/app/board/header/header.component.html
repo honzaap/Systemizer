@@ -153,6 +153,14 @@
             <span>Show component titles: </span>
             <input type="checkbox" [(ngModel)]="exportPngOptions.showTitles">
         </label>
+        <label>
+            <span>Light mode: </span>
+            <input type="checkbox" [(ngModel)]="exportPngOptions.lightMode">
+        </label>
+        <label>
+            <span>Light color titles: </span>
+            <input [disabled]="!exportPngOptions.transparentBackground || !exportPngOptions.showTitles" type="checkbox" [(ngModel)]="exportPngOptions.lightTitles">
+        </label>
         <div class="buttons">
             <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsPng()">Download</button>
@@ -165,6 +173,14 @@
         <label>
             <span>Show component titles: </span>
             <input type="checkbox" [(ngModel)]="exportSvgOptions.showTitles">
+        </label>
+        <label>
+            <span>Light mode: </span>
+            <input type="checkbox" [(ngModel)]="exportSvgOptions.lightMode">
+        </label>
+        <label>
+            <span>Light color titles: </span>
+            <input [disabled]="!exportSvgOptions.showTitles" type="checkbox" [(ngModel)]="exportSvgOptions.lightTitles">
         </label>
         <div class="buttons">
             <button class="btn-cancel" (click)="closeExportSvgDialog()">Cancel</button>
