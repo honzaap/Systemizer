@@ -8,6 +8,7 @@ import { CloudStorage } from 'src/models/CloudStorage';
 import { Database } from 'src/models/Database';
 import { LoadBalancer } from 'src/models/LoadBalancer';
 import { MessageQueue } from 'src/models/MessageQueue';
+import { Options } from 'src/models/Options';
 import { PubSub } from 'src/models/PubSub';
 import { TextField } from 'src/models/TextField';
 import { WebServer } from 'src/models/WebServer';
@@ -24,43 +25,27 @@ export class SavingService {
 
   	getBoardJson(allLogicComponents: IDataOperator[], systemName: string){
 		let jsonReadyComponents = [];
-		let wasError = false;
 		for(let component of allLogicComponents){
 			// If one component fails, dont fail the whole operation, tell the user there were errors instead
 			try{ 
 				let jsonReadyComponent: any = {};
 				jsonReadyComponent.type = this.getComponentType(component);
-				jsonReadyComponent.id = component.originID;
-				jsonReadyComponent.options = component.options;
+				jsonReadyComponent.id = component.originID.slice(0, 6);
+				jsonReadyComponent.options = this.cloneOptions(component.options);
 				jsonReadyComponent.connections = [];
 				let inputPort = component.getPort(false);
-				let outputPort = component.getPort(true);
 				if(inputPort != null){ // Get all connections from inputPort to JSON ready form
 					for(let connection of inputPort.connections){
 						let jsonReadyConnection: any = {};
-						jsonReadyConnection.isFromOutput = false;
 						jsonReadyConnection.from = jsonReadyComponent.id;
 						let connectedCompoent = connection.getOtherPort(inputPort).parent;
-						jsonReadyConnection.to = connectedCompoent.originID;
-						jsonReadyConnection.isToOutput = connection.getOtherPort(inputPort).isOutput;
-						jsonReadyComponent.connections.push(jsonReadyConnection);
-					}
-				}
-				if(outputPort != null){ // Get all connections from outputPort to JSON ready form
-					for(let connection of outputPort.connections){
-						let jsonReadyConnection: any = {};
-						jsonReadyConnection.isFromOutput = true;
-						jsonReadyConnection.from = jsonReadyComponent.id;
-						let connectedCompoent = connection.getOtherPort(outputPort).parent;
-						jsonReadyConnection.to = connectedCompoent.originID;
-						jsonReadyConnection.isToOutput = connection.getOtherPort(outputPort).isOutput;
+						jsonReadyConnection.to = connectedCompoent.originID.slice(0, 6);
 						jsonReadyComponent.connections.push(jsonReadyConnection);
 					}
 				}
 				jsonReadyComponents.push(jsonReadyComponent);
 			}
 			catch(e){
-				wasError = true;
 				continue;
 			}
 		}
@@ -97,5 +82,25 @@ export class SavingService {
 
 	save(allLogicComponents: IDataOperator[]){
 		localStorage.setItem(this.LOCALSTORAGE_AUTOSAVE_KEY, this.getBoardJson(allLogicComponents, this.systemName));
+	}
+	
+	/**
+	 * Returns new object that represents options of given component normalized for saving
+	 */
+	private cloneOptions(options: Options): any {
+		var cloneObj = new (options.constructor as any);
+		for (var attribut in options) {
+			if(options[attribut] != null && options[attribut].endpoint != null && options[attribut].method != null){
+				cloneObj[attribut] = {
+					endpoint: {url: options[attribut].endpoint.url, supportedMethods: options[attribut].endpoint.supportedMethods },
+					method: options[attribut].method
+				};
+			}
+			else if (typeof options[attribut] === "object" && options[attribut] != null)
+				cloneObj[attribut] = this.cloneOptions(options[attribut]);
+			else
+				cloneObj[attribut] = options[attribut];
+		}
+		return cloneObj;
 	}
 }

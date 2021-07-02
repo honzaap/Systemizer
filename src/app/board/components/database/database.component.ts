@@ -47,6 +47,8 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 	}
 
 	changeDatabaseType(){
+		if(this.LogicDatabase.outputPort == null)	
+			return;
 		for(let conn of this.LogicDatabase.outputPort.connections){
 			let options = conn.getOtherPort(this.LogicDatabase.outputPort).parent.options;
 			if(options instanceof  DatabaseOptions)
@@ -87,5 +89,8 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 					this.LogicDatabase.options.isMasterShard = false;
 			}
 		}
+		setTimeout(()=>{
+			this.afterChange();
+		}, 300);
 	}
 }

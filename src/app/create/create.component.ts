@@ -102,6 +102,7 @@ export class CreateComponent implements OnInit {
 
 	clearBoard(){
 		this.board.clearBoard(true);
+		this.board.componentChanged();
 	}
 
 	fullscreen(){

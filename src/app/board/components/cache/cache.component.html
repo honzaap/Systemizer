@@ -16,7 +16,7 @@ class="anchor component"
             <span class="property-name">Write Policy: <info-tooltip [Message]="'Changes the write policy of the cache. This changes behaviour of writes.'"></info-tooltip></span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
-                    <mat-select [(ngModel)]="LogicCache.options.writePolicy">
+                    <mat-select (selectionChange)="afterChange()" [(ngModel)]="LogicCache.options.writePolicy">
                       <mat-option *ngFor="let type of WritePolicyKeys" [value]="type">{{WritePolicy[type]}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -26,7 +26,7 @@ class="anchor component"
             <span class="property-name">Replacement Policy: <info-tooltip [Message]="'Changes the replacement policy of the cache. This does not have any effect on the visualization.'"></info-tooltip></span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
-                    <mat-select [(ngModel)]="LogicCache.options.replacementPolicy">
+                    <mat-select (selectionChange)="afterChange()" [(ngModel)]="LogicCache.options.replacementPolicy">
                       <mat-option *ngFor="let type of ReplacementPolicyKeys" [value]="type">{{ReplacementPolicy[type]}}</mat-option>
                     </mat-select>
                 </mat-form-field>

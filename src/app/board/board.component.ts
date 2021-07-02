@@ -101,6 +101,10 @@ export class BoardComponent implements AfterViewChecked  {
 	private changeRef: ChangeDetectorRef,
 	private changesService: ChangesService,
 	private exportService: ExportService) { 
+		placingService.componentChanged.subscribe(()=>{
+			// Some component just got changed, change will be added for undo
+			this.componentChanged();
+		})
 		setInterval(()=>{
 			if(this.allLogicComponents.length != 0){
 				this.save();
@@ -114,6 +118,11 @@ export class BoardComponent implements AfterViewChecked  {
 
 	allLogicComponents: IDataOperator[] = [];
 	allComponents: OperatorComponent[] = [];
+
+	/**
+	 * The Json representation of the board before change was made
+	 */
+	beforeState: any = "";
 	
 	scroll(event){
 		if(event.deltaY < 0)
@@ -131,16 +140,16 @@ export class BoardComponent implements AfterViewChecked  {
 		this.board.style.width = `${this.placingService.boardWidth}px`;
 		this.board.style.height = `${this.placingService.boardHeight}px`;
 
-		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+		this.updateBoardTransform();
 
 		this.board.addEventListener("mouseup",(e)=>{
 			if(this.placingService.isCreating){
 				let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
-				console.log(component);
 				let logicComponent = component.getLogicComponent();
 				this.allLogicComponents.push(logicComponent);
 				this.allComponents.push(component);
 				this.placingService.stopCreating();
+				this.componentChanged();
 			}
 		})
 
@@ -193,6 +202,9 @@ export class BoardComponent implements AfterViewChecked  {
 		if(latestBoardJson){
 			this.loadFromJson(latestBoardJson, false);
 		}
+		setTimeout(()=>{
+			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+		}, 400);
 	}
 
 	public handleMousedown( event: Event ) : void {
@@ -206,12 +218,16 @@ export class BoardComponent implements AfterViewChecked  {
 	public handleMousemove = ( event: MouseEvent ): void => {
 		this.posX += event.movementX;
 		this.posY += event.movementY;
-		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+		this.updateBoardTransform();
 	}
 
 	public handleMouseup = (e) : void => {
 		this.board.removeEventListener( "mousemove", this.handleMousemove );
 		window.removeEventListener( "mouseup", this.handleMouseup );
+	}
+
+	public updateBoardTransform(){
+		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
 	}
 
 	public handleClick = (event: MouseEvent) : void => {
@@ -229,25 +245,40 @@ export class BoardComponent implements AfterViewChecked  {
 
 	handleScaleChange(){
 		this.placingService.boardScale = this.scaleControl.value;
-		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+		this.updateBoardTransform();
 	}
 
 	zoomOut(){
 		this.placingService.boardScale = Math.max(this.placingService.boardScale - 0.1,0.1) ;
-		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+		this.updateBoardTransform();
 	}
 
 	zoomIn(){
 		this.placingService.boardScale = Math.min(this.placingService.boardScale + 0.1,2);
-		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
+		this.updateBoardTransform();
+	}
+
+	componentChanged(){
+		this.changesService.pushChange(this.beforeState);
+		this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
 	}
 
 	undo(){
-		this.changesService.undo();
+		let undoState = this.changesService.getUndo(this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName));
+		if(undoState)
+			this.loadFromJson(undoState, false);
+		setTimeout(()=>{
+			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+		}, 400)
 	}
 
 	redo(){
-		this.changesService.redo();
+		let redoState = this.changesService.getRedo();
+		if(redoState)
+			this.loadFromJson(redoState, false);
+		setTimeout(()=>{
+			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+		}, 400)
 	}
 
 	delete(){
@@ -261,7 +292,9 @@ export class BoardComponent implements AfterViewChecked  {
 				this.allLogicComponents.findIndex(comp => comp.originID == logicComponent.originID)
 			,1);
 		}
-		this.selectionService.deleteSelection();
+
+		if(this.selectionService.deleteSelection())
+			this.componentChanged();
 	}
 
 	newFile(){
@@ -269,7 +302,10 @@ export class BoardComponent implements AfterViewChecked  {
 		this.systemName = "Untitled system";
 		this.clearBoard(true);
 		this.placingService.boardScale = 1;
-		this.board.style.transform = "";
+		this.posX = 0;
+		this.posY = 0;
+		this.updateBoardTransform();
+		this.changesService.reset();
 	}
 
 	save(showIcon = false){
@@ -305,23 +341,23 @@ export class BoardComponent implements AfterViewChecked  {
 		try{
 			let file = JSON.parse(json);
 			let components: any[];
+			components = file;
 			if(file.components)
 				components = file.components;
-			else
-				components = file;
 			if(file.name)
 				this.changeSystemName.emit(file.name);
 			if(components.length == 0){
 				throw Error("No components to load");
 			}
 			let connectionTable: any[] = [];
+			let outputPortsTable: any = {};
 			let index = 0;
 			for(let logicComponent of components){
 				let type = this.getComponentTypeFromName(logicComponent.type);
 				if(type == null || logicComponent.options == null){
 					wasError = true;
 					if(index == components.length - 1){
-						this.connectLoadedComponents(connectionTable);
+						this.connectLoadedComponents(connectionTable, outputPortsTable);
 					}
 					index++;
 					continue;
@@ -335,24 +371,19 @@ export class BoardComponent implements AfterViewChecked  {
 				component.onViewInit = () => {
 					let outputPort = component.getPortComponent(true);
 					let inputPort = component.getPortComponent(false);
-					if(outputPort != null){
-						let connection: any = {};
-						connection.port = outputPort;
-						connection.id = logicComponent.id;
-						connection.to = logicComponent.connections.filter(c => c.isFromOutput).map(c => c.to);
-						connection.isFromOutput = outputPort.IsOutput;
-						connectionTable.push(connection);
+					if(outputPort){
+						outputPortsTable[logicComponent.id] = outputPort;
 					}
-					if(inputPort != null){
+					if(inputPort){
 						let connection: any = {};
 						connection.port = inputPort;
 						connection.id = logicComponent.id;
-						connection.to = logicComponent.connections.filter(c => c.isToOutput).map(c => c.to);
-						connection.isFromOutput = inputPort.IsOutput;
+						connection.to = logicComponent.connections;
+						//connection.isFromOutput = inputPort.IsOutput;
 						connectionTable.push(connection);
 					}
 					if(currentComponentIndex == components.length - 1){
-						this.connectLoadedComponents(connectionTable);
+						this.connectLoadedComponents(connectionTable, outputPortsTable);
 					}
 				}
 				index++;
@@ -370,13 +401,11 @@ export class BoardComponent implements AfterViewChecked  {
 			this.placingService.showSnack("There were errors loading the file and some components couldn't be loaded.")
 	}
 
-	connectLoadedComponents(connectionTable: any[]){
+	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){
 		for(let connection of connectionTable){
-			connection.to.forEach(id => {
-				connectionTable.filter(con => con.id === id && connection.isFromOutput != con.isFromOutput).forEach(con => {
-					this.placingService.connectPorts(connection.port, con.port);
-				})
-			})
+			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
+				this.placingService.connectPorts(connection.port, outputPortsTable[con.to]);
+			});
 		}
 		setTimeout(()=>{
 			this.isLoading = false;

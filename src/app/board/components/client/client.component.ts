@@ -54,6 +54,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.LogicClient.options.endpointRef.method = this.LogicClient.options.endpointRef.endpoint.supportedMethods[0];
 		this.availableMethods = this.endpointSelect.value.supportedMethods;
 		this.protocol = this.LogicClient.options.endpointRef.endpoint.protocol;
+		this.afterChange();
 	}
 
 	updateSelection(){
@@ -123,7 +124,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 			return;
 		}
 		this.canSend = this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode['Server Streaming'] && 
-			this.LogicClient.options.isConnectedToEndpoint || 
+			this.LogicClient.isConnectedToEndpoint || 
 			this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode.Unary && this.LogicClient.options.endpointRef.endpoint.protocol != Protocol.WebSockets;
 	}
 
@@ -131,14 +132,14 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.canEstabilishConnection = this.LogicClient.options.endpointRef.endpoint != null && 
 		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
-		!this.LogicClient.options.isConnectedToEndpoint
+		!this.LogicClient.isConnectedToEndpoint
 	}
 
 	updateCanEndStream(){
 		this.canEndConnection = this.LogicClient.options.endpointRef.endpoint != null && 
 		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
-		this.LogicClient.options.isConnectedToEndpoint
+		this.LogicClient.isConnectedToEndpoint
 	}
 
 	async stream(){
@@ -156,8 +157,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		request.header = new RequestDataHeader(this.LogicClient.options.endpointRef, this.LogicClient.options.protocol)
 		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
-		if(this.LogicClient.options.connectedId != null) {
-			request.requestId = this.LogicClient.options.connectedId;
+		if(this.LogicClient.connectedId != null) {
+			request.requestId = this.LogicClient.connectedId;
 			request.header.stream = true;
 		}
 		else
@@ -171,9 +172,9 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	}
 
 	estabilishConnection(){
-		if(this.LogicClient.options.isConnectedToEndpoint) 
+		if(this.LogicClient.isConnectedToEndpoint) 
 			return;
-		this.LogicClient.options.isConnectedToEndpoint = true;
+		this.LogicClient.isConnectedToEndpoint = true;
 		
 		let id = UUID();
 		let request = new RequestData();
@@ -181,17 +182,17 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
 		request.requestId = id;
-		this.LogicClient.options.connectedId = id;
+		this.LogicClient.connectedId = id;
 		this.LogicClient.sendData(request);
 
 		this.updateSelection();
 	}
 
 	async endConnection(){
-		if(!this.LogicClient.options.isConnectedToEndpoint) 
+		if(!this.LogicClient.isConnectedToEndpoint) 
 			return;
 		
-		let id = this.LogicClient.options.connectedId;
+		let id = this.LogicClient.connectedId;
 		if(id == null) 
 			return;
 		let request = new RequestData();
@@ -199,11 +200,11 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		request.origin = this.LogicClient.outputPort.connections[0];
 		request.originID = this.LogicClient.originID;
 		request.requestId = id;
-		this.LogicClient.options.connectedId = null;
+		this.LogicClient.connectedId = null;
 		this.canAutoSend = true;
 		this.isAutomaticSending = false;
 		await this.LogicClient.sendData(request);
-		this.LogicClient.options.isConnectedToEndpoint = false;
+		this.LogicClient.isConnectedToEndpoint = false;
 
 		this.updateSelection();
 	}

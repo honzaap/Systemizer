@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, EventEmitter, Injectable, Output, Type, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { clone } from 'src/shared/ExtensionMethods';
 import { ConnectionComponent } from './board/components/connection/connection.component';
@@ -8,6 +8,8 @@ import { PortComponent } from './board/components/port/port.component';
   	providedIn: 'root'
 })
 export class PlacingService{
+
+	@Output() componentChanged = new EventEmitter();
 
 	isPlacing = false;
 	isConnecting = false;
@@ -155,7 +157,7 @@ export class PlacingService{
 		let logicConn = portComponent1.LogicPort.parent.connectTo(portComponent2.LogicPort.parent, portComponent1.IsOutput, portComponent2.IsOutput);
 		if(logicConn == null){
 			c.destroy();
-			return;
+			return false;
 		}
 		c.instance.LogicConnection = logicConn;
 
@@ -165,6 +167,7 @@ export class PlacingService{
 
 		c.instance.portComponent1 = portComponent1;
 		c.instance.portComponent2 = portComponent2;
+		return true
 	}
 
 	public createComponent<T>(component: Type<T>, left = 100, top = 100, options: any) {
@@ -184,8 +187,13 @@ export class PlacingService{
 			}
 		}
 
+		c.instance.hasChanged.subscribe(()=>{
+			this.componentChanged.emit();
+		})
+
 		comp.options.X = left;
 		comp.options.Y = top;
+
 		return c.instance;
 	}
 

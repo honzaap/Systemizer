@@ -34,6 +34,7 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 
 	addEndpoint(){
 		this.LogicPubSub.options.endpoints.push(new Endpoint("topic.topicCreated", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));
+		this.afterChange();
 	}
 
 	removeEndpoint(endpoint: Endpoint){
@@ -41,6 +42,7 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 		for(let ep of this.LogicPubSub.options.endpoints){
 			if(ep === endpoint){
 				this.LogicPubSub.options.endpoints.splice(idx,1);
+				this.afterChange();
 				return;
 			} 
 			idx++;

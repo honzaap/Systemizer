@@ -34,6 +34,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 
 	addAction(endpoint: Endpoint){
 		endpoint.actions.push(new EndpointAction());
+		this.afterChange();
 	}
 
 	removeAction(endpoint: Endpoint, action: EndpointAction){
@@ -41,6 +42,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		for(let act of endpoint.actions){
 			if(act === action) {
 				endpoint.actions.splice(idx,1);
+				this.afterChange();
 				return;
 			}
 			idx++;
@@ -52,6 +54,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH]));
 		else
 			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET]));
+		this.afterChange();
 	}
 
 	removeEndpoint(endpoint: Endpoint){
@@ -59,6 +62,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		for(let ep of this.LogicApi.options.endpoints){
 			if(ep === endpoint) {
 				this.LogicApi.options.endpoints.splice(idx,1);
+				this.afterChange();
 				return;
 			}
 			idx++;
@@ -77,6 +81,10 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	handleEndpointUrlChange(endpoint){
 		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
 			endpoint.url = `api/v${Math.floor(10*Math.random())}`;
+	}
+
+	test(){
+		console.log("changed");
 	}
 
 	public handleClick(){

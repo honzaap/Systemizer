@@ -13,6 +13,8 @@ export class Client extends LogicComponent implements IDataOperator{
     outputPort: Port;
     options: ClientOptions;
     originID: string;
+    isConnectedToEndpoint: boolean = false; // For streaming/websockets
+    connectedId: string;
 
     constructor() {
         super();
@@ -25,13 +27,13 @@ export class Client extends LogicComponent implements IDataOperator{
         this.fireReceiveData(data);
         if(data.header.endpoint.endpoint.protocol == Protocol.WebSockets || data.header.endpoint.endpoint.grpcMode == gRPCMode["Bidirectional Streaming"] || data.header.endpoint.endpoint.grpcMode == gRPCMode["Server Streaming"]){
             if(data.header.stream == true){
-                if(this.options.connectedId == null) 
+                if(this.connectedId == null) 
                     return;
-                this.options.isConnectedToEndpoint = true;
+                this.isConnectedToEndpoint = true;
             }
             else{
-                this.options.isConnectedToEndpoint = false;
-                this.options.connectedId = null;
+                this.isConnectedToEndpoint = false;
+                this.connectedId = null;
             }
         }
     }
@@ -90,6 +92,4 @@ export class ClientOptions extends Options{
     data: RequestData;
     protocol: Protocol = Protocol.HTTP; // Is decided by endpoint, cannot be changed from client
     endpointRef: EndpointRef = new EndpointRef();
-    isConnectedToEndpoint: boolean = false; // For streaming/websockets
-    connectedId: string;
 }

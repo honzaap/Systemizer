@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { IDataOperator } from 'src/interfaces/IDataOperator';
-import { Options } from 'src/models/Options';
-import { clone } from 'src/shared/ExtensionMethods';
 
 class Change {
-	component: IDataOperator;
-	beforeOptions: Options;
+	/**
+	 * Json state of board
+	 */
+	Board: any;
 
-	constructor(component: IDataOperator, beforeOptions: Options) {
-		this.component = component;
-		this.beforeOptions = beforeOptions;
+	constructor(Board: any) {
+		this.Board = Board;
 	}
 }
 
@@ -23,26 +21,43 @@ export class ChangesService {
 
   	constructor() { }
 
-	public pushChange(component: IDataOperator, beforeOptions: Options){
-		let change = new Change(component, beforeOptions);
+	/**
+	 * Push the state of the board to undo stack
+	 */
+	public pushChange(state: string){
+		if(state == null)
+			return;
+		let change = new Change(state);
 		this.undoStack.push(change);
 		this.redoStack = [];
 	}
 
-	public undo(){
+	/**
+	 * Returns the json state of board
+	 */
+	public getUndo(currentState: string){
 		let change = this.undoStack.pop();
 		if(change == null)
-			return;
-		let redoChange = new Change(change.component, clone(change.component.options));
-		change.component.options = change.beforeOptions;
-		this.redoStack.push(redoChange);
+			return null;
+		this.redoStack.push(new Change(currentState));
+		return change.Board;
 	}
 
-	public redo(){
+	/**
+	 * Returns the json state of board
+	 */
+	public getRedo(): any{
 		let change = this.redoStack.pop();
 		if(change == null)
-			return;
-		let redoChange = new Change(change.component, clone(change.component.options));
-		change.component.options = change.beforeOptions;
+			return null;
+		return change.Board;
+	}
+
+	/**
+	 * Resets all changes 
+	 */
+	public reset(){
+		this.redoStack = [];
+		this.undoStack = [];
 	}
 }

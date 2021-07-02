@@ -19,7 +19,7 @@ class="anchor component"
             <span class="property-name">Font Size:</span>
             <div class="text-format-container">
                 <mat-form-field appearance="fill" class="endpoint-url">
-                    <mat-select [(ngModel)]="LogicTextField.options.fontSize">
+                    <mat-select (selectionChange)="afterChange()" [(ngModel)]="LogicTextField.options.fontSize">
                         <mat-option [value]="8">8px</mat-option>
                         <mat-option [value]="10">10px</mat-option>
                         <mat-option [value]="12">12px</mat-option>
@@ -34,10 +34,10 @@ class="anchor component"
                         </mat-select>
                     </ng-template>
                 </mat-form-field>
-                <span (click)="toggleBold()" [class.inactive]="!LogicTextField.options.isBold" [class.active]="LogicTextField.options.isBold" class="options-button-icon">
+                <span (click)="toggleBold(); afterChange()" [class.inactive]="!LogicTextField.options.isBold" [class.active]="LogicTextField.options.isBold" class="options-button-icon">
                     <i class="fas fa-bold"></i>
                 </span>
-                <span (click)="toggleItalic()" [class.inactive]="!LogicTextField.options.isItalic" [class.active]="LogicTextField.options.isItalic" class="options-button-icon">
+                <span (click)="toggleItalic(); afterChange()" [class.inactive]="!LogicTextField.options.isItalic" [class.active]="LogicTextField.options.isItalic" class="options-button-icon">
                     <i class="fas fa-italic"></i>
                 </span>
             </div>

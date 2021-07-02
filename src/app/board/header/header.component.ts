@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ExportPngOptions, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
@@ -48,6 +48,8 @@ export class HeaderComponent implements OnInit {
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
 	confirmDialogReturnFunction = () => {};
 
+	@ViewChild("file") fileInput;
+
 	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
 		this.isTitlesHidden = viewingService.isTitlesHidden();
@@ -68,6 +70,7 @@ export class HeaderComponent implements OnInit {
 			}; 
 		})(file);
 		reader.readAsText(file.files[0]);
+		this.fileInput.nativeElement.value = null;
 	}
 
 	private isJson(name: string){

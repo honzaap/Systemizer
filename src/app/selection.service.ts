@@ -57,18 +57,22 @@ export class SelectionService {
 		}  
 	}
 
-	deleteSelection(){
+	/**
+	 * Returns true if something was deleted, false otherwise
+	 */
+	deleteSelection(): boolean{
 		if(this.currentConnectionSelection == null && this.currentSelection == null)
-			return;
+			return false;
 		if(this.currentConnectionSelection){
 			this.currentConnectionSelection.destroySelf();
 			this.clearSelection();
 			this.clearConnectionSelection();
-			return;
+			return true;
 		}
 		this.currentSelection.destroySelf();    
 		this.clearSelection();
 		this.clearConnectionSelection();
+		return true;
 	}
 
 	constructor() { }

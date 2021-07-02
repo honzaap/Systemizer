@@ -16,7 +16,7 @@ class="anchor component"
             <span class="property-name">Type: <info-tooltip [Message]="'Changes the type of the database. This does not have any effect on the visualization.'"></info-tooltip></span>
             <div>
                 <mat-form-field appearance="fill" class="action-endpoint">
-                    <mat-select (selectionChange)="changeDatabaseType()" [disabled]="LogicDatabase.options.isShard" [(ngModel)]="LogicDatabase.options.type">
+                    <mat-select (selectionChange)="changeDatabaseType(); afterChange()" [disabled]="LogicDatabase.options.isShard" [(ngModel)]="LogicDatabase.options.type">
                       <mat-option *ngFor="let type of DatabaseTypeKeys" [value]="type">{{DatabaseType[type]}}</mat-option>
                     </mat-select>
                 </mat-form-field>

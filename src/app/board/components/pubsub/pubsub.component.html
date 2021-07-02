@@ -20,7 +20,7 @@ class="anchor component"
                 </div>
                 <div class="options-endpoints">
                     <div class="options-endpoint" *ngFor="let endpoint of this.LogicPubSub.options.endpoints">
-                        <input (blur)="handleEndpointUrlChange(endpoint)" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
+                        <input (change)="afterChange()" (blur)="handleEndpointUrlChange(endpoint)" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
                         <span class="button-icon remove-endpoint" (click)="removeEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
                     </div>
                 </div>

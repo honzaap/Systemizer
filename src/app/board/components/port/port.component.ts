@@ -93,7 +93,8 @@ export class PortComponent implements OnInit {
 	public handleMouseUp(event: MouseEvent){
 		if(this.placingService.isConnecting){
 			if(this !== this.placingService.connectingPort)
-				this.placingService.connectPorts(this,this.placingService.connectingPort);
+				if(this.placingService.connectPorts(this,this.placingService.connectingPort))
+					this.placingService.componentChanged.emit();
 		}
 	}
 

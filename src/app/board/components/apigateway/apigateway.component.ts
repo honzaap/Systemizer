@@ -31,67 +31,84 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 
 	addAction(endpoint: Endpoint){
 		endpoint.actions.push(new EndpointAction());
+		this.afterChange();
 	}
 
 	removeAction(endpoint: Endpoint, action: EndpointAction){
 		let idx = 0;
 		for(let act of endpoint.actions){
-			if(act === action) 
+			if(act === action) {
 				endpoint.actions.splice(idx,1);
+				this.afterChange();
+			}
 			idx++;
 		}
 	}
 
 	addRestEndpoint(){
 		this.LogicApiGateway.options.restEndpoints.push(new Endpoint("api/posts", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, ]));
+		this.afterChange();
 	}
 	addRpcEndpoint(){
 		this.LogicApiGateway.options.rpcEndpoints.push(new Endpoint("api/getPosts", [HTTPMethod.GET]));
+		this.afterChange();
 	}
 	addGrpcEndpoint(){
 		this.LogicApiGateway.options.grpcEndpoints.push(new Endpoint("api/getPosts", [HTTPMethod.GET]));
+		this.afterChange();
 	}
 	addGraphqlEndpoint(){
 		this.LogicApiGateway.options.graphqlEndpoints.push(new Endpoint("/graphql", [HTTPMethod.GET, HTTPMethod.POST]));
+		this.afterChange();
 	}
 	addWebsocketsEndpoint(){
 		let wsEp = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
 		wsEp.protocol = Protocol.WebSockets;
 		this.LogicApiGateway.options.websocketsEndpoints.push(wsEp);
+		this.afterChange();
 	}
 
 	removeRestEndpoint(endpoint: Endpoint){
 		let idx = 0;
 		for(let ep of this.LogicApiGateway.options.restEndpoints){
-			if(ep === endpoint) 
-			 	this.LogicApiGateway.options.restEndpoints.splice(idx,1);
+			if(ep === endpoint) {
+				this.LogicApiGateway.options.restEndpoints.splice(idx,1);
+				this.afterChange();
+			}
 			idx++;
 		}	
 	}
 	removeRpcEndpoint(endpoint: Endpoint){
 		let idx = 0;
 		for(let ep of this.LogicApiGateway.options.rpcEndpoints){
-			if(ep === endpoint) 
+			if(ep === endpoint){
 				this.LogicApiGateway.options.rpcEndpoints.splice(idx,1);
+				this.afterChange();
+			}
 			idx++;
 		}	
 	}
 	removeGrpcEndpoint(endpoint: Endpoint){
 		let idx = 0;
 		for(let ep of this.LogicApiGateway.options.grpcEndpoints){
-			if(ep === endpoint) 
+			if(ep === endpoint){
 				this.LogicApiGateway.options.grpcEndpoints.splice(idx,1);
+				this.afterChange();
+			}
 			idx++;
 		}	
 	}
 	removeGraphqlEndpoint(endpoint: Endpoint){
 		this.LogicApiGateway.options.graphqlEndpoints = [];
+		this.afterChange();
 	}
 	removeWebsocketsEndpoint(endpoint: Endpoint){
 		let idx = 0;
 		for(let ep of this.LogicApiGateway.options.websocketsEndpoints){
-			if(ep === endpoint) 
+			if(ep === endpoint){
 				this.LogicApiGateway.options.websocketsEndpoints.splice(idx,1);
+				this.afterChange();
+			}
 			idx++;
 		}	
 	}

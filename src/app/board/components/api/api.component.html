@@ -17,7 +17,7 @@ class="anchor component"
                 <span class="property-name">Type: <info-tooltip [Message]="'Changes the type of an API. This can change the behaviour of endpoints.'"></info-tooltip></span>
                 <div>
                     <mat-form-field appearance="fill" class="action-endpoint">
-                        <mat-select (selectionChange)="handleTypeChange()"  [(ngModel)]="LogicApi.options.type">
+                        <mat-select (selectionChange)="handleTypeChange(); afterChange()" [(ngModel)]="LogicApi.options.type">
                             <mat-option *ngFor="let type of APITypeKeys" [value]="type">{{APIType[type]}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -33,28 +33,28 @@ class="anchor component"
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <input (blur)="handleEndpointUrlChange(endpoint)" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
+                                    <input (blur)="handleEndpointUrlChange(endpoint)" (change)="afterChange()" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <div class="options-endpoint-menu-top">
                                 <mat-form-field class="endpoint-method" appearance="fill">
-                                    <mat-select *ngIf="LogicApi.options.type == APIType.REST" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
+                                    <mat-select *ngIf="LogicApi.options.type == APIType.REST" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
                                         <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ HTTPMethod[method] }}</mat-option>
                                     </mat-select>
-                                    <mat-select *ngIf="LogicApi.options.type == APIType.GraphQL" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
+                                    <mat-select *ngIf="LogicApi.options.type == APIType.GraphQL" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
                                         <mat-option [value]="HTTPMethod.GET">GET</mat-option>
                                         <mat-option [value]="HTTPMethod.POST">POST</mat-option>
                                     </mat-select>
-                                    <mat-select *ngIf="LogicApi.options.type == APIType.RPC || LogicApi.options.type == APIType.gRPC" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods[0]" required>
+                                    <mat-select *ngIf="LogicApi.options.type == APIType.RPC || LogicApi.options.type == APIType.gRPC" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods[0]" required>
                                         <mat-option [value]="HTTPMethod.GET">GET</mat-option>
                                         <mat-option [value]="HTTPMethod.POST">POST</mat-option>
                                     </mat-select>
-                                    <mat-select *ngIf="LogicApi.options.type == APIType.WebSockets" (closed)="handleEndpointMethodChange(endpoint)" disabled [(ngModel)]="endpoint.supportedMethods[0]">
+                                    <mat-select *ngIf="LogicApi.options.type == APIType.WebSockets" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" disabled [(ngModel)]="endpoint.supportedMethods[0]">
                                         <mat-option [value]="HTTPMethod.GET">GET</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field class="endpoint-grpcmode" appearance="fill" *ngIf="LogicApi.options.type == APIType.gRPC">
-                                    <mat-select [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.grpcMode" required>
+                                    <mat-select (selectionChange)="afterChange()" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.grpcMode" required>
                                         <mat-option *ngFor="let mode of gRPCModeKeys" [value]="mode">{{ gRPCMode[mode] }}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -68,12 +68,12 @@ class="anchor component"
                                 <div class="options-endpoint-actions">
                                     <div class="options-endpoint-action" *ngFor="let action of endpoint.actions">
                                         <mat-form-field appearance="fill" class="action-endpoint">
-                                            <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action)" [(ngModel)]="action.endpoint">
-                                            <mat-option *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
+                                            <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action); afterChange()" [(ngModel)]="action.endpoint">
+                                                <mat-option *ngFor="let endpoint of connectableEndpoints" [value]="endpoint">{{endpoint.url}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                         <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
-                                            <mat-select [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
+                                            <mat-select (selectionChange)="afterChange()" [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                                 <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                                 <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>
                                             </mat-select>

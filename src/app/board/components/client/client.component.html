@@ -31,7 +31,7 @@ class="anchor component"
                     </ng-template>
                 </mat-form-field>
                 <mat-form-field [style.display]="isMQEndpoint(LogicClient.options.endpointRef.endpoint) ? 'none' : 'flex'" appearance="fill" class="endpoint-method">
-                    <mat-select [(ngModel)]="LogicClient.options.endpointRef.method" #methodSelect>
+                    <mat-select (selectionChange)="afterChange()" [(ngModel)]="LogicClient.options.endpointRef.method" #methodSelect>
                       <mat-option *ngFor="let method of availableMethods" [value]="method">{{ formatMethod(HTTPMethod[method+''], protocol == Protocol.Database) }}</mat-option>
                     </mat-select>
                     <ng-template #emptyMethod>

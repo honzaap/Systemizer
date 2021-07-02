@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ElementRef, ViewContainerRef } from "@angular/core";
+import { ComponentFactoryResolver, ElementRef, ViewContainerRef, EventEmitter } from "@angular/core";
 import { ChangesService } from "src/app/changes.service";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
@@ -25,6 +25,8 @@ interface Position{
 }
 
 export class OperatorComponent {
+
+	hasChanged = new EventEmitter();
 
     board: HTMLElement;
 	comp: HTMLElement
@@ -131,8 +133,7 @@ export class OperatorComponent {
 		window.removeEventListener( "mouseup", this.handleMouseup );
 
 		if(this.beforeOptions.X !== this.LogicComponent.options.X || this.beforeOptions.Y !== this.LogicComponent.options.Y){
-			this.changesService.pushChange(this.LogicComponent, this.beforeOptions);
-			this.beforeOptions = clone(this.LogicComponent.options);
+			this.afterChange();
 		}		
 	}
 
@@ -284,5 +285,10 @@ export class OperatorComponent {
 
 	isMQEndpoint(endpoint: Endpoint){
 		return endpoint instanceof MQEndpoint;
+	}
+
+	afterChange(){
+		this.hasChanged.emit();
+		this.beforeOptions = clone(this.LogicComponent.options);
 	}
 }
