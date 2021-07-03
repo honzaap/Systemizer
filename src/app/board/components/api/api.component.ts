@@ -113,7 +113,7 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 					endpoint.actions.splice(i,1);
 			}
 		}
-		if(this.LogicApi.options.isConsumer){ // Remove consumed endpoint that are no longer available
+		if(this.LogicApi.options.isConsumer){ // Remove consumed endpoints that are no longer available
 			this.consumeableEndpoints = this.LogicApi.getConsumableEndpoints();
 			let idx_arr = [];
 			for(let i = 0; i < this.LogicApi.options.endpoints.length; i++){

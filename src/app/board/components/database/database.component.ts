@@ -13,6 +13,7 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
 		actionsRef: new ViewChild("actions"),
+		outputPortRef: new ViewChild("outputPort")
 	},
 	templateUrl: './database.component.html',
 	styleUrls: ['./database.component.scss']
@@ -56,10 +57,14 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 		}
 	}
 
-	shard(){
+	createOutputPort(){
 		this.LogicDatabase.outputPort = new Port(this.LogicDatabase,true,true);
-		this.LogicDatabase.options.isMasterShard = true;
 		this.createPort(true);
+	}
+
+	shard(){
+		this.LogicDatabase.options.isMasterShard = true;
+		this.createOutputPort();
 
 		let dirX = 0;
 		let dirY = 0;
@@ -83,6 +88,7 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 			let comp = this.placingService.createComponent(DatabaseComponent, initX + dirX * 80 * i, initY + dirY * 70 * i, { type: this.LogicDatabase.options.type, isShard: true, title: `Shard ${i+1}`, endpoints: [ep] });
 			comp.onViewInit = () => {
 				this.placingService.connectPorts(this.getPortComponent(true), comp.getPortComponent(false));
+				this.placingService.pushComponent.emit(comp);
 			}
 			comp.onAfterDestroySelf = () => {
 				if(this.LogicDatabase.outputPort.connections.length == 0)

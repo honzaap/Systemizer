@@ -105,6 +105,10 @@ export class BoardComponent implements AfterViewChecked  {
 			// Some component just got changed, change will be added for undo
 			this.componentChanged();
 		})
+		placingService.pushComponent.subscribe((component: OperatorComponent)=>{
+			// A component was created somewhere else and needs to be added to the state of the board
+			this.pushComponent(component);
+		})
 		setInterval(()=>{
 			if(this.allLogicComponents.length != 0){
 				this.save();
@@ -145,9 +149,7 @@ export class BoardComponent implements AfterViewChecked  {
 		this.board.addEventListener("mouseup",(e)=>{
 			if(this.placingService.isCreating){
 				let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
-				let logicComponent = component.getLogicComponent();
-				this.allLogicComponents.push(logicComponent);
-				this.allComponents.push(component);
+				this.pushComponent(component);
 				this.placingService.stopCreating();
 				this.componentChanged();
 			}
@@ -171,9 +173,7 @@ export class BoardComponent implements AfterViewChecked  {
 	pasteItem(){
 		let component = this.placingService.pasteItem(this.posX, this.posY);
 		if(component != null){ // Add component to list
-			let logicComponent = component.getLogicComponent();
-			this.allLogicComponents.push(logicComponent);
-			this.allComponents.push(component);
+			this.pushComponent(component);
 		}
 	}
 
@@ -365,10 +365,13 @@ export class BoardComponent implements AfterViewChecked  {
 				let left = logicComponent.options.X;
 				let top = logicComponent.options.Y;
 				let component = this.placingService.createComponent(type as any, left, top, logicComponent.options);
-				this.allComponents.push(component);
-				this.allLogicComponents.push(component.getLogicComponent());
+
+				this.pushComponent(component);
 				const currentComponentIndex = index;
 				component.onViewInit = () => {
+					if(component instanceof DatabaseComponent && component.getLogicComponent().options.isMasterShard){
+						component.createOutputPort()
+					}
 					let outputPort = component.getPortComponent(true);
 					let inputPort = component.getPortComponent(false);
 					if(outputPort){
@@ -379,17 +382,19 @@ export class BoardComponent implements AfterViewChecked  {
 						connection.port = inputPort;
 						connection.id = logicComponent.id;
 						connection.to = logicComponent.connections;
-						//connection.isFromOutput = inputPort.IsOutput;
 						connectionTable.push(connection);
 					}
 					if(currentComponentIndex == components.length - 1){
-						this.connectLoadedComponents(connectionTable, outputPortsTable);
+						setTimeout(()=>{
+							this.connectLoadedComponents(connectionTable, outputPortsTable);
+						}, 150);
 					}
 				}
 				index++;
 			}
 		}
 		catch(e){
+			console.log(e);
 			if(showInfo)
 				this.placingService.showSnack("This file could not be loaded because it is corrupted or not supported.")
 			setTimeout(()=>{
@@ -429,5 +434,10 @@ export class BoardComponent implements AfterViewChecked  {
 
 	getComponentTypeFromName(name: string){
 		return this.componentTypes[name];
+	}
+
+	pushComponent(component: OperatorComponent){
+		this.allComponents.push(component);
+		this.allLogicComponents.push(component.getLogicComponent());
 	}
 }

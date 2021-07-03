@@ -65,8 +65,9 @@ export class Database extends EndpointOperator implements IDataOperator{
     }
 
     onConnectionUpdate(wasOutput: boolean = false){
-        if(this.outputPort != null && this.outputPort.connections.length == 0){
+        if(wasOutput && this.outputPort != null && this.outputPort.connections.length == 0){
             this.options.isMasterShard = false;
+            console.log("Stop being master shard")
             this.outputPort = null;
             this.fireRemoveShard({});
         }
@@ -93,8 +94,7 @@ export class Database extends EndpointOperator implements IDataOperator{
         return false;
     }
 
-    getAvailableEndpoints(): Endpoint[]
-    {
+    getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
 

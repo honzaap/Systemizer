@@ -46,6 +46,7 @@ export class SavingService {
 				jsonReadyComponents.push(jsonReadyComponent);
 			}
 			catch(e){
+				console.log(e);
 				continue;
 			}
 		}

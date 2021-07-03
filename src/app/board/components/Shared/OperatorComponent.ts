@@ -240,7 +240,6 @@ export class OperatorComponent {
 
 		if(this.conn == null)
 			return;
-
 		
 		if(generateTitle)
 			setTimeout(()=>{this.generateTitle();}, 100); 

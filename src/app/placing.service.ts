@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { clone } from 'src/shared/ExtensionMethods';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
+import { OperatorComponent } from './board/components/Shared/OperatorComponent';
 
 @Injectable({
   	providedIn: 'root'
@@ -10,6 +11,7 @@ import { PortComponent } from './board/components/port/port.component';
 export class PlacingService{
 
 	@Output() componentChanged = new EventEmitter();
+	@Output() pushComponent = new EventEmitter<OperatorComponent>();
 
 	isPlacing = false;
 	isConnecting = false;

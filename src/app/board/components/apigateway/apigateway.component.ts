@@ -130,13 +130,14 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 	public handleClick(){
 		super.handleClick();
 		this.connectableEndpoints = this.LogicApiGateway.getConnectableEndpoints();
-		for(let j = 0; j < this.LogicApiGateway.options.endpoints.length; j++){
-			let endpoint = this.LogicApiGateway.options.endpoints[j]
+		let endpoints = this.LogicApiGateway.getEndpoints();
+		for(let j = 0; j < endpoints.length; j++){
+			let endpoint = endpoints[j]
 			for(let i = 0; i < endpoint.actions.length; i++){
 				let action = endpoint.actions[i];
 				let currEdp = action.endpoint;
 				let currMth = action.method;
-				this.LogicApiGateway.options.endpoints[j].actions[i].endpoint = null;
+				endpoints[j].actions[i].endpoint = null;
 				if(this.connectableEndpoints.length == 0){
 					this.connectableEndpoints = [];
 					endpoint.actions = [];
@@ -145,7 +146,7 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 				if(currEdp != null && currMth != null){
 					for(let e of this.connectableEndpoints){ // need this workaround to keep values in material select....
 						if(e.url == currEdp.url)
-							this.LogicApiGateway.options.endpoints[j].actions[i].endpoint = e;
+							endpoints[j].actions[i].endpoint = e;
 					}
 					endpoint.actions[i].method = currMth;
 				}
