@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from "@angular/material/select";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSliderModule } from "@angular/material/slider"
 
 import { BrowserModule, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,6 +35,8 @@ import { PubsubComponent } from './board/components/pubsub/pubsub.component';
 import { TitleComponent } from './board/components/Shared/title/title.component';
 import { TextfieldComponent } from './board/components/textfield/textfield.component';
 import { WebserverComponent } from './board/components/webserver/webserver.component';
+import { ProxyComponent } from './board/components/proxy/proxy.component';
+import { ClientclusterComponent } from './board/components/clientcluster/clientcluster.component';
 
 import { HeaderComponent } from './board/header/header.component';
 import { OptionsmenuComponent } from './board/optionsmenu/optionsmenu.component';
@@ -76,7 +79,9 @@ import { PagesComponent } from './pages/pages.component';
     LandingPageComponent,
     InfoTooltipComponent,
     TitleComponent,
-    CloudStorageComponent
+    CloudStorageComponent,
+    ProxyComponent,
+    ClientclusterComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +94,8 @@ import { PagesComponent } from './pages/pages.component';
     MatExpansionModule,
     MatMenuModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSliderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [

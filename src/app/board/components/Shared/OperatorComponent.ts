@@ -1,5 +1,4 @@
-import { ComponentFactoryResolver, ElementRef, ViewContainerRef, EventEmitter } from "@angular/core";
-import { ChangesService } from "src/app/changes.service";
+import { ComponentFactoryResolver, ElementRef, EventEmitter, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
@@ -54,7 +53,6 @@ export class OperatorComponent {
 
     public placingService: PlacingService;
     private selectionService: SelectionService;
-    private changesService: ChangesService;
 	private resolver: ComponentFactoryResolver;
 
 	conn: ViewContainerRef;
@@ -78,10 +76,9 @@ export class OperatorComponent {
 
 	public beforeOptions: Options;
 
-    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, changesService: ChangesService) {
+    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
 		this.placingService = placingService;
         this.selectionService = selectionService;
-        this.changesService = changesService;
 		this.resolver = resolver
 	}
 

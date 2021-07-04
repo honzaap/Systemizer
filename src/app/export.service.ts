@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { APIGateway } from 'src/models/APIGateway';
+import { ClientCluster } from 'src/models/ClientCluster';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Port } from 'src/models/Port';
 import { TextField } from 'src/models/TextField';
@@ -17,7 +18,7 @@ export class ExportService {
   	constructor(private placingService: PlacingService, private savingService: SavingService) { }
 
 	private getComponentSize(component: IDataOperator){
-		return {width: component instanceof MessageQueue ? 80 : 40, height: component instanceof APIGateway ? 80 : 40}
+		return {width: component instanceof MessageQueue ? 80 : 40, height: component instanceof APIGateway || component instanceof ClientCluster ? 80 : 40}
 	}
 
   	async getCanvas(components: IDataOperator[], options: ExportPngOptions){

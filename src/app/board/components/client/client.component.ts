@@ -1,5 +1,4 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Client } from 'src/models/Client';
@@ -40,8 +39,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 	isAutomaticSending = false;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver, changesService: ChangesService){
-		super(placingService, selectionService, resolver, changesService);
+	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver){
+		super(placingService, selectionService, resolver);
 	}
 
 	ngAfterViewInit(): void {

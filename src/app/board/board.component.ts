@@ -12,10 +12,12 @@ import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
 import { CacheComponent } from './components/cache/cache.component';
 import { ClientComponent } from './components/client/client.component';
+import { ClientclusterComponent } from './components/clientcluster/clientcluster.component';
 import { CloudStorageComponent } from './components/cloudstorage/cloudstorage.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { LoadbalancerComponent } from './components/loadbalancer/loadbalancer.component';
 import { MessagequeueComponent } from './components/messagequeue/messagequeue.component';
+import { ProxyComponent } from './components/proxy/proxy.component';
 import { PubsubComponent } from './components/pubsub/pubsub.component';
 import { OperatorComponent } from './components/Shared/OperatorComponent';
 import { TextfieldComponent } from './components/textfield/textfield.component';
@@ -47,6 +49,7 @@ export class BoardComponent implements AfterViewChecked  {
 	 */
 	componentTypes = { 
 		Client: ClientComponent,
+		ClientCluster: ClientclusterComponent,
 		API: ApiComponent,
 		APIGateway: ApiGatewayComponent,
 		Cache: CacheComponent,
@@ -55,6 +58,7 @@ export class BoardComponent implements AfterViewChecked  {
 		LoadBalancer: LoadbalancerComponent,
 		MessageQueue: MessagequeueComponent,
 		PubSub: PubsubComponent,
+		Proxy: ProxyComponent,
 		TextField: TextfieldComponent,
 		WebServer: WebserverComponent
 	}

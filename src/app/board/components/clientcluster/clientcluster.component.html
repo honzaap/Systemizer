@@ -1,0 +1,40 @@
+<div
+#anchorRef
+class="anchor component"
+[style.left.px]="LogicClientCluster.options.X "
+[style.top.px]="LogicClientCluster.options.Y"
+>
+    <template #conn></template>
+    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    (click)="handleClick()">
+        <img src="./assets/clientcluster.svg">
+    </div>    
+</div>
+<div style="display:none">
+    <div #options>
+        <div>
+            <span class="property-name endpoint-title">Requests per minute: <info-tooltip [Message]="'Changes the speed at which data is sent.'"></info-tooltip></span>
+            <div class="endpoint-protocol">
+                <mat-slider
+                    thumbLabel
+                    [(ngModel)]="LogicClientCluster.options.requestsPerMinute"
+                    tickInterval="10"
+                    step="10"
+                    min="10"
+                    max="200"
+                    (change)="afterChange()"
+                    aria-label="units"></mat-slider>
+            </div>
+        </div>
+    </div>
+    <div #actions>
+        <div class="options-actions">
+            <div class="actions-container">
+                <button *ngIf="!LogicClientCluster.isSendingData"
+                 (click)="LogicClientCluster.startSendingData()">Start sending data</button>
+                <button *ngIf="LogicClientCluster.isSendingData"
+                 (click)="LogicClientCluster.stopSendingData()">Stop sending data</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -89,7 +89,6 @@ export class Client extends LogicComponent implements IDataOperator{
 }
 
 export class ClientOptions extends Options{
-    data: RequestData;
     protocol: Protocol = Protocol.HTTP; // Is decided by endpoint, cannot be changed from client
     endpointRef: EndpointRef = new EndpointRef();
 }

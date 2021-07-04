@@ -4,11 +4,13 @@ import { API } from 'src/models/API';
 import { APIGateway } from 'src/models/APIGateway';
 import { Cache } from 'src/models/Cache';
 import { Client } from 'src/models/Client';
+import { ClientCluster } from 'src/models/ClientCluster';
 import { CloudStorage } from 'src/models/CloudStorage';
 import { Database } from 'src/models/Database';
 import { LoadBalancer } from 'src/models/LoadBalancer';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Options } from 'src/models/Options';
+import { Proxy } from 'src/models/Proxy';
 import { PubSub } from 'src/models/PubSub';
 import { TextField } from 'src/models/TextField';
 import { WebServer } from 'src/models/WebServer';
@@ -20,6 +22,22 @@ export class SavingService {
 
 	LOCALSTORAGE_AUTOSAVE_KEY = "board_autosave";
 	systemName: string = "Untitled system";
+
+	types = {
+		API,
+		APIGateway,
+		Client,
+		Cache,
+		CloudStorage,
+		Database,
+		LoadBalancer,
+		MessageQueue,
+		PubSub,
+		WebServer,
+		TextField,
+		Proxy,
+		ClientCluster
+	}
 
 	constructor() { }
 
@@ -56,29 +74,7 @@ export class SavingService {
 	}
 
 	public getComponentType(component: any){ // constructor.name doesn't work in prod if sourceMap isn't turned on
-		if(component instanceof API)
-			return "API";
-		else if(component instanceof APIGateway)
-			return "APIGateway";
-		else if(component instanceof Client)
-			return "Client";
-		else if(component instanceof Cache)
-			return "Cache";
-		else if(component instanceof CloudStorage)
-			return "CloudStorage"
-		else if(component instanceof Database)
-			return "Database";
-		else if(component instanceof LoadBalancer)
-			return "LoadBalancer";
-		else if(component instanceof MessageQueue)
-			return "MessageQueue";
-		else if(component instanceof PubSub)
-			return "PubSub";
-		else if(component instanceof WebServer)
-			return "WebServer";
-		else if(component instanceof TextField)
-			return "TextField";
-		return "Client";
+		return Object.keys(this.types).find(type => component instanceof this.types[type]) || "Client";
 	}
 
 	save(allLogicComponents: IDataOperator[]){

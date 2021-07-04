@@ -1,5 +1,4 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ChangesService } from 'src/app/changes.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { CloudStorage } from 'src/models/CloudStorage';
@@ -19,8 +18,8 @@ export class CloudStorageComponent extends OperatorComponent implements OnInit {
 	public LogicCloudStorage : CloudStorage = new CloudStorage();
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver, changesService: ChangesService){
-		super(placingService, selectionService, resolver, changesService);
+	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver){
+		super(placingService, selectionService, resolver);
 	}
 
 	ngAfterViewInit(): void {

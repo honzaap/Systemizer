@@ -8,10 +8,12 @@ import { ApiComponent } from '../components/api/api.component';
 import { ApiGatewayComponent } from '../components/apigateway/apigateway.component';
 import { CacheComponent } from '../components/cache/cache.component';
 import { ClientComponent } from '../components/client/client.component';
+import { ClientclusterComponent } from '../components/clientcluster/clientcluster.component';
 import { CloudStorageComponent } from '../components/cloudstorage/cloudstorage.component';
 import { DatabaseComponent } from '../components/database/database.component';
 import { LoadbalancerComponent } from '../components/loadbalancer/loadbalancer.component';
 import { MessagequeueComponent } from '../components/messagequeue/messagequeue.component';
+import { ProxyComponent } from '../components/proxy/proxy.component';
 import { PubsubComponent } from '../components/pubsub/pubsub.component';
 import { TextfieldComponent } from '../components/textfield/textfield.component';
 import { WebserverComponent } from '../components/webserver/webserver.component';
@@ -69,7 +71,8 @@ export class ComponentmenuComponent implements OnInit {
 	{
 		// Create Categories
 		this.allCategories.push(new Category("Client-side",[
-			new MenuItem(ClientComponent, "Basic Client", "","./assets/client.svg", '<p>Client is the component, that simulates either a real client, or client side application on any device.</p><p>Use the output port to connect to other compoenents via their input port. Select endpoint you want to connect to and the HTTP method used.</p><p>Once connected to an endpoint, you can use the <span class="highlight">Send data</span> button. To send data automatically, use the loop icon next to <span class="highlight">Send data</span> button.</p>')
+			new MenuItem(ClientComponent, "Basic Client", "","./assets/client.svg", '<p>Client is the component, that simulates either a real client, or client side application on any device.</p><p>Use the output port to connect to other compoenents via their input port. Select endpoint you want to connect to and the HTTP method used.</p><p>Once connected to an endpoint, you can use the <span class="highlight">Send data</span> button. To send data automatically, use the loop icon next to <span class="highlight">Send data</span> button.</p>'),
+			new MenuItem(ClientclusterComponent, "Client Cluster", "","./assets/clientcluster.svg", '<p>Client cluster represents multiple clients. It sends data to any endpoint available at given speed.<p>To start sending data, click the <span class="highlight">Start sending data</span> button.</p>')
 		]));
 		this.allCategories.push(new Category("Server-side",[
 			new MenuItem(WebserverComponent, "Static HTTP Web Server", "HTTP","./assets/webserver.svg", '<p>Web server component simulates static HTTP web server with one default endpoint.</p><p>Use the input port to receive data and send response back.</p>'),
@@ -85,12 +88,11 @@ export class ComponentmenuComponent implements OnInit {
 			new MenuItem(CacheComponent, "Write-Through Cache", "WT","./assets/cache.svg", '<p>Cache component simulates a distributed cache with a <span class="underline">random</span> hit/miss chance.</p> <p>Receive data through input port. The output port is connected to <span class="highlight">Database</span>.</p> <p>You can change Write and Replacement policies to better specify the behaviour of your cache.</p>', { writePolicy: WritePolicy['Write-Through'] }),
 			new MenuItem(CacheComponent, "Write-Back Cache", "WB","./assets/cache.svg", '<p>Cache component simulates a distributed cache with a <span class="underline">random</span> hit/miss chance.</p> <p>Receive data through input port. The output port is connected to <span class="highlight">Database</span>.</p> <p>You can change Write and Replacement policies to better specify the behaviour of your cache.</p>', { writePolicy: WritePolicy['Write-Back (Behind)'] })
 		]));
-		this.allCategories.push(new Category("Load Balancers",[
+		this.allCategories.push(new Category("Load Balancers & Proxies",[
 			new MenuItem(LoadbalancerComponent, "Layer 7 Load Balancer", "L7","./assets/loadbalancer.svg", '<p>Load Balancer component is used to balance load between multiple services. </p> <p>Use the input port to receive data and balance it between connections on output port.</p> <p>Load balancer can work in <span class="highlight">Layer 7</span> or <span class="highlight">Layer 4</span> mode. You can change the balance algorithm to any of 4 available types. </p> '),
-			new MenuItem(LoadbalancerComponent, "Layer 4 Load Balancer", "L4","./assets/loadbalancer.svg", '<p>Load Balancer component is used to balance load between multiple services. </p> <p>Use the input port to receive data and balance it between connections on output port.</p> <p>Load balancer can work in <span class="highlight">Layer 7</span> or <span class="highlight">Layer 4</span> mode. You can change the balance algorithm to any of 4 available types. </p> ', { type: LoadBalancerType['Layer 4'] })
-		]));/*
-		this.allCategories.push(new Category("Proxies",[
-		]));*/
+			new MenuItem(LoadbalancerComponent, "Layer 4 Load Balancer", "L4","./assets/loadbalancer.svg", '<p>Load Balancer component is used to balance load between multiple services. </p> <p>Use the input port to receive data and balance it between connections on output port.</p> <p>Load balancer can work in <span class="highlight">Layer 7</span> or <span class="highlight">Layer 4</span> mode. You can change the balance algorithm to any of 4 available types. </p> ', { type: LoadBalancerType['Layer 4'] }),
+			new MenuItem(ProxyComponent, "Proxy", "PROXY","./assets/proxy.svg", '<p>Proxy component acts like a man in the middle between client and server. </p> <p>Use the input port to receive data and route it to server through output port.</p>')
+		]));
 		this.allCategories.push(new Category("Async Communication",[
 			new MenuItem(MessagequeueComponent, "Message Queue", "MQ","./assets/messagequeue.svg", '<p>Message Queue component is used to simulate a single message queue, <span class="underline">not a full fledged message broker</span>.</p> <p>To publish message to queue, use the input port and send data to default endpoint. Consumers can be connected to output port of message queue. These <span class="underline">consumers can only be API Service</span> components and they automatically become consumers of message queue.</p> <p>Message can be only send to one consumer. In case of more consumers, the messages will be sent in round robin manner. Consumers can perform actions on data receive. </p> '),
 			new MenuItem(PubsubComponent, "Publisher/Subscriber Model", "PUBSUB","./assets/pubsub.svg", '<p>Pub/Sub is used for publishers sending data to a specified topic, to which can be connected any number of subscribers.</p> <p>To publish a message, connect to input port and select a topic as an endpoint. You can create any number of topics. Subcribers connect to output port and select any number of topics they want to subscribe. <span class="underline">Subcribers can only be API Service</span> components.</p>'),
