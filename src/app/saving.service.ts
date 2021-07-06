@@ -113,7 +113,8 @@ export class SavingService {
 		}
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				connection.component.connectTo(outputsTable[con.to], false, true);
+				if(outputsTable[con.to])
+					connection.component.connectTo(outputsTable[con.to], false, true);
 			});
 		}
 		return components;

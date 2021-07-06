@@ -188,8 +188,9 @@ export class HeaderComponent implements OnInit {
 			this.preview.nativeElement.appendChild(this.exportPngPreview);
 		}
 		else{
-			this.exportSvgPreview = await this.exportService.getSvg(this.getComponents(), this.exportSvgOptions);
-			this.exportPngPreview.style.marginBottom = "-5px";
+			let components = this.getComponents();
+			this.exportSvgPreview = await this.exportService.getSvg(components, this.exportSvgOptions);
+			this.exportSvgPreview.style.marginBottom = "-5px";
 			this.preview.nativeElement.innerHTML = "";
 			this.preview.nativeElement.appendChild(this.exportSvgPreview);
 		}
