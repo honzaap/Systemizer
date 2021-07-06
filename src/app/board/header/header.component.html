@@ -19,6 +19,9 @@
                         <input #file (input)="load(file)" type="file" accept=".json" style="position: absolute;width: 100%;height: 100%;opacity: 0;cursor: pointer;right: 0;z-index: 100;">
                         Load file
                     </label>
+                    <button mat-menu-item (click)="showSaved.emit(name)">
+                        <span>Show saved boards</span>
+                    </button>
                     <hr class="line">
                     <button mat-menu-item (click)="save.emit(name)">
                         <span>Save</span>
@@ -93,6 +96,10 @@
                             <span>Hide titles</span>
                         </ng-template>
                     </button>
+                    <hr class="line">
+                    <button mat-menu-item (click)="resetView.emit()">
+                        <span>Reset view</span>
+                    </button>
                 </mat-menu>
             </li>
             <li>
@@ -109,6 +116,9 @@
                     <button mat-menu-item (click)="openKeyboardShortcuts()">
                         <span>Keyboard shortcuts</span>
                     </button>
+                    <a mat-menu-item href="https://github.com/honzaap/Systemizer/issues" target="_blank" >
+                        <span>Report a bug</span>
+                    </a>
                 </mat-menu>
             </li>
         </ul>
@@ -139,7 +149,7 @@
     </div>
 </div>
 <div class="confirm-dialog-container" (click.self)="closeExportPngDialog()" [style.display]="isExportPngDialogOpen ? 'flex' : 'none'">
-    <div class="confirm-dialog">
+    <div class="confirm-dialog export">
         <p class="title">Export as PNG</p>
         <label>
             <span>Transparent background: </span>
@@ -162,13 +172,14 @@
             <input [disabled]="!exportPngOptions.transparentBackground || !exportPngOptions.showTitles" type="checkbox" [(ngModel)]="exportPngOptions.lightTitles">
         </label>
         <div class="buttons">
+            <button class="btn-preview" (click)="openPreview()">Preview</button>
             <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsPng()">Download</button>
         </div>
     </div>
 </div>
 <div class="confirm-dialog-container" (click.self)="closeExportSvgDialog()" [style.display]="isExportSvgDialogOpen ? 'flex' : 'none'">
-    <div class="confirm-dialog">
+    <div class="confirm-dialog export">
         <p class="title">Export as SVG</p>
         <label>
             <span>Show component titles: </span>
@@ -183,8 +194,14 @@
             <input [disabled]="!exportSvgOptions.showTitles" type="checkbox" [(ngModel)]="exportSvgOptions.lightTitles">
         </label>
         <div class="buttons">
+            <button class="btn-preview" (click)="openPreview(false)">Preview</button>
             <button class="btn-cancel" (click)="closeExportSvgDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsSvg()">Download</button>
         </div>
+    </div>
+</div>
+<div class="preview-container" (click)="closePreview()" [style.display]="isPreviewOpen ? 'flex' : 'none'">
+    <div #preview class="preview">
+
     </div>
 </div>

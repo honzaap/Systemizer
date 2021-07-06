@@ -1,8 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { ExportPngOptions, ExportSvgOptions } from 'src/app/export.service';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
 import { ViewingService } from 'src/app/viewing.service';
+import { IDataOperator } from 'src/interfaces/IDataOperator';
+import { downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
 
 @Component({
 	selector: 'board-header',
@@ -15,6 +17,7 @@ export class HeaderComponent implements OnInit {
 	@Output() newFile = new EventEmitter();
 	@Output() saveFile = new EventEmitter();
 	@Output() loadFile = new EventEmitter();
+	@Output() showSaved = new EventEmitter();
 	@Output() save = new EventEmitter();
 	@Output() exportPng = new EventEmitter();
 	@Output() exportSvg = new EventEmitter();
@@ -32,25 +35,32 @@ export class HeaderComponent implements OnInit {
 	@Output() fullscreen = new EventEmitter();
 	@Output() zoomIn = new EventEmitter();
 	@Output() zoomOut = new EventEmitter();
+	@Output() resetView = new EventEmitter();
 
 	// Help section events
 	@Output() onboardTutorial1 = new EventEmitter();
 
+	@Input() getComponents: () => IDataOperator[];
+
 	name = "Untitled System";
-	confirmDialogOpen = false;
 	confirmDialogText = "";
-	isKeyboardShortcutsOpen = false;
-	isExportPngDialogOpen = false;
-	isExportSvgDialogOpen = false;
-	isHelpersDisabled: boolean;
-	isTitlesHidden: boolean;
+	confirmDialogOpen: boolean = false;
+	isKeyboardShortcutsOpen: boolean = false;
+	isExportPngDialogOpen: boolean = false;
+	isExportSvgDialogOpen: boolean = false;
+	isHelpersDisabled: boolean = false;
+	isTitlesHidden: boolean = false;
+	isPreviewOpen: boolean = false;
 	exportPngOptions: ExportPngOptions = new ExportPngOptions();
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
+	exportPngPreview: HTMLCanvasElement;
+	exportSvgPreview: SVGElement;
 	confirmDialogReturnFunction = () => {};
 
 	@ViewChild("file") fileInput;
+	@ViewChild("preview") preview;
 
-	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { 
+	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService, private exportService: ExportService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
 		this.isTitlesHidden = viewingService.isTitlesHidden();
 	}
@@ -114,12 +124,18 @@ export class HeaderComponent implements OnInit {
 		this.clearBoard.emit();
 	}
 
-	exportAsPng(){
-		this.exportPng.emit(this.exportPngOptions);
+	async exportAsPng(){
+		let components = this.getComponents()
+		if(components == null || components.length == 0){
+			this.placingService.showSnack("You can't export an empty board.");
+			return;
+		}
+		let canvas = await this.exportService.getCanvas(components, this.exportPngOptions);
+		downloadPng(this.name+".png", canvas.toDataURL('image/png', 1));
 		this.closeExportPngDialog();
 	}
 
-	openExportPngDialog(){
+	async openExportPngDialog(){
 		this.isExportPngDialogOpen = true;
 	}
 
@@ -127,12 +143,17 @@ export class HeaderComponent implements OnInit {
 		this.isExportPngDialogOpen = false;
 	}
 
-	exportAsSvg(){
-		this.exportSvg.emit(this.exportSvgOptions);
+	async exportAsSvg(){
+		let svg = await this.exportService.getSvg(this.getComponents(), this.exportSvgOptions);
+		if(svg == null){
+			this.placingService.showSnack("You can't export an empty board.");
+			return;
+		}
+		downloadSvg(this.name+".svg", svg);
 		this.closeExportSvgDialog();
 	}
 
-	openExportSvgDialog(){
+	async openExportSvgDialog(){
 		this.isExportSvgDialogOpen = true;
 	}
 
@@ -156,5 +177,26 @@ export class HeaderComponent implements OnInit {
 	toggleTitlesHidden(){
 		this.isTitlesHidden = !this.isTitlesHidden;
 		this.viewingService.setTitlesHidden(this.isTitlesHidden);
+	}
+	
+	async openPreview(png: boolean = true){
+		if(png){
+			this.exportPngPreview = await this.exportService.getCanvas(this.getComponents(), this.exportPngOptions);
+			this.exportPngPreview.style.width = "100%";
+			this.exportPngPreview.style.marginBottom = "-5px";
+			this.preview.nativeElement.innerHTML = "";
+			this.preview.nativeElement.appendChild(this.exportPngPreview);
+		}
+		else{
+			this.exportSvgPreview = await this.exportService.getSvg(this.getComponents(), this.exportSvgOptions);
+			this.exportPngPreview.style.marginBottom = "-5px";
+			this.preview.nativeElement.innerHTML = "";
+			this.preview.nativeElement.appendChild(this.exportSvgPreview);
+		}
+		this.isPreviewOpen = true;
+	}
+
+	closePreview(){
+		this.isPreviewOpen = false;
 	}
 }

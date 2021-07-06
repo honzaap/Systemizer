@@ -63,7 +63,7 @@
         cursor: pointer;
     }
 }
-.loading{
+.backdrop-centralized{
     position: absolute;
     top: 0;
     bottom: 0;
@@ -72,30 +72,21 @@
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-flow: column nowrap;
-    gap: 1em;
-    font-size: 2em;
-    color: #fff;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+.loading{
+    gap: 1em;
+    font-size: 2em;
+    color: #fff;
     & img{
         animation: loadingAnim 1s ease-in-out infinite;
     }
 }
 .saving{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-flow: column nowrap;
     font-size: 0.9em;
     color: #fff;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
     & .saving-inner{
         display: flex;
         flex-flow: row nowrap;
@@ -120,20 +111,20 @@
                 }
             }
         }
-        .close{
-            position: absolute;
-            color: #d4d4d4;
-            top: 0.2em;
-            right: 0.2em;
-            border: 0;
-            outline: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size: 1.1em;
-            &:hover{
-                color: #fff;
-            }
-        }
+    }
+}
+.close{
+    position: absolute;
+    color: #d4d4d4;
+    top: 0.2em;
+    right: 0.2em;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.1em;
+    &:hover{
+        color: #fff;
     }
 }
 .autosave{
@@ -152,7 +143,146 @@
     opacity: 0.5;
     animation: autosave 1s ease-in-out;
 }
+.saved-boards{
+    position: relative;
+    min-width: 800px;
+    max-width: 950px;
+    color: #fff;
+    background-color: $bg-purple-light;
+    padding: 1em;
+    & .title{
+        text-align: center;
+    }
+    & .note{
+        font-size: 0.65em;
+        font-weight: normal;
+        text-align: center;
+        display: block;
+        color: #b0b0b0;
+    }
+    & .saved-boards-main-container{
+        display: flex;
+        gap: 0.5em;
+    }
+    & .selected{
+        outline: 0.1em solid #fff;
+    }
+    & .saved-boards-main{
+        margin-top: 1em;
+        padding: 1em;
+        flex-basis: 70%;
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 1em;
+        max-height: 70vh;
+        overflow-y: scroll;
+        & .saved-board{
+            position: relative;
+            transition: filter 0.2s ease-in-out;
+            cursor: pointer;
+            &:hover{
+                filter: brightness(80%);
+            }
+            & .saved-board-title{
+                position: absolute;
+                top: 0.3em;
+                right: 0.5em;
+                color: #fff;
+            }
+        }
+    }
+    & .saved-boards-side{
+        display: flex;
+        flex-flow: column;
+        gap: 0.5em;
+        padding: 0.5em;
+        flex-grow: 1;
+        color: #fff;
+        & .selected-title{
+            font-size: 1.1em;
+            text-align: center;
+            display: block;
+        }
+        & .selected-info{
+            font-size: 0.85em;
+            & .highlight{
+                color: $purple-dark;
+            }
+        }
+        & .selected-actions{
+            margin-top: auto;
+            margin-bottom: auto;
+            align-self: center;
+            display: flex;
+            gap: 1.4em;
+            & button{
+                font-size: 0.9em;
+                font-weight: normal;
+                border: 0;
+                outline: 0;
+                padding: 0.3em 1em;
+                color: #fff;
+                border-radius: 0.1em;
+                cursor: pointer;
+                transition: background-color 0.1s linear;
+                &.delete{
+                    background-color: $text-purple-light;
+                    &:hover{
+                        background-color: $text-purple-light2;
+                    }
+                }
+                &.load{
+                    background-color: $purple-dark;
+                    &:hover{
+                        background-color: $purple-darker;
+                    }
+                }
+                &:disabled{
+                    filter: grayscale(100%);
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}
 
+.saved-boards-popup{
+    position: absolute;
+    top: 100px;
+    background-color: $bg-purple-lighter;
+    font-size: 0.8em;
+    right: 0;
+    display: flex;
+    color: #fff;
+    transition: transform 0.4s ease-in-out;
+    &:hover{
+        transform: translateX(0) !important;
+    }
+    & .hidden{
+        width: 2em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $purple-dark;
+    }
+    & .show{
+        padding: 0.5em 1em;
+    }
+    & button{
+        margin-left: 0.5em;
+        width: 80px;
+        outline: 0;
+        border: 0;
+        padding: 0.5em 0.5em;
+        color: #fff;
+        background-color: $purple-dark;
+        cursor: pointer;
+        transition: background-color 0.1s linear;
+        &:hover{
+            background-color: $purple-darker;
+        }
+    }
+}
 
 @keyframes loadingAnim {
     0%{

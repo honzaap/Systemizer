@@ -41,6 +41,12 @@ export class CreateComponent implements OnInit {
 		}
 	}
 
+	getComponents(){
+		return () => {
+			return this.board.allLogicComponents;
+		};
+	}
+
 	newFile(){
 		this.board.newFile();
 	}
@@ -54,12 +60,16 @@ export class CreateComponent implements OnInit {
 		this.board.loadFromJson(json);
 	}
 
+	showSaved(){
+		this.board.openSavedBoards();
+	}
+
 	save(){
 		this.board.save(true);
 	}
 
 	async exportPng(options: ExportPngOptions){
-		let canvas = await this.board.getBoardCanvas(options);
+		let canvas = await this.board.getCurrentBoardCanvas(options);
 		if(canvas == null){
 			this.placingService.showSnack("You can't export an empty board.");
 			return;
@@ -68,7 +78,7 @@ export class CreateComponent implements OnInit {
 	}
 
 	async exportSvg(options: ExportSvgOptions){
-		let svg = await this.board.getBoardSvg(options);
+		let svg = await this.board.getCurrentBoardSvg(options);
 		if(svg == null){
 			this.placingService.showSnack("You can't export an empty board.");
 			return;
@@ -101,7 +111,7 @@ export class CreateComponent implements OnInit {
 	}
 
 	clearBoard(){
-		this.board.clearBoard(true);
+		this.board.clearBoard(false);
 		this.board.componentChanged();
 	}
 
@@ -115,6 +125,10 @@ export class CreateComponent implements OnInit {
 
 	zoomOut(){
 		this.board.zoomOut();
+	}
+
+	resetView(){
+		this.board.resetView();
 	}
 
 	openTutorialMenu(){

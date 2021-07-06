@@ -36,14 +36,14 @@
     <svg class="svg-canvas" id="svg-canvas" >
     </svg>
 </div>
-<div class="loading" *ngIf="isLoading">
+<div class="backdrop-centralized loading" *ngIf="isLoading">
     Loading...
     <img src="./assets/logo.svg">
 </div>
 <div class="autosave" *ngIf="autosaving">
     <i class="far fa-save"></i>
 </div>
-<div class="saving" *ngIf="isSaving" (click.self)="isSaving = false">
+<div class="backdrop-centralized saving" *ngIf="isSaving" (click.self)="isSaving = false">
     <div class="saving-inner">
         <div class="name">
             <label>File name</label>
@@ -53,3 +53,35 @@
         <button class="close" (click)="isSaving = false">×</button>
     </div>
 </div>
+<div class="backdrop-centralized" [style.display]="showSavedBoards ? 'flex' : 'none'" (click.self)="closeSavedBoards()">
+    <div class="saved-boards">
+        <button class="close" (click)="closeSavedBoards()">×</button>
+        <div class="saved-boards-top">
+            <h3 class="title">Your saved systems</h3>
+            <span class="note">Note that these systems are saved in your browser and aren't permanent!</span>
+        </div>
+        <div class="saved-boards-main-container">
+            <div class="saved-boards-main" #savedBoardsRef>
+                <span *ngIf="savedBoards == null || savedBoards.length == 0">You don't have any saved boards...</span>
+            </div>
+            <div class="saved-boards-side">
+                <span class="selected-title">{{ selectedSavedBoard == null ? "Select a board" : selectedSavedBoard.title }}</span>
+                <div class="selected-info">
+                    <span *ngIf="selectedSavedBoard != null"><span class="highlight">{{ selectedSavedBoard.board.length }}</span> component{{ selectedSavedBoard.board.length == 1 ? "" : "s" }}</span>
+                </div>
+                <div class="selected-actions">
+                    <button (click)="deleteSelectedSavedBoard()" [disabled]="selectedSavedBoard == null" class="delete">Delete</button>
+                    <button (click)="loadSelectedSavedBoard()" [disabled]="selectedSavedBoard == null" class="load">Load</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="saved-boards-popup" [style.transform]="showSavedBoardsPopup ? 'translateX(0)' : 'translateX(calc(100% - 2em))' ">
+    <span class="hidden">{{ savedBoards.length }}</span>
+    <div class="show" >
+        <span class="text">You have {{ savedBoards.length }} saved system<span *ngIf="savedBoards.length != 1">s</span></span>
+        <button (click)="openSavedBoards()">Show all</button>
+    </div>
+</div>
+

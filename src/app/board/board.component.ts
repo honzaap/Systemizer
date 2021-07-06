@@ -1,8 +1,8 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
-import { download } from 'src/shared/ExtensionMethods';
+import { download, UUID } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
 import { ExportPngOptions, ExportService, ExportSvgOptions } from '../export.service';
 import { PlacingService } from '../placing.service';
@@ -23,6 +23,17 @@ import { OperatorComponent } from './components/Shared/OperatorComponent';
 import { TextfieldComponent } from './components/textfield/textfield.component';
 import { WebserverComponent } from './components/webserver/webserver.component';
 
+class SavedBoard{
+	title: string;
+	board: IDataOperator[];
+	save: any;
+
+	constructor(title: string, board: IDataOperator[], save: any) {
+		this.title = title;
+		this.board = board;
+		this.save = save;
+	}
+}
 
 @Component({
 	selector: 'app-board',
@@ -42,6 +53,7 @@ export class BoardComponent implements AfterViewChecked  {
 	autosaving = false;
 	saveFileName: string = "";
 	systemName: string = "";
+	currentBoardId: string = UUID();
 
 	AUTOSAVE_INTERVAL = 30;
 	/**
@@ -98,13 +110,33 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 	}
 
+	
+	@ViewChild("conn", { read: ViewContainerRef }) conn;
+	@ViewChild("savedBoardsRef") savedBoardsRef: ElementRef;
+
+	@Output() changeSystemName = new EventEmitter();
+
+	allLogicComponents: IDataOperator[] = [];
+	allComponents: OperatorComponent[] = [];
+
+	/**
+	 * The Json representation of the board before change was made
+	 */
+	beforeState: any = "";
+
+	showSavedBoards: boolean;
+	showSavedBoardsPopup: boolean;
+	savedBoards: SavedBoard[] = [];
+	selectedSavedBoard: SavedBoard;
+
 	constructor(private placingService : PlacingService,
 	private selectionService: SelectionService, 
 	private snackBar: MatSnackBar,
 	private savingService: SavingService,
 	private changeRef: ChangeDetectorRef,
 	private changesService: ChangesService,
-	private exportService: ExportService) { 
+	private exportService: ExportService,
+	private renderer: Renderer2) { 
 		placingService.componentChanged.subscribe(()=>{
 			// Some component just got changed, change will be added for undo
 			this.componentChanged();
@@ -119,18 +151,6 @@ export class BoardComponent implements AfterViewChecked  {
 			}
 		}, this.AUTOSAVE_INTERVAL * 1000);
 	}
-
-	@ViewChild("conn", { read: ViewContainerRef }) conn;
-
-	@Output() changeSystemName = new EventEmitter();
-
-	allLogicComponents: IDataOperator[] = [];
-	allComponents: OperatorComponent[] = [];
-
-	/**
-	 * The Json representation of the board before change was made
-	 */
-	beforeState: any = "";
 	
 	scroll(event){
 		if(event.deltaY < 0)
@@ -186,28 +206,121 @@ export class BoardComponent implements AfterViewChecked  {
 		this.delete();
 	}
 
+	resetView(){
+		this.posX = 0;
+		this.posY = 0;
+		this.placingService.boardScale = 1;
+		this.updateBoardTransform();
+	}
+
 	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
-	ngAfterViewInit(){
+	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
 		this.loadLatestBoard();
+
+		// Loading saved boards
+		let savedBoardsJson = this.savingService.getSavedBoardsJson();
+		if(savedBoardsJson == null)
+			return;
+		let savedBoards = JSON.parse(savedBoardsJson) as any[];
+		if(savedBoards.length == 0)
+			return;
+		for(let board of savedBoards){ // Convert all boards to IDataOperator[]
+			let convertedBoard = this.savingService.getComponentsFromSave(board.components);
+			if(convertedBoard)
+				this.savedBoards.push(new SavedBoard(board.name || "Untitled System", convertedBoard, board));
+		}
+		for(let savedBoard of this.savedBoards){
+			this.displaySavedBoard(savedBoard);
+		}
+		this.showSavedBoardsPopup = true;
+		setTimeout(()=>{
+			this.showSavedBoardsPopup = false;
+		}, 6500);
 	}
 
-	async getBoardCanvas(options: ExportPngOptions){
+	async displaySavedBoard(savedBoard: SavedBoard){
+		let divContainer = this.renderer.createElement('div');
+		divContainer.className = "saved-board";
+		divContainer.id = savedBoard.save.id;
+
+		divContainer.onclick = () => {
+			// Display options
+			if(this.selectedSavedBoard){
+				document.getElementById(this.selectedSavedBoard.save.id).classList.remove("selected")
+			}
+			this.selectedSavedBoard = savedBoard;
+			document.getElementById(this.selectedSavedBoard.save.id).classList.add("selected")
+		}
+		divContainer.ondblclick  = () => {
+			// Load board
+			this.closeSavedBoards();
+			this.loadFromSave(savedBoard.save);
+		}
+		let canvas = await this.getBoardCanvas(savedBoard.board);
+		canvas.style.width = "100%";
+		canvas.style.marginBottom = "-5px";
+
+		let title = this.renderer.createElement("span");
+		title.innerText = savedBoard.title;
+		title.className = "saved-board-title";
+
+		let existing = document.getElementById(savedBoard.save.id);
+		if(existing)
+			this.savedBoardsRef.nativeElement.removeChild(existing);
+
+		this.renderer.appendChild(divContainer, canvas);
+		this.renderer.appendChild(divContainer, title);
+		this.renderer.appendChild(this.savedBoardsRef.nativeElement, divContainer);
+	}
+
+	openSavedBoards(){
+		this.showSavedBoards = true;
+		this.showSavedBoardsPopup = false;
+		let savedBoard = this.savedBoards.find(board => board.save.id == this.currentBoardId);
+		if(savedBoard)
+			this.displaySavedBoard(savedBoard);
+	}
+
+	closeSavedBoards(){
+		this.showSavedBoards = false;
+	}
+
+	deleteSelectedSavedBoard(){
+		this.savedBoardsRef.nativeElement.removeChild(document.getElementById(this.selectedSavedBoard.save.id));
+
+		this.savedBoards.splice(this.savedBoards.findIndex(board => board === this.selectedSavedBoard), 1);
+		this.selectedSavedBoard = null;
+		this.savingService.saveBoards(this.savedBoards.map(board => board.save));
+	}
+
+	loadSelectedSavedBoard(){
+		if(this.allLogicComponents.length != 0)
+			this.saveCurrentBoardToAllBoards();
+		this.closeSavedBoards();
+		this.loadFromSave(this.selectedSavedBoard.save);
+	}
+
+	async getBoardCanvas(board: IDataOperator[]){
+		return await this.exportService.getCanvas(board, new ExportPngOptions());
+	}
+
+	async getCurrentBoardCanvas(options: ExportPngOptions){
 		return await this.exportService.getCanvas(this.allLogicComponents, options);
 	}
 
-	async getBoardSvg(options: ExportSvgOptions){
+	async getCurrentBoardSvg(options: ExportSvgOptions){
 		return await this.exportService.getSvg(this.allLogicComponents, options);
 	}
 
 	loadLatestBoard(){
-		let latestBoardJson = localStorage.getItem(this.savingService.LOCALSTORAGE_AUTOSAVE_KEY);
+		let latestBoardJson = this.savingService.getLatestBoardJson();
 		if(latestBoardJson){
 			this.loadFromJson(latestBoardJson, false);
 		}
 		setTimeout(()=>{
-			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+			this.beforeState = this.getCurrentBoardJson();
 		}, 400);
 	}
 
@@ -264,15 +377,19 @@ export class BoardComponent implements AfterViewChecked  {
 
 	componentChanged(){
 		this.changesService.pushChange(this.beforeState);
-		this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+		this.beforeState = this.getCurrentBoardJson();
+	}
+
+	getCurrentBoardJson(){
+		return this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName, this.currentBoardId);
 	}
 
 	undo(){
-		let undoState = this.changesService.getUndo(this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName));
+		let undoState = this.changesService.getUndo(this.getCurrentBoardJson());
 		if(undoState)
 			this.loadFromJson(undoState, false);
 		setTimeout(()=>{
-			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+			this.beforeState = this.getCurrentBoardJson();
 		}, 400)
 	}
 
@@ -281,7 +398,7 @@ export class BoardComponent implements AfterViewChecked  {
 		if(redoState)
 			this.loadFromJson(redoState, false);
 		setTimeout(()=>{
-			this.beforeState = this.savingService.getBoardJson(this.allLogicComponents, this.savingService.systemName);
+			this.beforeState = this.getCurrentBoardJson();
 		}, 400)
 	}
 
@@ -302,18 +419,19 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	newFile(){
+		if(this.allLogicComponents.length != 0)
+			this.saveCurrentBoardToAllBoards();
+		this.currentBoardId = UUID();
 		this.changeSystemName.emit("Untitled system");
 		this.systemName = "Untitled system";
 		this.clearBoard(true);
-		this.placingService.boardScale = 1;
-		this.posX = 0;
-		this.posY = 0;
-		this.updateBoardTransform();
+		this.resetView();
 		this.changesService.reset();
 	}
 
 	save(showIcon = false){
-		this.savingService.save(this.allLogicComponents);
+		this.savingService.save(this.allLogicComponents, this.currentBoardId);
+		this.saveCurrentBoardToAllBoards();
 		if(showIcon){
 			this.autosaving = true;
 			setTimeout(()=>{
@@ -333,72 +451,17 @@ export class BoardComponent implements AfterViewChecked  {
 			this.placingService.showSnack("There is nothing to save...");
 			return;
 		}
-		let file = this.savingService.getBoardJson(this.allLogicComponents, this.systemName);
+		let file = this.savingService.getBoardJson(this.allLogicComponents, this.systemName, this.currentBoardId);
 		this.save();
 		download(`${this.saveFileName}.json`, file);	
 	}
 
 	loadFromJson(json: string, showInfo = true){
-		this.clearBoard();
-		this.isLoading = true;
-		let wasError = false;
 		try{
 			let file = JSON.parse(json);
-			let components: any[];
-			components = file;
-			if(file.components)
-				components = file.components;
-			if(file.name)
-				this.changeSystemName.emit(file.name);
-			if(components.length == 0){
-				throw Error("No components to load");
-			}
-			let connectionTable: any[] = [];
-			let outputPortsTable: any = {};
-			let index = 0;
-			for(let logicComponent of components){
-				let type = this.getComponentTypeFromName(logicComponent.type);
-				if(type == null || logicComponent.options == null){
-					wasError = true;
-					if(index == components.length - 1){
-						this.connectLoadedComponents(connectionTable, outputPortsTable);
-					}
-					index++;
-					continue;
-				}
-				let left = logicComponent.options.X;
-				let top = logicComponent.options.Y;
-				let component = this.placingService.createComponent(type as any, left, top, logicComponent.options);
-
-				this.pushComponent(component);
-				const currentComponentIndex = index;
-				component.onViewInit = () => {
-					if(component instanceof DatabaseComponent && component.getLogicComponent().options.isMasterShard){
-						component.createOutputPort()
-					}
-					let outputPort = component.getPortComponent(true);
-					let inputPort = component.getPortComponent(false);
-					if(outputPort){
-						outputPortsTable[logicComponent.id] = outputPort;
-					}
-					if(inputPort){
-						let connection: any = {};
-						connection.port = inputPort;
-						connection.id = logicComponent.id;
-						connection.to = logicComponent.connections;
-						connectionTable.push(connection);
-					}
-					if(currentComponentIndex == components.length - 1){
-						setTimeout(()=>{
-							this.connectLoadedComponents(connectionTable, outputPortsTable);
-						}, 150);
-					}
-				}
-				index++;
-			}
+			this.loadFromSave(file);
 		}
 		catch(e){
-			console.log(e);
 			if(showInfo)
 				this.placingService.showSnack("This file could not be loaded because it is corrupted or not supported.")
 			setTimeout(()=>{
@@ -406,8 +469,88 @@ export class BoardComponent implements AfterViewChecked  {
 			}, 100);
 			return;
 		}
+	}
+
+	/**
+	 * Loads the board from save object generated by saving service
+	 */
+	loadFromSave(save: any, showInfo = true){
+		this.clearBoard();
+		this.changesService.reset();
+		this.isLoading = true;
+		let wasError = false;
+		let components: any[];
+		components = save;
+		if(save.components)
+			components = save.components;
+		if(components == null || components.length == 0){
+			this.isLoading = false;
+			return;
+		}
+		if(save.name)
+			this.changeSystemName.emit(save.name);
+		if(save.id != null && save.id != "undefined")
+			this.currentBoardId = save.id;
+		else
+			this.currentBoardId = UUID();
+
+		let connectionTable: any[] = [];
+		let outputPortsTable: any = {};
+		let index = 0;
+		for(let logicComponent of components){
+			let type = this.getComponentTypeFromName(logicComponent.type);
+			if(type == null || logicComponent.options == null){
+				wasError = true;
+				if(index == components.length - 1){
+					this.connectLoadedComponents(connectionTable, outputPortsTable);
+				}
+				index++;
+				continue;
+			}
+			let left = logicComponent.options.X;
+			let top = logicComponent.options.Y;
+			let component = this.placingService.createComponent(type as any, left, top, logicComponent.options);
+
+			this.pushComponent(component);
+			const currentComponentIndex = index;
+			component.onViewInit = () => {
+				if(component instanceof DatabaseComponent && component.getLogicComponent().options.isMasterShard){
+					component.createOutputPort()
+				}
+				let outputPort = component.getPortComponent(true);
+				let inputPort = component.getPortComponent(false);
+				if(outputPort){
+					outputPortsTable[logicComponent.id] = outputPort;
+				}
+				if(inputPort){
+					let connection: any = {};
+					connection.port = inputPort;
+					connection.id = logicComponent.id;
+					connection.to = logicComponent.connections;
+					connectionTable.push(connection);
+				}
+				if(currentComponentIndex == components.length - 1){
+					setTimeout(()=>{
+						this.connectLoadedComponents(connectionTable, outputPortsTable);
+					}, 150);
+				}
+			}
+			index++;
+		}
 		if(wasError && showInfo)
 			this.placingService.showSnack("There were errors loading the file and some components couldn't be loaded.")
+	}
+
+	saveCurrentBoardToAllBoards(){
+		let boardSave = this.savingService.getBoardSave(this.allLogicComponents, this.savingService.systemName, this.currentBoardId);
+		let currentBoardIndex = this.savedBoards.findIndex(board => board.save.id == this.currentBoardId);
+		let savedBoard = new SavedBoard(boardSave.name, this.allLogicComponents, boardSave);
+		if(currentBoardIndex != -1)
+			this.savedBoards.splice(currentBoardIndex, 1);
+		else
+			this.displaySavedBoard(savedBoard);
+		this.savedBoards.push(savedBoard);
+		this.savingService.saveBoards(this.savedBoards.map(board => board.save));
 	}
 
 	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){

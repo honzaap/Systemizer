@@ -22,8 +22,7 @@ export class ExportService {
 	}
 
   	async getCanvas(components: IDataOperator[], options: ExportPngOptions){
-		if(components.length == 0)
-			return null;
+
 		let canvas = document.createElement("canvas");
 		canvas.width = this.placingService.boardWidth;
 		canvas.height = this.placingService.boardHeight;
@@ -41,6 +40,8 @@ export class ExportService {
 			ctx.fillStyle = options.lightMode ? "#fff" : "#141625";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		}
+		if(components.length == 0)
+			return canvas;
 		for(let component of components){
 			// Render component
 			ctx.beginPath()

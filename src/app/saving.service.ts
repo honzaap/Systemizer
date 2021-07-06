@@ -10,6 +10,7 @@ import { Database } from 'src/models/Database';
 import { LoadBalancer } from 'src/models/LoadBalancer';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Options } from 'src/models/Options';
+import { Port } from 'src/models/Port';
 import { Proxy } from 'src/models/Proxy';
 import { PubSub } from 'src/models/PubSub';
 import { TextField } from 'src/models/TextField';
@@ -21,6 +22,7 @@ import { WebServer } from 'src/models/WebServer';
 export class SavingService {
 
 	LOCALSTORAGE_AUTOSAVE_KEY = "board_autosave";
+	LOCALSTORAGE_BOARDS_KEY = "all_saved_boards";
 	systemName: string = "Untitled system";
 
 	types = {
@@ -41,7 +43,7 @@ export class SavingService {
 
 	constructor() { }
 
-  	getBoardJson(allLogicComponents: IDataOperator[], systemName: string){
+	getBoardSave(allLogicComponents: IDataOperator[], systemName: string, id: string){
 		let jsonReadyComponents = [];
 		for(let component of allLogicComponents){
 			// If one component fails, dont fail the whole operation, tell the user there were errors instead
@@ -64,22 +66,82 @@ export class SavingService {
 				jsonReadyComponents.push(jsonReadyComponent);
 			}
 			catch(e){
-				console.log(e);
 				continue;
 			}
 		}
-		let jsonComponents = JSON.stringify(jsonReadyComponents);
-		let file = `{"name": "${systemName}", "components": ${jsonComponents}}`;
-		return file;
+		return 	{
+			name: systemName, 
+			id: id || "",
+			components: jsonReadyComponents
+		}
 	}
 
-	public getComponentType(component: any){ // constructor.name doesn't work in prod if sourceMap isn't turned on
+  	getBoardJson(allLogicComponents: IDataOperator[], systemName: string, id: string){
+		let jsonReadySave = this.getBoardSave(allLogicComponents, systemName, id);
+		return JSON.stringify(jsonReadySave);
+	}
+
+	/**
+	 * Takes in array of components that was made by getBoardSave method
+	 */
+	getComponentsFromSave(save: any[]): IDataOperator[]{
+		let components = [];
+		let outputsTable = {}
+		let connectionTable = []
+		for(let component of save){
+			let logicComponent: IDataOperator = new this.types[component.type];
+
+			for(let key of Object.keys(component.options)){
+				logicComponent.options[key] = component.options[key];
+			}
+			if(component instanceof Database && component.options.isMasterShard){
+				component.outputPort = new Port(component, true, true);
+			}
+			let outputPort = logicComponent.getPort(true);
+			let inputPort = logicComponent.getPort(false);
+			if(outputPort){
+				outputsTable[component.id] = logicComponent;
+			}
+			if(inputPort){
+				let connection: any = {};
+				connection.component = logicComponent;
+				connection.id = logicComponent.originID;
+				connection.to = component.connections;
+				connectionTable.push(connection);
+			}
+			components.push(logicComponent);
+		}
+		for(let connection of connectionTable){
+			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
+				connection.component.connectTo(outputsTable[con.to], false, true);
+			});
+		}
+		return components;
+	}
+
+	public getComponentType(component: any){ 
 		return Object.keys(this.types).find(type => component instanceof this.types[type]) || "Client";
 	}
 
-	save(allLogicComponents: IDataOperator[]){
-		localStorage.setItem(this.LOCALSTORAGE_AUTOSAVE_KEY, this.getBoardJson(allLogicComponents, this.systemName));
+	save(allLogicComponents: IDataOperator[], id: string){
+		localStorage.setItem(this.LOCALSTORAGE_AUTOSAVE_KEY, this.getBoardJson(allLogicComponents, this.systemName, id));
 	}
+
+	getLatestBoardJson(){
+		return localStorage.getItem(this.LOCALSTORAGE_AUTOSAVE_KEY);
+	}
+
+	getSavedBoardsJson(){
+		return localStorage.getItem(this.LOCALSTORAGE_BOARDS_KEY);
+	}
+
+	/**
+	 * Saves array of save objects from getBoardSave method
+	 */
+	saveBoards(boards: any[]){
+		localStorage.setItem(this.LOCALSTORAGE_BOARDS_KEY, JSON.stringify(boards));
+	}
+
 	
 	/**
 	 * Returns new object that represents options of given component normalized for saving

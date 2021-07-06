@@ -59,6 +59,10 @@ input[type="file"] {
     text-align: center;
     background-color: $bg-purple-dark;    
     color: #fff;
+    &.export{
+        min-width: 550px;
+        max-width: 700px;
+    }
     & .title{
         font-size: 1.2em;
     }
@@ -97,13 +101,22 @@ input[type="file"] {
                 background-color: transparent;
             }
         }
+        &.btn-preview{
+            border: 0.15em solid $purple-dark;
+            color: $purple-dark;
+            background-color: transparent;
+            &:hover{
+                color: $bg-purple-dark;
+                background-color: $purple-dark;
+            }
+        }
     }
     & label{
         display: flex;
         margin: 0.4em 0;
         & input{
             width: auto;
-            flex-basis: 25%;
+            flex-basis: 50%;
         }
         & span{
             flex-grow: 1;
@@ -111,7 +124,25 @@ input[type="file"] {
         }
     }
 }
-
+.preview-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    z-index: 1400;
+}
+.preview{
+    flex-basis: 80%;
+    outline: 0.1em solid #c0c0c0;
+    height: fit-content;
+    background-color: $bg-purple-darker;
+}
 .keyboard-shortcuts-window{
     color: #fff;
     position: absolute;

@@ -3,6 +3,7 @@
         (newFile)="newFile()"
         (saveFile)="saveFile($event)" 
         (loadFile)="loadFile($event)"
+        (showSaved)="showSaved()"
         (save)="save()" 
         (exportPng)="exportPng($event)"
         (exportSvg)="exportSvg($event)"
@@ -15,8 +16,10 @@
         (clearBoard)="clearBoard()"
         (fullscreen)="fullscreen()"
         (zoomIn)="zoomIn()"
-        (zoomOut)="zoomOut()"        
+        (zoomOut)="zoomOut()"   
+        (resetView)="resetView()"     
         (onboardTutorial1)="openTutorialMenu()" 
+        [getComponents]="getComponents()"
         >
     </board-header>
     <app-board (changeSystemName)="changeSystemName($event)"></app-board>
