@@ -34,12 +34,8 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
 	ngOnInit(){
 	}
 
-	public handleClick(){
-		super.handleClick();
-	}
-
 	public handleMousedown(event){
-		if(this.currentSelectionService.currentSelection !== this)
+		if(this.currentSelectionService.currentSelections.indexOf(this) == -1)
 			super.handleMousedown(event);
 	}
 

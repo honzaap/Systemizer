@@ -126,8 +126,8 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 			endpoint.url = `api/v${Math.floor(10*Math.random())}`;
 	}
 
-	public handleClick(){
-		super.handleClick();
+	public handleClick(event: MouseEvent){
+		super.handleClick(event);
 		this.connectableEndpoints = this.LogicApiGateway.getConnectableEndpoints();
 		let endpoints = this.LogicApiGateway.getEndpoints();
 		for(let j = 0; j < endpoints.length; j++){

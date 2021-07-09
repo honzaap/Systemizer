@@ -9,7 +9,7 @@ class="anchor component"
         <div class="message empty" *ngFor="let num of [].constructor(10)"></div>
     </div>  
     <div class="img-container messages" (mousedown)="handleMousedown( $event )"
-    (click)="handleClick()">
+    (click)="handleClick($event)">
         <div class="message" *ngFor="let message of LogicMessageQueue.messages | slice:0:10;"></div>
         <div class="message fill" *ngFor="let num of [].constructor(10)"></div>
     </div>  
@@ -22,7 +22,7 @@ class="anchor component"
             </div>
             <div class="options-endpoints">
                 <div class="options-endpoint" *ngFor="let endpoint of this.LogicMessageQueue.options.endpoints">
-                    <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                    <input (change)="afterChange()" (blur)="handleEndpointUrlChange(endpoint)" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
                 </div>
             </div>
         </div>

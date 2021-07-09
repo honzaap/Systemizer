@@ -9,7 +9,7 @@
                     File
                 </button>
                 <mat-menu #fileMenu="matMenu">
-                    <button mat-menu-item (click)="showConfirmDialog('Do you really want to create new file? All unsaved changes will be lost!', newFileDialog )">
+                    <button mat-menu-item (click)="showConfirmDialog('Do you really want to create a new file?', newFileDialog )">
                         <span>New file</span>
                     </button>
                     <button mat-menu-item (click)="saveFile.emit(name)">

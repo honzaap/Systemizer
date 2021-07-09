@@ -10,7 +10,10 @@
     outline: 6px solid $purple-darker;
     z-index: -1;
     &.infocus:hover{
-        cursor: grab;
+        cursor: default;
+    }
+    &.moving{
+        cursor: grab !important;
     }
     & .board-bg-title{
         position: absolute;

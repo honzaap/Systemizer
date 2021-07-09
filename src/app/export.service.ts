@@ -17,7 +17,9 @@ export class ExportService {
 
   	constructor(private placingService: PlacingService, private savingService: SavingService) { }
 
-	private getComponentSize(component: IDataOperator){
+	public getComponentSize(component: IDataOperator){
+		if(component instanceof TextField)
+			return {width: component.options.width, height: component.options.height};
 		return {width: component instanceof MessageQueue ? 80 : 40, height: component instanceof APIGateway || component instanceof ClientCluster ? 80 : 40}
 	}
 

@@ -448,6 +448,12 @@ mat-tooltip-component .mat-tooltip{
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
 }
+.selection-rect{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    outline: 0.1rem dashed $purple-dark;
+}
 
 .fs-1{
     font-size: 1.65rem !important;

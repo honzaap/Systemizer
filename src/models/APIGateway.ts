@@ -225,5 +225,4 @@ export class APIGatewayOptions extends EndpointOptions{
     graphqlEndpoints: Endpoint[] = [];
     grpcEndpoints: Endpoint[] = [];
     websocketsEndpoints: Endpoint[] = [];
-    type: APIType = APIType.REST
 }

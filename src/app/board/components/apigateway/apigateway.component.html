@@ -6,7 +6,7 @@ class="anchor component"
 >
     <template #conn></template>
     <div class="img-container"(mousedown)="handleMousedown( $event )"
-    (click)="handleClick()">
+    (click)="handleClick($event)">
         <img src="./assets/apigateway.svg">
     </div>
 </div>
@@ -204,7 +204,7 @@ class="anchor component"
                 <span class="property-name">Endpoints (GraphQL): <info-tooltip [Message]="'A GraphQL endpoint. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
                 <div>
                     <span>[{{LogicApiGateway.options.graphqlEndpoints.length}}]</span>
-                    <span *ngIf="LogicApiGateway.options.type != APIType.GraphQL && LogicApiGateway.options.graphqlEndpoints.length == 0" class="button-icon" (click)="addGraphqlEndpoint()"><i class="fas fa-plus"></i></span>
+                    <span *ngIf="LogicApiGateway.options.graphqlEndpoints.length == 0" class="button-icon" (click)="addGraphqlEndpoint()"><i class="fas fa-plus"></i></span>
                 </div>
             </div>
             <div class="options-endpoints">
@@ -252,7 +252,7 @@ class="anchor component"
                             </div>
                         </div>
                     </mat-expansion-panel>
-                    <span *ngIf="LogicApiGateway.options.type != APIType.GraphQL" class="button-icon remove-endpoint" (click)="removeGraphqlEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
+                    <span class="button-icon remove-endpoint" (click)="removeGraphqlEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
                 </div>
             </div>
         </div>

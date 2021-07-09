@@ -86,8 +86,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		console.log("changed");
 	}
 
-	public handleClick(){
-		super.handleClick();
+	public handleClick(event: MouseEvent){
+		super.handleClick(event);
 		this.connectableEndpoints = this.LogicApi.getConnectableEndpoints();
 		for(let j = 0; j < this.LogicApi.options.endpoints.length; j++){
 			let endpoint = this.LogicApi.options.endpoints[j];

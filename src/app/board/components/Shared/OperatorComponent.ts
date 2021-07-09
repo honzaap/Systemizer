@@ -69,9 +69,6 @@ export class OperatorComponent {
 	private maxX = 0;
 	private maxY = 0;
 
-	private prevX = 0;
-	private prevY = 0;
-
 	public anchorRect: any;
 
 	public beforeOptions: Options;
@@ -85,37 +82,28 @@ export class OperatorComponent {
   	public handleMousedown(event: MouseEvent): void {
 		if(this.placingService.isConnecting) 
 			return;
+		this.handleClick(event);
 		this.placingService.startPlacing();
 
 		event.preventDefault();
 
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
-		this.maxX = this.board.clientWidth;
-		this.maxY = this.board.clientHeight;
+		this.maxX = this.placingService.boardWidth;
+		this.maxY = this.placingService.boardHeight;
 
-		this.prevX = event.clientX;
-		this.prevY = event.clientY;
+		this.selectionService.prevX = event.clientX;
+		this.selectionService.prevY = event.clientY;
 
 		this.board.addEventListener( "mousemove", this.handleMousemove );
 		window.addEventListener( "mouseup", this.handleMouseup );
 	}
 
   	public handleMousemove = (event: MouseEvent): void => {
-		this.setPosition(
-			this.LogicComponent.options.X - (this.prevX - event.clientX) / this.placingService.boardScale, 
-			this.LogicComponent.options.Y - (this.prevY - event.clientY) / this.placingService.boardScale
-		);
-		
-		this.prevX = this.convertScaledPosition(event.clientX);
-		this.prevY = this.convertScaledPosition(event.clientY);
+		this.selectionService.moveComponents(event, this.placingService.boardScale);
 	}
 
 	private convertPosition(number){
 		return Math.round(number / 10) * 10;
-	}
-
-	private convertScaledPosition(number){
-		return Math.round(number / (10 * this.placingService.boardScale)) * (10 * this.placingService.boardScale);
 	}
 
 	public setPosition(x: number, y: number){
@@ -134,8 +122,8 @@ export class OperatorComponent {
 		}		
 	}
 
-	public handleClick(){
-		this.selectionService.setSelection(this);
+	public handleClick(event: MouseEvent){
+		this.selectionService.addSelection(this, event.ctrlKey);
 	}
 
 	public getLogicComponent(): IDataOperator{
@@ -213,6 +201,9 @@ export class OperatorComponent {
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
 		this.comp = this.anchorRef.nativeElement;
+		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
+		this.maxX = this.placingService.boardWidth;
+		this.maxY = this.placingService.boardHeight;
 		this.LogicComponent.onShowStatusCode((code:HTTPStatus)=>{
 			this.showStatusCode(code);
 		});

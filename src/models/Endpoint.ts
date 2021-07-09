@@ -7,7 +7,7 @@ export class Endpoint{
     supportedMethods: HTTPMethod[] = [];
     protocol: Protocol = Protocol.HTTP;
     actions: EndpointAction[] = [];
-    grpcMode: gRPCMode = gRPCMode.Unary
+    grpcMode: gRPCMode = gRPCMode.Unary;
 
     constructor(url: string, supportedMethods: HTTPMethod[] = []) {
         this.url = url;
@@ -17,12 +17,12 @@ export class Endpoint{
 
 export class EndpointRef {
     endpoint: Endpoint;
-    method: HTTPMethod;
+    method: HTTPMethod = HTTPMethod.GET;
 }
 
 export class EndpointAction {
     endpoint: Endpoint;
-    method: EndpointActionHTTPMethod;
+    method: EndpointActionHTTPMethod = EndpointActionHTTPMethod.Inherit;
 }
 
 export class DatabaseEndpoint extends Endpoint{

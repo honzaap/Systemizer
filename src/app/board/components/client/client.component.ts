@@ -98,8 +98,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.updateCanEndStream();
 	}
 
-	public handleClick(){
-		super.handleClick();
+	public handleClick(event: MouseEvent){
+		super.handleClick(event);
 		this.updateSelection();
 	}
 

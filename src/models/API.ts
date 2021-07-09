@@ -248,7 +248,7 @@ export class API extends EndpointOperator implements IDataOperator{
 }
 
 export class APIOptions extends EndpointOptions{
-    type: APIType = APIType.REST
+    type: APIType = APIType.REST;
     isConsumer = false;
     isSubscriber = false;
 }

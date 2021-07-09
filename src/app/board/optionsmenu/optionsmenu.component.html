@@ -12,37 +12,44 @@
                     </span>
                 </ng-template>
             </div>
-            <div class="content" *ngIf="isActive">
-                <div *ngIf="!isSelectionTextField() && !isSelectionMQ(); else textFieldTitle">
+            <div class="content" *ngIf="isActive && selectionService.currentSelections.length == 1">
+                <div *ngIf="!isSelectionTextField(); else textFieldTitle">
                     <span class="property-name">Title:</span>
-                    <input type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']">
+                    <input type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['title']">
                 </div>
                 <ng-template #textFieldTitle>
                     <div *ngIf="isSelectionTextField()">
                         <div>
                             <span class="property-name">Content:</span>
-                            <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']"></textarea>
+                            <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['title']"></textarea>
                         </div>
                     </div>
-                    <div *ngIf="isSelectionMQ()">
-                        <div>
-                            <span class="property-name">Title:</span>
-                            <input #title type="text" spellcheck="false"  (input)="this.selectionService.currentSelection.getLogicComponent().options['endpoints'][0].url = title.value" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['title']">
-                        </div>
-                    </div>   
-
                 </ng-template>
                 <div class="small">
                     <span class="property-name">X:</span>
-                    <input #x (input)="change($event, x.value, y.value)" step="10" type="number" min="0" max="1960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['X']">
+                    <input #x (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="1960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['X']">
                 </div>
                 <div class="small">
                     <span class="property-name">Y:</span>
-                    <input #y (input)="change($event, x.value, y.value)" step="10" type="number" min="0" max="960" [(ngModel)]="this.selectionService.currentSelection.getLogicComponent().options['Y']">
+                    <input #y (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['Y']">
+                </div>
+            </div>
+            <div class="content" *ngIf="isActive && selectionService.currentSelections.length > 1">
+                <div>
+                    <span class="property-name">Title:</span>
+                    <input type="text" spellcheck="false" (input)="updateTitles()" [(ngModel)]="multipleSelectionsTitle">
+                </div>
+                <div class="small">
+                    <span class="property-name">X:</span>
+                    <input #x (input)="updatePosition(multipleSelectionsX, multipleSelectionsY)" step="10" type="number" min="0" max="1960" [(ngModel)]="multipleSelectionsX">
+                </div>
+                <div class="small">
+                    <span class="property-name">Y:</span>
+                    <input #y (input)="updatePosition(multipleSelectionsX, multipleSelectionsY)" step="10" type="number" min="0" max="960" [(ngModel)]="multipleSelectionsY">
                 </div>
             </div>
         </div>
-        <div class="section" [class.active]="openProps">
+        <div class="section" [style.display]="selectionService.currentSelections.length == 1 ? 'block' : 'none'" [class.active]="openProps">
             <div class="header" (click)="openProps = !openProps">
                 <span class="title">Properties</span>
                 <span class="icon" *ngIf="openProps; else closed">
@@ -60,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <div class="section" [class.active]="openActions" [style.display]="!hasActions?'none':'block'">
+        <div class="section" [class.active]="openActions" [style.display]="!hasActions || selectionService.currentSelections.length > 1 ? 'none' : 'block'">
             <div class="header" (click)="openActions = !openActions">
                 <span class="title">Actions</span>
                 <span class="icon" *ngIf="openActions; else closed">

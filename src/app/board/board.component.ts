@@ -150,6 +150,7 @@ export class BoardComponent implements AfterViewChecked  {
 				this.save();
 			}
 		}, this.AUTOSAVE_INTERVAL * 1000);
+
 	}
 	
 	scroll(event){
@@ -163,6 +164,19 @@ export class BoardComponent implements AfterViewChecked  {
 		window.addEventListener("resize", event => {
 			event.preventDefault();
 		});
+
+		this.selectionService.onStopSelecting.subscribe((e) => {
+			for(let component of this.allComponents){
+				let logicComponent = component.getLogicComponent();
+				let size = this.exportService.getComponentSize(logicComponent);
+				let pos = {top: logicComponent.options.Y, left: logicComponent.options.X};
+				if(pos.top >= e.top && pos.left >= e.left && pos.left + size.width < e.left + e.width && pos.top + size.height < e.top + e.height){
+					setTimeout(()=>{
+						this.selectionService.addSelection(component, true);
+					}, 20);
+				}
+			}
+		})
 
 		this.board = document.getElementById("board");
 		this.board.style.width = `${this.placingService.boardWidth}px`;
@@ -190,15 +204,25 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	copyItem(){
-		if(this.selectionService.currentSelection != null)
-			this.placingService.copyItem(this.selectionService.currentSelection.constructor, this.selectionService.currentSelection.getLogicComponent().options);
+		if(this.selectionService.currentSelections.length == 0)
+			return;
+		let selections = [];
+		for(let selection of this.selectionService.currentSelections){
+			selections.push({component: selection.constructor, options: selection.getLogicComponent().options})
+		}
+		this.placingService.copyItems(selections);
 	}
 
 	pasteItem(){
-		let component = this.placingService.pasteItem(this.posX, this.posY);
-		if(component != null){ // Add component to list
+		this.selectionService.clearSelection();
+		for(let component of this.placingService.pasteItem()){
 			this.pushComponent(component);
+			component.onViewInit = ()=>{
+				this.selectionService.addSelection(component, true);
+			}
 		}
+		this.placingService.startPlacing()
+		this.componentChanged();
 	}
 
 	cutItem(){
@@ -317,19 +341,33 @@ export class BoardComponent implements AfterViewChecked  {
 	loadLatestBoard(){
 		let latestBoardJson = this.savingService.getLatestBoardJson();
 		if(latestBoardJson){
-			this.loadFromJson(latestBoardJson, false);
+			try{
+				this.loadFromJson(latestBoardJson, false);
+			}
+			catch(e){
+				console.log(e);
+				this.isLoading = false;
+			}
 		}
 		setTimeout(()=>{
 			this.beforeState = this.getCurrentBoardJson();
 		}, 400);
 	}
 
-	public handleMousedown( event: Event ) : void {
-		if(!this.placingService.canDrag()) 
-			return;
-
-		this.board.addEventListener( "mousemove", this.handleMousemove );
-		window.addEventListener( "mouseup", this.handleMouseup );
+	public handleMousedown(event: Event) {
+		let e = event as MouseEvent;
+		if(e.button == 0){
+			// Start selecting
+			this.selectionService.startSelecting(e, this.placingService.boardScale)
+		}
+		else if(e.button == 1 || e.button == 2){
+			e.preventDefault();
+			if(!this.placingService.canDrag()) 
+				return;
+				this.board.classList.add("moving")
+				this.board.addEventListener( "mousemove", this.handleMousemove );
+			window.addEventListener( "mouseup", this.handleMouseup );
+		}
 	}
 
 	public handleMousemove = ( event: MouseEvent ): void => {
@@ -339,6 +377,7 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	public handleMouseup = (e) : void => {
+		this.board.classList.remove("moving")
 		this.board.removeEventListener( "mousemove", this.handleMousemove );
 		window.removeEventListener( "mouseup", this.handleMouseup );
 	}
@@ -355,7 +394,7 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 	}
 
-	public handleSelfClick(){
+	public handleSelfClick(event: Event){
 		this.selectionService.clearSelection();
 		this.selectionService.clearConnectionSelection();
 	}
@@ -403,15 +442,11 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	delete(){
-		let component = this.selectionService.currentSelection; 
-		if(component != null){ // Delete component from list
+		let components = this.selectionService.currentSelections; 
+		for(let component of components){ 
 			let logicComponent = component.getLogicComponent();
-			this.allComponents.splice(
-				this.allComponents.findIndex(comp => comp === component)
-			,1);
-			this.allLogicComponents.splice(
-				this.allLogicComponents.findIndex(comp => comp.originID == logicComponent.originID)
-			,1);
+			this.allComponents.splice(this.allComponents.findIndex(comp => comp === component),1);
+			this.allLogicComponents.splice(this.allLogicComponents.findIndex(comp => comp.originID == logicComponent.originID),1);
 		}
 
 		if(this.selectionService.deleteSelection())
@@ -476,7 +511,6 @@ export class BoardComponent implements AfterViewChecked  {
 	 */
 	loadFromSave(save: any, showInfo = true){
 		this.clearBoard();
-		this.changesService.reset();
 		this.isLoading = true;
 		let wasError = false;
 		let components: any[];
@@ -567,7 +601,7 @@ export class BoardComponent implements AfterViewChecked  {
 
 	clearBoard(clearLocalStorage = false){
 		for(let component of this.allComponents){
-			this.selectionService.currentSelection = component;
+			this.selectionService.currentSelections = [component]; 
 			try{ // Deleting element while sending data could throw error
 				this.selectionService.deleteSelection();
 			}

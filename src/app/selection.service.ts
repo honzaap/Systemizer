@@ -1,36 +1,71 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { EventDispatcher, Handler } from 'src/models/Shared/EventDispatcher';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { OperatorComponent } from './board/components/Shared/OperatorComponent';
+import { PlacingService } from './placing.service';
 
-interface ChangeSelectionEvent {};
+class StopSelectingEvent {
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+}
+
+interface ChangeSelectionEvent {}
 
 @Injectable({
   	providedIn: 'root'
 })
 export class SelectionService {
 
-	currentSelection: OperatorComponent;
+	@Output() onStopSelecting = new EventEmitter<StopSelectingEvent>();
+
+	prevX: number;
+	prevY: number;
+
 	currentConnectionSelection: ConnectionComponent;
+	currentSelections: OperatorComponent[] = [];
 
-	setSelection(selection: OperatorComponent){
-		if(selection != this.currentSelection){
-			if(this.currentSelection != null)
-				this.currentSelection.anchorRef.nativeElement.classList.remove("is-current-selection")
+	selectionRect: HTMLDivElement;
 
-			selection.anchorRef.nativeElement.classList.add("is-current-selection")
-			this.currentSelection = selection;
-			this.clearConnectionSelection();
-			this.fireChangeSelection({});
+	selectionStartX: number;
+	selectionStartY: number;
+
+	selectionClientX: number;
+	selectionClientY: number;
+
+	selectionPrevX: number;
+	selectionPrevY: number;
+
+	selectionWidth = 0;
+	selectionHeight = 0;
+
+	selectionScale: number = 1;
+
+	addSelection(selection: OperatorComponent, multiple: boolean = false){
+		if(this.currentSelections.indexOf(selection) == -1){ // Add to current selections
+			if(multiple){ // Add to current multiple selections
+				selection.anchorRef.nativeElement.classList.add("is-current-selection")
+				this.currentSelections.push(selection);
+			}
+			else{ // Set as currently selected
+				for(let oldSelection of this.currentSelections){
+					oldSelection.anchorRef.nativeElement.classList.remove("is-current-selection")
+				}
+				selection.anchorRef.nativeElement.classList.add("is-current-selection")
+				this.currentSelections = [selection];
+			}
 		}
+		this.clearConnectionSelection();
+		this.fireChangeSelection({});
 	}
 
 	clearSelection(){
-		if(this.currentSelection != null){
-			this.currentSelection.anchorRef.nativeElement.classList.remove("is-current-selection")
-			this.currentSelection = null;
-			this.fireChangeSelection({});
+		for(let selection of this.currentSelections){
+			selection.anchorRef.nativeElement.classList.remove("is-current-selection")
 		}  
+		this.currentSelections = [];
+		this.fireChangeSelection({});
 	}
 
 	// Connection
@@ -61,7 +96,7 @@ export class SelectionService {
 	 * Returns true if something was deleted, false otherwise
 	 */
 	deleteSelection(): boolean{
-		if(this.currentConnectionSelection == null && this.currentSelection == null)
+		if(this.currentConnectionSelection == null && this.currentSelections.length == 0)
 			return false;
 		if(this.currentConnectionSelection){
 			this.currentConnectionSelection.destroySelf();
@@ -69,10 +104,90 @@ export class SelectionService {
 			this.clearConnectionSelection();
 			return true;
 		}
-		this.currentSelection.destroySelf();    
+		for(let selection of this.currentSelections){
+			selection.destroySelf();    
+		}
 		this.clearSelection();
 		this.clearConnectionSelection();
 		return true;
+	}
+
+	startSelecting(e: MouseEvent, scale: number){
+		let board = document.getElementById("board");
+		let rect = document.createElement("div");
+		rect.style.left = `${e.clientX}px`;
+		rect.style.top = `${e.clientY}px`;
+		rect.style.width = "0px";
+		rect.style.height = "0px";
+		rect.className = "selection-rect"
+		rect.style.display = "none";
+		board.appendChild(rect);
+
+		this.selectionRect = rect;
+		this.selectionStartX = e.offsetX;
+		this.selectionStartY = e.offsetY;
+
+		this.selectionClientX = e.clientX;
+		this.selectionClientY = e.clientY;
+
+		this.selectionPrevX = e.clientX;
+		this.selectionPrevY = e.clientY;
+
+		this.selectionWidth = 0;
+		this.selectionHeight = 0;
+
+		this.selectionScale = scale;
+
+		window.addEventListener("mousemove", this.moveSelectionRect);
+		window.addEventListener("mouseup", this.stopSelecting);
+	}
+
+	stopSelecting = () => {
+		this.onStopSelecting.emit({ 
+			top: parseInt(this.selectionRect.style.top), 
+			left: parseInt(this.selectionRect.style.left),
+			width: Math.abs(this.selectionWidth),
+			height: Math.abs(this.selectionHeight)
+		});
+		window.removeEventListener("mousemove", this.moveSelectionRect);
+		window.removeEventListener("mouseup", this.stopSelecting);
+		document.getElementById("board").removeChild(this.selectionRect);
+		this.selectionRect = null;
+	}
+
+	moveSelectionRect = (e: MouseEvent) =>{
+		this.selectionRect.style.display = "block";
+		let diffX = (this.selectionPrevX - e.clientX) / this.selectionScale;
+		let diffY = (this.selectionPrevY - e.clientY) / this.selectionScale;
+
+		this.selectionWidth -= diffX;
+		this.selectionHeight -= diffY;
+
+
+		this.selectionRect.style.width = Math.abs(this.selectionWidth).toString() + "px";
+		this.selectionRect.style.left = e.clientX < this.selectionClientX ? (this.selectionStartX + this.selectionWidth).toString() + "px" : this.selectionStartX.toString() + "px";
+
+		this.selectionRect.style.height = Math.abs(this.selectionHeight).toString() + "px";
+		this.selectionRect.style.top = e.clientY < this.selectionClientY ? (this.selectionStartY + this.selectionHeight).toString() + "px" : this.selectionStartY.toString() + "px";
+
+		this.selectionPrevX = e.clientX;
+		this.selectionPrevY = e.clientY;
+	}
+
+	public moveComponents = (event: MouseEvent, scale: number): void => {
+		for(let selection of this.currentSelections){
+			selection.setPosition(
+				selection.getLogicComponent().options.X - (this.prevX - event.clientX) / scale, 
+				selection.getLogicComponent().options.Y - (this.prevY - event.clientY) / scale
+			);
+			
+		}
+		this.prevX = this.convertScaledPosition(event.clientX, scale);
+		this.prevY = this.convertScaledPosition(event.clientY, scale);
+	}
+
+	private convertScaledPosition(number, scale: number){
+		return Math.round(number / (10 * scale)) * (10 * scale);
 	}
 
 	constructor() { }
