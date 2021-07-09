@@ -80,9 +80,7 @@ export class OptionsmenuComponent implements OnInit {
 	}
 
 	isSelectionTextField(){
-		if(this.selectionService.currentSelections.length == 1)
-			return this.selectionService.currentSelections[0] instanceof TextfieldComponent;
-		return false;
+		return this.selectionService.currentSelections.length == 1 && this.selectionService.currentSelections[0] instanceof TextfieldComponent;
 	}
 	
 	ngOnInit(): void {

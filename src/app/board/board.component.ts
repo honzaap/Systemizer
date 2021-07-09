@@ -351,7 +351,7 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 		setTimeout(()=>{
 			this.beforeState = this.getCurrentBoardJson();
-		}, 400);
+		}, 1000);
 	}
 
 	public handleMousedown(event: Event) {
@@ -497,6 +497,7 @@ export class BoardComponent implements AfterViewChecked  {
 			this.loadFromSave(file);
 		}
 		catch(e){
+			console.log(e);
 			if(showInfo)
 				this.placingService.showSnack("This file could not be loaded because it is corrupted or not supported.")
 			setTimeout(()=>{
