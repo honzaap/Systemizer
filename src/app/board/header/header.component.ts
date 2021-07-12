@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
@@ -35,6 +36,7 @@ export class HeaderComponent implements OnInit {
 	@Output() fullscreen = new EventEmitter();
 	@Output() zoomIn = new EventEmitter();
 	@Output() zoomOut = new EventEmitter();
+	@Output() changeScale = new EventEmitter<number>();
 	@Output() resetView = new EventEmitter();
 
 	// Help section events
@@ -43,18 +45,26 @@ export class HeaderComponent implements OnInit {
 	@Input() getComponents: () => IDataOperator[];
 
 	name = "Untitled System";
+
 	confirmDialogText = "";
 	confirmDialogOpen: boolean = false;
+
 	isKeyboardShortcutsOpen: boolean = false;
 	isExportPngDialogOpen: boolean = false;
 	isExportSvgDialogOpen: boolean = false;
+
 	isHelpersDisabled: boolean = false;
 	isTitlesHidden: boolean = false;
 	isPreviewOpen: boolean = false;
+
 	exportPngOptions: ExportPngOptions = new ExportPngOptions();
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
 	exportPngPreview: HTMLCanvasElement;
 	exportSvgPreview: SVGElement;
+
+	scaleControl: FormControl = new FormControl();
+	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
+
 	confirmDialogReturnFunction = () => {};
 
 	@ViewChild("file") fileInput;
@@ -99,6 +109,7 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.scaleControl.setValue(1);
 	}
 
 	showConfirmDialog(text: string, returnFunction){
@@ -199,5 +210,9 @@ export class HeaderComponent implements OnInit {
 
 	closePreview(){
 		this.isPreviewOpen = false;
+	}
+
+	handleScaleChange(){
+		this.changeScale.emit(this.scaleControl.value);
 	}
 }

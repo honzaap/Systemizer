@@ -47,6 +47,9 @@ html{
     border-radius: 10%;
     padding: 0.3em;
     z-index: 3;
+    &.read-only{
+        pointer-events: none;
+    }
     & .img-container{
         position: absolute;
         padding: 7px;
@@ -124,15 +127,6 @@ li{
     &:hover{
         transform: scale(1.2);
     }
-}
-.nav{
-    z-index: 30;
-    display:flex;
-    flex-flow: row nowrap;
-    align-items: stretch;
-    background-color: $bg-purple-light;
-    color: rgba(255,255,255,0.6);
-    position: relative;
 }
 .nav-list{
     display:flex;

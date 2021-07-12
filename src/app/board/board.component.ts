@@ -1,5 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { download, UUID } from 'src/shared/ExtensionMethods';
@@ -46,14 +45,15 @@ export class BoardComponent implements AfterViewChecked  {
 	posX = 0;
 	posY = 48;
 
-	scaleControl: FormControl = new FormControl();
-	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
 	isLoading = false;
 	isSaving = false;
 	autosaving = false;
 	saveFileName: string = "";
 	systemName: string = "";
 	currentBoardId: string = UUID();
+
+	@Input() isReadOnly = false;
+	@Input() loadedSave: any;
 
 	AUTOSAVE_INTERVAL = 30;
 	/**
@@ -136,22 +136,7 @@ export class BoardComponent implements AfterViewChecked  {
 	private changeRef: ChangeDetectorRef,
 	private changesService: ChangesService,
 	private exportService: ExportService,
-	private renderer: Renderer2) { 
-		placingService.componentChanged.subscribe(()=>{
-			// Some component just got changed, change will be added for undo
-			this.componentChanged();
-		})
-		placingService.pushComponent.subscribe((component: OperatorComponent)=>{
-			// A component was created somewhere else and needs to be added to the state of the board
-			this.pushComponent(component);
-		})
-		setInterval(()=>{
-			if(this.allLogicComponents.length != 0){
-				this.save();
-			}
-		}, this.AUTOSAVE_INTERVAL * 1000);
-
-	}
+	private renderer: Renderer2) { }
 	
 	scroll(event){
 		if(event.deltaY < 0)
@@ -161,46 +146,60 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	ngOnInit(): void {
-		window.addEventListener("resize", event => {
-			event.preventDefault();
-		});
-
-		this.selectionService.onStopSelecting.subscribe((e) => {
-			for(let component of this.allComponents){
-				let logicComponent = component.getLogicComponent();
-				let size = this.exportService.getComponentSize(logicComponent);
-				let pos = {top: logicComponent.options.Y, left: logicComponent.options.X};
-				if(pos.top >= e.top && pos.left >= e.left && pos.left + size.width < e.left + e.width && pos.top + size.height < e.top + e.height){
-					setTimeout(()=>{
-						this.selectionService.addSelection(component, true);
-					}, 20);
-				}
-			}
-		})
-
 		this.board = document.getElementById("board");
 		this.board.style.width = `${this.placingService.boardWidth}px`;
 		this.board.style.height = `${this.placingService.boardHeight}px`;
 
 		this.updateBoardTransform();
 
-		this.board.addEventListener("mouseup",(e)=>{
-			if(this.placingService.isCreating){
-				let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
-				this.pushComponent(component);
-				this.placingService.stopCreating();
-				this.componentChanged();
-			}
-		})
+		window.addEventListener("resize", event => {
+			event.preventDefault();
+		});
 
-		window.onkeydown = (e: KeyboardEvent)=>{
-			if(e.ctrlKey && this.controlShortcuts[e.key]){
-				this.controlShortcuts[e.key](e);
+		if(!this.isReadOnly){ // These events will not be used in readonly board
+			window.onkeydown = (e: KeyboardEvent)=>{
+				if(e.ctrlKey && this.controlShortcuts[e.key]){
+					this.controlShortcuts[e.key](e);
+				}
+				if(e.key === 'Delete')
+					this.delete();
 			}
-			if(e.key === 'Delete')
-				this.delete();
+
+			this.selectionService.onStopSelecting.subscribe((e) => {
+				for(let component of this.allComponents){
+					let logicComponent = component.getLogicComponent();
+					let size = this.exportService.getComponentSize(logicComponent);
+					let pos = {top: logicComponent.options.Y, left: logicComponent.options.X};
+					if(pos.top >= e.top && pos.left >= e.left && pos.left + size.width < e.left + e.width && pos.top + size.height < e.top + e.height){
+						setTimeout(()=>{
+							this.selectionService.addSelection(component, true);
+						}, 20);
+					}
+				}
+			})
+	
+			this.board.addEventListener("mouseup",(e)=>{
+				if(this.placingService.isCreating){
+					let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
+					this.pushComponent(component);
+					this.placingService.stopCreating();
+					this.componentChanged();
+				}
+			})
+			this.placingService.componentChanged.subscribe(()=>{
+				// Some component just got changed, change will be added for undo
+				this.componentChanged();
+			})
+			this.placingService.pushComponent.subscribe((component: OperatorComponent)=>{
+				// A component was created somewhere else and needs to be added to the state of the board
+				this.pushComponent(component);
+			})
+			setInterval(()=>{
+				if(this.allLogicComponents.length != 0){
+					this.save();
+				}
+			}, this.AUTOSAVE_INTERVAL * 1000);
 		}
-		this.scaleControl.setValue(1);
 	}
 
 	copyItem(){
@@ -241,27 +240,35 @@ export class BoardComponent implements AfterViewChecked  {
 	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
-		this.loadLatestBoard();
+		
+		if(this.loadedSave){
+			this.loadFromSave(this.loadedSave);
+		}
+		else if(!this.isReadOnly){
+			this.loadLatestBoard();
+		}
 
-		// Loading saved boards
-		let savedBoardsJson = this.savingService.getSavedBoardsJson();
-		if(savedBoardsJson == null)
-			return;
-		let savedBoards = JSON.parse(savedBoardsJson) as any[];
-		if(savedBoards.length == 0)
-			return;
-		for(let board of savedBoards){ // Convert all boards to IDataOperator[]
-			let convertedBoard = this.savingService.getComponentsFromSave(board.components);
-			if(convertedBoard)
-				this.savedBoards.push(new SavedBoard(board.name || "Untitled System", convertedBoard, board));
+		if(!this.isReadOnly){
+			// Loading saved boards
+			let savedBoardsJson = this.savingService.getSavedBoardsJson();
+			if(savedBoardsJson == null)
+				return;
+			let savedBoards = JSON.parse(savedBoardsJson) as any[];
+			if(savedBoards.length == 0)
+				return;
+			for(let board of savedBoards){ // Convert all boards to IDataOperator[]
+				let convertedBoard = this.savingService.getComponentsFromSave(board.components);
+				if(convertedBoard)
+					this.savedBoards.push(new SavedBoard(board.name || "Untitled System", convertedBoard, board));
+			}
+			for(let savedBoard of this.savedBoards){
+				this.displaySavedBoard(savedBoard);
+			}
+			this.showSavedBoardsPopup = true;
+			setTimeout(()=>{
+				this.showSavedBoardsPopup = false;
+			}, 6500);
 		}
-		for(let savedBoard of this.savedBoards){
-			this.displaySavedBoard(savedBoard);
-		}
-		this.showSavedBoardsPopup = true;
-		setTimeout(()=>{
-			this.showSavedBoardsPopup = false;
-		}, 6500);
 	}
 
 	async displaySavedBoard(savedBoard: SavedBoard){
@@ -356,16 +363,16 @@ export class BoardComponent implements AfterViewChecked  {
 
 	public handleMousedown(event: Event) {
 		let e = event as MouseEvent;
-		if(e.button == 0){
+		if(e.button == 0 && !this.isReadOnly){
 			// Start selecting
 			this.selectionService.startSelecting(e, this.placingService.boardScale)
 		}
-		else if(e.button == 1 || e.button == 2){
+		else if(this.isReadOnly || e.button == 1 || e.button == 2){
 			e.preventDefault();
 			if(!this.placingService.canDrag()) 
 				return;
-				this.board.classList.add("moving")
-				this.board.addEventListener( "mousemove", this.handleMousemove );
+			this.board.classList.add("moving")
+			this.board.addEventListener( "mousemove", this.handleMousemove );
 			window.addEventListener( "mouseup", this.handleMouseup );
 		}
 	}
@@ -397,11 +404,6 @@ export class BoardComponent implements AfterViewChecked  {
 	public handleSelfClick(event: Event){
 		this.selectionService.clearSelection();
 		this.selectionService.clearConnectionSelection();
-	}
-
-	handleScaleChange(){
-		this.placingService.boardScale = this.scaleControl.value;
-		this.updateBoardTransform();
 	}
 
 	zoomOut(){
@@ -465,6 +467,8 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	save(showIcon = false){
+		if(this.isReadOnly)
+			return;
 		this.savingService.save(this.allLogicComponents, this.currentBoardId);
 		this.saveCurrentBoardToAllBoards();
 		if(showIcon){
@@ -544,7 +548,7 @@ export class BoardComponent implements AfterViewChecked  {
 			}
 			let left = logicComponent.options.X;
 			let top = logicComponent.options.Y;
-			let component = this.placingService.createComponent(type as any, left, top, logicComponent.options);
+			let component = this.placingService.createComponent(type as any, left, top, logicComponent.options, this.isReadOnly);
 
 			this.pushComponent(component);
 			const currentComponentIndex = index;
@@ -591,7 +595,7 @@ export class BoardComponent implements AfterViewChecked  {
 	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				this.placingService.connectPorts(connection.port, outputPortsTable[con.to]);
+				this.placingService.connectPorts(connection.port, outputPortsTable[con.to], this.isReadOnly);
 			});
 		}
 		setTimeout(()=>{

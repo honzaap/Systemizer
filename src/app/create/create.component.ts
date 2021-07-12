@@ -147,4 +147,9 @@ export class CreateComponent implements OnInit {
 			this.header.changeName(name);
 		}
 	}
+
+	handleScaleChange(scale: number){
+		this.placingService.boardScale = scale;
+		this.board.updateBoardTransform();
+	}
 }

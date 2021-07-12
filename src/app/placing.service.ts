@@ -112,7 +112,7 @@ export class PlacingService{
 		return components;
 	}
 
-	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent){
+	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false){
 		let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
 		let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
 		
@@ -122,6 +122,7 @@ export class PlacingService{
 			return false;
 		}
 		c.instance.LogicConnection = logicConn;
+		c.instance.isReadOnly = isReadOnly;
 
 		c.instance.destroyComponent = () => {
 			c.destroy();
@@ -132,11 +133,12 @@ export class PlacingService{
 		return true
 	}
 
-	public createComponent<T>(component: Type<T>, left = 100, top = 100, options: any) {
+	public createComponent<T>(component: Type<T>, left = 100, top = 100, options: any, isReadOnly: boolean = false) {
 		if(component == null) 
 			return;
 		let factory  = this.resolver.resolveComponentFactory(component);
 		let c : any = this.connectionRef.createComponent(factory);
+		c.instance.isReadOnly = isReadOnly;
 		let comp = c.instance.getLogicComponent();
 
 		c.instance.destroyComponent = () => {

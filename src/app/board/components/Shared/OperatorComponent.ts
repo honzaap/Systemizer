@@ -71,6 +71,8 @@ export class OperatorComponent {
 
 	public anchorRect: any;
 
+	public isReadOnly = false;
+
 	public beforeOptions: Options;
 
     constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
@@ -201,6 +203,9 @@ export class OperatorComponent {
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
 		this.comp = this.anchorRef.nativeElement;
+		this.comp.classList.add("component");
+		if(this.isReadOnly)
+			this.comp.classList.add("read-only")
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
 		this.maxX = this.placingService.boardWidth;
 		this.maxY = this.placingService.boardHeight;

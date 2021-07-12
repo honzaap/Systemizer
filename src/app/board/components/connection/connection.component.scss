@@ -6,6 +6,9 @@ svg{
     height: 100%;
     z-index: 1;
     pointer-events: none;
+    &.read-only > *{
+        pointer-events: none;
+    }
     & path{
         stroke: $orange-light;
         stroke-width: 2;

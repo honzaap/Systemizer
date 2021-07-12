@@ -16,6 +16,8 @@ export class ConnectionComponent implements OnInit {
 	
 	public LogicConnection : Connection;
 
+	isReadOnly = false;
+
 	@ViewChild("svg") svg: ElementRef;
 	@ViewChild("mainPath") mainPath: ElementRef;
 	@ViewChild("secondPath") secondPath: ElementRef;

@@ -34,38 +34,7 @@
     height: 100%;
     pointer-events: none;
 }
-.nav{
-    font-size: 1.1rem;
-    padding: 0.2em 0;
-    & .nav-list{
-        gap:0.3em;
-        color: #fff
-    }
-    & .line::before{
-        content: "";
-        height: 100%;
-        margin-right: 0.3em;
-        margin-left: 0.3em;
-        border-left: 2px solid rgba(255,255,255,0.6);
-    }
-    & select{
-        background-color: transparent;
-        color: inherit;
-        outline: none;
-        border: none;
-    }
-    & .icon{
-        width: 1em;
-        height: 1em;
-        display: inline-block;
-        transition: transform 0.1s linear, color 0.1s linear;
-    }
-    & .icon:hover{
-        transform: scale(1.05);
-        color: $purple-dark;
-        cursor: pointer;
-    }
-}
+
 .backdrop-centralized{
     position: absolute;
     top: 0;

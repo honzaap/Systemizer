@@ -1,6 +1,15 @@
 @import "../../../colors";
-
+nav{
+    z-index: 30;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    background-color: $bg-purple-light;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+}
 .nav{
+    z-index: 100;
     & .navbar-name{
         background-color: transparent;
         padding: 0.1em 0.2em;
@@ -29,11 +38,42 @@
         cursor: pointer;
     }
 }
-
+.nav-second{
+    font-size: 1.1rem;
+    padding: 0.2em 0;
+    & .nav-list{
+        gap:0.3em;
+        color: #fff;
+        justify-content: flex-start;
+    }
+    & .v-line::before{
+        content: "";
+        height: 100%;
+        margin-right: 0.3em;
+        margin-left: 0.3em;
+        border-left: 2px solid rgba(255,255,255,0.6);
+    }
+    & select{
+        background-color: transparent;
+        color: inherit;
+        outline: none;
+        border: none;
+    }
+    & .icon{
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+        transition: transform 0.1s linear, color 0.1s linear;
+    }
+    & .icon:hover{
+        transform: scale(1.05);
+        color: $purple-dark;
+        cursor: pointer;
+    }
+}
 input[type="file"] {
     display: none;
 }      
-
 .line{
     margin: 0 auto;
     width: 80%;

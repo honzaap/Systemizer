@@ -1,5 +1,5 @@
 
-<svg #svg *ngIf="portComponent1.port != null && portComponent2.port != null">
+<svg #svg *ngIf="portComponent1.port != null && portComponent2.port != null" [class.read-only]="isReadOnly">
   <path #mainPath [attr.d]="'M'+(portComponent1.port.nativeElement.offsetLeft+portComponent1.port.nativeElement.clientWidth/2)+' '+(portComponent1.port.nativeElement.offsetTop+portComponent1.port.nativeElement.clientHeight/2)+' L'+(portComponent2.port.nativeElement.offsetLeft+portComponent2.port.nativeElement.clientWidth/2)+' '+(portComponent2.port.nativeElement.offsetTop+portComponent2.port.nativeElement.clientHeight/2)" 
   ></path>
   <path #secondPath (click)="handleClick()" class="blur" [attr.d]="'M'+(portComponent1.port.nativeElement.offsetLeft+portComponent1.port.nativeElement.clientWidth/2)+' '+(portComponent1.port.nativeElement.offsetTop+portComponent1.port.nativeElement.clientHeight/2)+' L'+(portComponent2.port.nativeElement.offsetLeft+portComponent2.port.nativeElement.clientWidth/2)+' '+(portComponent2.port.nativeElement.offsetTop+portComponent2.port.nativeElement.clientHeight/2)" 

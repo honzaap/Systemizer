@@ -123,6 +123,38 @@
             </li>
         </ul>
     </nav>
+    <nav class="nav-second">
+        <ul class="nav-list">
+            <li>
+                <mat-form-field appearance="fill" class="nav-select">
+                    <mat-select (selectionChange)="handleScaleChange()" [formControl]="scaleControl">
+                      <mat-option *ngFor="let val of scaleSelectList" [value]="val">{{val*100}}%</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li class="v-line">
+                <span (click)="zoomIn.emit()" class="icon"><i class="fas fa-search-plus"></i></span>
+            </li>
+            <li>
+                <span (click)="zoomOut.emit()" class="icon"><i class="fas fa-search-minus"></i></span>
+            </li>
+            <li class="v-line">
+                <span (click)="undo.emit()" class="icon"><i class="fas fa-undo-alt"></i></span>
+            </li>
+            <li>
+                <span (click)="redo.emit()" class="icon"><i class="fas fa-redo"></i></span>
+            </li>
+            <li class="v-line">
+                <span (click)="copy.emit()" class="icon"><i class="far fa-copy"></i></span>
+            </li>
+            <li>
+                <span (click)="paste.emit()" class="icon"><i class="fas fa-paste"></i></span>
+            </li>
+            <li class="v-line">
+                <span (click)="del.emit()" class="icon"><i class="fas fa-trash"></i></span>
+            </li>
+        </ul>
+    </nav>
 </header>
 <div class="confirm-dialog-container" (click.self)="closeDialog()" [style.display]="confirmDialogOpen ? 'flex' : 'none'">
     <div class="confirm-dialog">
