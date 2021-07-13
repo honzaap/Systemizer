@@ -2,6 +2,7 @@
 
 :host{
     height: 100%;
+    min-height: 100vh;
     overflow: hidden;
 }
 .board{
@@ -54,35 +55,6 @@
     color: #fff;
     & img{
         animation: loadingAnim 1s ease-in-out infinite;
-    }
-}
-.saving{
-    font-size: 0.9em;
-    color: #fff;
-    & .saving-inner{
-        display: flex;
-        flex-flow: row nowrap;
-        background-color: $bg-purple-dark;
-        border-radius: 0.4em;
-        padding: 2em 1em;
-        gap: 1em;
-        position: relative;
-        & .name{
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 0.2em;
-            input {
-                background-color: rgba(0, 0, 0, 0.35);
-                color: #fff;
-                padding: 0.3em 0.5em;
-                border: 0;
-                outline: none;
-                border-bottom: 0.15em solid transparent;
-                &:hover,&:focus{
-                    border-color: $purple-light;
-                }
-            }
-        }
     }
 }
 .close{
@@ -217,7 +189,6 @@
         }
     }
 }
-
 .saved-boards-popup{
     position: absolute;
     top: 100px;
@@ -252,6 +223,37 @@
         transition: background-color 0.1s linear;
         &:hover{
             background-color: $purple-darker;
+        }
+    }
+}
+.read-only-controls{
+    position: absolute;
+    bottom: 0.5em;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    & .controls{ 
+        display: flex;
+        gap: 0.5em;
+        transition: background-color 0.2s ease-in-out;
+        padding: 0.5em 1em;
+        border-radius: 2em;
+        background-color: rgba(0, 0, 0, 0.4);
+        &:hover{
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        & button, & a{
+            border: 0;
+            font-size: 1.5rem;
+            outline: none;
+            padding: 0.2em;
+            background-color: transparent;
+            color: #fff;
+            cursor: pointer;
+            &:hover, &:focus{
+                outline: 0;
+            }
         }
     }
 }

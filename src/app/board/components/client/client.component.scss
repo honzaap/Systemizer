@@ -34,3 +34,29 @@
         width: max-content;
     }
 }
+.read-only-controls{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    &:hover{
+        & button{
+            opacity: 1;
+        }
+    }
+    & button{
+        padding: 0.2em 0.6em;
+        width: max-content;
+        border: 0;
+        opacity: 0;
+        font-size: 10px;
+        outline: none;
+        transform: translate(-55px, 5px);
+        cursor: pointer;
+        background-color: $purple-dark;
+        color: #fff;
+        transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in;
+        &:hover{
+            background-color: $purple-darker;
+        }
+    }
+}

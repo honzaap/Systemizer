@@ -9,19 +9,8 @@
     <img src="./assets/logo.svg">
 </div>
 <div *ngIf="!isReadOnly">
-
     <div class="autosave" *ngIf="autosaving">
         <i class="far fa-save"></i>
-    </div>
-    <div class="backdrop-centralized saving" *ngIf="isSaving" (click.self)="isSaving = false">
-        <div class="saving-inner">
-            <div class="name">
-                <label>File name</label>
-                <input spellcheck="false" required [(ngModel)]="saveFileName" placeholder="File name">
-            </div>
-            <button class="btn-purple" (click)="saveJson()">Download</button>
-            <button class="close" (click)="isSaving = false">×</button>
-        </div>
     </div>
     <div class="backdrop-centralized" [style.display]="showSavedBoards ? 'flex' : 'none'" (click.self)="closeSavedBoards()">
         <div class="saved-boards">
@@ -53,5 +42,16 @@
             <span class="text">You have {{ savedBoards.length }} saved system<span *ngIf="savedBoards.length != 1">s</span></span>
             <button (click)="openSavedBoards()">Show all</button>
         </div>
+    </div>
+</div>
+<div class="read-only-controls" *ngIf="isReadOnly">
+    <div class="controls">
+        <button *ngIf="!isAllClientsSendingData" (click)="startAllClients()" matTooltip="{{ 'Start animation' }}"><i class="fas fa-play"></i></button>
+        <button *ngIf="isAllClientsSendingData" (click)="stopAllClients()" matTooltip="{{ 'Stop animation' }}"><i class="fas fa-stop"></i></button>
+        <button (click)="zoomIn()" matTooltip="{{ 'Zoom in' }}"><i class="fas fa-search-plus"></i></button>
+        <button (click)="zoomOut()" matTooltip="{{ 'Zoom out' }}"><i class="fas fa-search-minus"></i></button>
+        <button (click)="resetView()" matTooltip="{{ 'Reset view' }}"><i class="fas fa-search"></i></button>
+        <button (click)="toggleTitles()" matTooltip="{{ 'Toggle titles' }}"><i class="fas fa-heading"></i></button>
+        <a matTooltip="{{ 'Edit board' }}"><i class="fas fa-edit"></i></a>
     </div>
 </div>

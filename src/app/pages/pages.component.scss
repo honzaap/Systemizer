@@ -8,6 +8,12 @@
     max-height: 100vh;
 }
 .pages-board{
+    height: 100vh;
+    display: flex;
+    background-color: $bg-purple-darker;
+    flex-flow:column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;

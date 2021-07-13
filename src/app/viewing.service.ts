@@ -29,8 +29,9 @@ export class ViewingService {
 		return this.titlesHidden;
 	}
 
-	setTitlesHidden(hidden: boolean = true){
-		localStorage.setItem(this.TITLES_KEY, hidden.toString());
+	setTitlesHidden(hidden: boolean = true, saveToLocalStorage: boolean = true){
+		if(saveToLocalStorage)
+			localStorage.setItem(this.TITLES_KEY, hidden.toString());
 		this.titlesHidden = hidden;
 	}
 }

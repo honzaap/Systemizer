@@ -12,7 +12,7 @@
                     <button mat-menu-item (click)="showConfirmDialog('Do you really want to create a new file?', newFileDialog )">
                         <span>New file</span>
                     </button>
-                    <button mat-menu-item (click)="saveFile.emit(name)">
+                    <button mat-menu-item (click)="openSaveFile()">
                         <span>Save file</span>
                     </button>
                     <label class="file-form" mat-menu-item class="custom-file-upload">
@@ -235,5 +235,15 @@
 <div class="preview-container" (click)="closePreview()" [style.display]="isPreviewOpen ? 'flex' : 'none'">
     <div #preview class="preview">
 
+    </div>
+</div>
+<div class="backdrop-centralized saving" *ngIf="isSavingOpen" (click.self)="isSavingOpen = false">
+    <div class="saving-inner">
+        <div class="name">
+            <label>File name</label>
+            <input spellcheck="false" required [(ngModel)]="saveFileName" placeholder="File name">
+        </div>
+        <button class="btn-purple" (click)="saveFile.emit(saveFileName)">Download</button>
+        <button class="close" (click)="isSavingOpen = false">×</button>
     </div>
 </div>

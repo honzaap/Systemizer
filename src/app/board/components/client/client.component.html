@@ -1,5 +1,6 @@
 <div
 #anchorRef
+[class.side-menu]="isReadOnly"
 [style.left.px]="LogicClient.options.X "
 [style.top.px]="LogicClient.options.Y"
 >
@@ -8,6 +9,13 @@
     (click)="handleClick($event)">
         <img src="./assets/client.svg">
     </div>    
+</div>
+<div *ngIf="isReadOnly" 
+[style.left.px]="LogicClient.options.X "
+[style.top.px]="LogicClient.options.Y" class="read-only-controls">
+    <button (click)="sendData()">
+        Send data 
+    </button>
 </div>
 <div style="display:none">
     <div #options>

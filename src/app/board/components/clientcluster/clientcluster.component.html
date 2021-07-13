@@ -1,5 +1,6 @@
 <div
 #anchorRef
+[class.side-menu]="isReadOnly"
 [style.left.px]="LogicClientCluster.options.X "
 [style.top.px]="LogicClientCluster.options.Y"
 >
@@ -8,6 +9,16 @@
     (click)="handleClick($event)">
         <img src="./assets/clientcluster.svg">
     </div>    
+</div>
+<div *ngIf="isReadOnly" 
+[style.left.px]="LogicClientCluster.options.X "
+[style.top.px]="LogicClientCluster.options.Y" class="read-only-controls">
+    <button *ngIf="!LogicClientCluster.isSendingData" (click)="LogicClientCluster.startSendingData()">
+        Start sending<br> data
+    </button>
+    <button *ngIf="LogicClientCluster.isSendingData" (click)="LogicClientCluster.stopSendingData()">
+        Stop sending<br> data 
+    </button>
 </div>
 <div style="display:none">
     <div #options>

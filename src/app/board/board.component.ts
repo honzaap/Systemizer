@@ -1,12 +1,13 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
-import { download, UUID } from 'src/shared/ExtensionMethods';
+import { sleep, UUID } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
 import { ExportPngOptions, ExportService, ExportSvgOptions } from '../export.service';
 import { PlacingService } from '../placing.service';
 import { SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
+import { ViewingService } from '../viewing.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
 import { CacheComponent } from './components/cache/cache.component';
@@ -43,14 +44,13 @@ export class BoardComponent implements AfterViewChecked  {
 
 	board : HTMLElement;
 	posX = 0;
-	posY = 48;
+	posY = 0;
 
 	isLoading = false;
-	isSaving = false;
 	autosaving = false;
-	saveFileName: string = "";
-	systemName: string = "";
 	currentBoardId: string = UUID();
+	isAllClientsSendingData = false;
+	canToggleClientsSendingData = true;
 
 	@Input() isReadOnly = false;
 	@Input() loadedSave: any;
@@ -75,42 +75,6 @@ export class BoardComponent implements AfterViewChecked  {
 		WebServer: WebserverComponent
 	}
 
-	/**
-	 * Dictionary of keys witht assigned function when pressed with ctrl key
-	 */
-	controlShortcuts = { 
-		"c": (e: Event) => {
-			this.copyItem();
-		},
-		"v": (e: Event) => {
-			this.pasteItem();
-		},
-		"x": (e: Event) => {
-			this.cutItem();
-		},
-		"s": (e: Event) => {
-			e.preventDefault();
-			this.save(true);
-		},
-		"z": (e: Event) => {
-			e.preventDefault();
-			this.undo();
-		},
-		"y": (e: Event) => {
-			e.preventDefault();
-			this.redo();
-		},
-		"+": (e: Event) => {
-			e.preventDefault();
-			this.zoomIn();
-		},
-		"-": (e: Event) => {
-			e.preventDefault();
-			this.zoomOut();
-		}
-	}
-
-	
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 	@ViewChild("savedBoardsRef") savedBoardsRef: ElementRef;
 
@@ -136,6 +100,7 @@ export class BoardComponent implements AfterViewChecked  {
 	private changeRef: ChangeDetectorRef,
 	private changesService: ChangesService,
 	private exportService: ExportService,
+	private viewingService: ViewingService,
 	private renderer: Renderer2) { }
 	
 	scroll(event){
@@ -157,14 +122,6 @@ export class BoardComponent implements AfterViewChecked  {
 		});
 
 		if(!this.isReadOnly){ // These events will not be used in readonly board
-			window.onkeydown = (e: KeyboardEvent)=>{
-				if(e.ctrlKey && this.controlShortcuts[e.key]){
-					this.controlShortcuts[e.key](e);
-				}
-				if(e.key === 'Delete')
-					this.delete();
-			}
-
 			this.selectionService.onStopSelecting.subscribe((e) => {
 				for(let component of this.allComponents){
 					let logicComponent = component.getLogicComponent();
@@ -177,7 +134,6 @@ export class BoardComponent implements AfterViewChecked  {
 					}
 				}
 			})
-	
 			this.board.addEventListener("mouseup",(e)=>{
 				if(this.placingService.isCreating){
 					let component = this.placingService.createComponent(this.placingService.creatingItem, e.offsetX - 20, e.offsetY - 20, this.placingService.creatingItemOptions);
@@ -229,13 +185,6 @@ export class BoardComponent implements AfterViewChecked  {
 		this.delete();
 	}
 
-	resetView(){
-		this.posX = 0;
-		this.posY = 0;
-		this.placingService.boardScale = 1;
-		this.updateBoardTransform();
-	}
-
 	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
 	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
@@ -247,7 +196,7 @@ export class BoardComponent implements AfterViewChecked  {
 		else if(!this.isReadOnly){
 			this.loadLatestBoard();
 		}
-
+		
 		if(!this.isReadOnly){
 			// Loading saved boards
 			let savedBoardsJson = this.savingService.getSavedBoardsJson();
@@ -268,6 +217,10 @@ export class BoardComponent implements AfterViewChecked  {
 			setTimeout(()=>{
 				this.showSavedBoardsPopup = false;
 			}, 6500);
+		}
+		else{
+			this.resetView();
+			this.viewingService.setTitlesHidden(false, false);
 		}
 	}
 
@@ -380,6 +333,7 @@ export class BoardComponent implements AfterViewChecked  {
 	public handleMousemove = ( event: MouseEvent ): void => {
 		this.posX += event.movementX;
 		this.posY += event.movementY;
+
 		this.updateBoardTransform();
 	}
 
@@ -414,6 +368,101 @@ export class BoardComponent implements AfterViewChecked  {
 	zoomIn(){
 		this.placingService.boardScale = Math.min(this.placingService.boardScale + 0.1,2);
 		this.updateBoardTransform();
+	}
+
+	toggleTitles(){
+		this.viewingService.setTitlesHidden(
+			!this.viewingService.isTitlesHidden(), false
+		);
+	}
+
+	resetView(){
+		if(this.allLogicComponents.length == 0 || !this.isReadOnly){
+			this.posX = (window.innerWidth - this.placingService.boardWidth) / 2;
+			this.posY = (window.innerHeight - this.placingService.boardHeight) / 2;
+			this.placingService.boardScale = 1;
+		}
+		else{
+			let minX = Number.MAX_VALUE;
+			let minY = Number.MAX_VALUE;
+			let maxX = 0;
+			let maxY = 0;
+
+			for(let component of this.allLogicComponents){
+				minX = Math.min(component.options.X, minX);
+				minY = Math.min(component.options.Y, minY);
+				maxX = Math.max(component.options.X, maxX);
+				maxY = Math.max(component.options.Y, maxY);
+			}
+			
+			let width = maxX - minX + 150;
+			let height = maxY - minY + 90;
+
+			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerWidth / width) / 0.1) * 0.1, 2), 0.3);
+			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerHeight / height) / 0.1) * 0.1, this.placingService.boardScale), 0.3);
+
+			let xFromCenter = (this.placingService.boardWidth / 2) - minX;
+			let yFromCenter = (this.placingService.boardHeight / 2) - minY;
+
+			this.posX = - minX + xFromCenter + 90;
+			this.posY = - minY + yFromCenter + 15;
+
+
+			for(let i = 2; i > this.placingService.boardScale; i -= 0.1){
+				this.posX -= xFromCenter / 10;
+				this.posY -= yFromCenter / 10;
+			}
+		}
+		this.updateBoardTransform();
+	}
+
+	/**
+	 * Triggers every client in the board to send data automatically
+	 */
+	async startAllClients(){
+		if(this.isAllClientsSendingData || !this.canToggleClientsSendingData)
+			return;
+		this.canToggleClientsSendingData = false;
+		this.isAllClientsSendingData = true;
+		for(let component of this.allComponents){
+			if(component instanceof ClientComponent){
+				if(component.canEstabilishConnection){
+					component.estabilishConnection();
+				}
+				component.toggleAutomaticSend();
+				await sleep(300); // Make some delay between
+			}
+			else if(component instanceof ClientclusterComponent){
+				component.LogicClientCluster.startSendingData();
+				await sleep(300); // Make some delay between
+			}
+		}
+		setTimeout(()=>{
+			this.canToggleClientsSendingData = true;
+		}, 400);
+	}
+
+	stopAllClients(){
+		if(!this.isAllClientsSendingData || !this.canToggleClientsSendingData)
+			return;
+		this.canToggleClientsSendingData = false;
+		this.isAllClientsSendingData = false;
+		for(let component of this.allComponents){
+			if(component instanceof ClientComponent){
+				if(component.canEndConnection){
+					component.endConnection();
+				}
+				else{
+					component.toggleAutomaticSend();
+				}
+			}
+			else if(component instanceof ClientclusterComponent){
+				component.LogicClientCluster.stopSendingData();
+			}
+		}
+		setTimeout(()=>{
+			this.canToggleClientsSendingData = true;
+		}, 400);
 	}
 
 	componentChanged(){
@@ -460,7 +509,6 @@ export class BoardComponent implements AfterViewChecked  {
 			this.saveCurrentBoardToAllBoards();
 		this.currentBoardId = UUID();
 		this.changeSystemName.emit("Untitled system");
-		this.systemName = "Untitled system";
 		this.clearBoard(true);
 		this.resetView();
 		this.changesService.reset();
@@ -477,22 +525,6 @@ export class BoardComponent implements AfterViewChecked  {
 				this.autosaving = false;
 			}, 1000)
 		}
-	}
-
-	saveFile(name: string){
-		this.isSaving = true;
-		this.saveFileName = name;
-		this.systemName = name;
-	}
-
-	saveJson(){
-		if(this.allLogicComponents.length == 0){
-			this.placingService.showSnack("There is nothing to save...");
-			return;
-		}
-		let file = this.savingService.getBoardJson(this.allLogicComponents, this.systemName, this.currentBoardId);
-		this.save();
-		download(`${this.saveFileName}.json`, file);	
 	}
 
 	loadFromJson(json: string, showInfo = true){
@@ -601,7 +633,16 @@ export class BoardComponent implements AfterViewChecked  {
 		setTimeout(()=>{
 			this.isLoading = false;
 			this.save();
+			this.updateComponents();
 		}, 100);
+	}
+
+	updateComponents(){
+		for(let component of this.allComponents){
+			if((component as any).updateSelection){
+				(component as any).updateSelection();
+			}
+		}
 	}
 
 	clearBoard(clearLocalStorage = false){

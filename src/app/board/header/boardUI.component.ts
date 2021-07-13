@@ -8,15 +8,15 @@ import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
 
 @Component({
-	selector: 'board-header',
-	templateUrl: './header.component.html',
-	styleUrls: ['./header.component.scss']
+	selector: 'board-ui',
+	templateUrl: './boardUI.component.html',
+	styleUrls: ['./boardUI.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class BoardUIComponent implements OnInit {
 	
 	// File section events
 	@Output() newFile = new EventEmitter();
-	@Output() saveFile = new EventEmitter();
+	@Output() saveFile = new EventEmitter<string>();
 	@Output() loadFile = new EventEmitter();
 	@Output() showSaved = new EventEmitter();
 	@Output() save = new EventEmitter();
@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
 	@Input() getComponents: () => IDataOperator[];
 
 	name = "Untitled System";
+	saveFileName = "Untitled System";
 
 	confirmDialogText = "";
 	confirmDialogOpen: boolean = false;
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit {
 	isHelpersDisabled: boolean = false;
 	isTitlesHidden: boolean = false;
 	isPreviewOpen: boolean = false;
+	isSavingOpen: boolean = false;
 
 	exportPngOptions: ExportPngOptions = new ExportPngOptions();
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
@@ -69,6 +71,41 @@ export class HeaderComponent implements OnInit {
 
 	@ViewChild("file") fileInput;
 	@ViewChild("preview") preview;
+
+	/**
+	 * Dictionary of keys witht assigned function when pressed with ctrl key
+	 */
+	controlShortcuts = { 
+		"c": (e: Event) => {
+			this.copy.emit();
+		},
+		"v": (e: Event) => {
+			this.paste.emit();
+		},
+		"x": (e: Event) => {
+			this.cut.emit();
+		},
+		"s": (e: Event) => {
+			e.preventDefault();
+			this.save.emit(true);
+		},
+		"z": (e: Event) => {
+			e.preventDefault();
+			this.undo.emit();
+		},
+		"y": (e: Event) => {
+			e.preventDefault();
+			this.redo.emit();
+		},
+		"+": (e: Event) => {
+			e.preventDefault();
+			this.zoomIn.emit();
+		},
+		"-": (e: Event) => {
+			e.preventDefault();
+			this.zoomOut.emit();
+		}
+	}
 
 	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService, private exportService: ExportService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
@@ -105,11 +142,19 @@ export class HeaderComponent implements OnInit {
 
 	changeName(name){
 		this.name = name;
+		this.saveFileName = name;
 		this.savingService.systemName = name;
 	}
 
 	ngOnInit(): void {
 		this.scaleControl.setValue(1);
+		window.onkeydown = (e: KeyboardEvent)=>{
+			if(e.ctrlKey && this.controlShortcuts[e.key]){
+				this.controlShortcuts[e.key](e);
+			}
+			if(e.key === 'Delete')
+				this.del.emit();
+		}
 	}
 
 	showConfirmDialog(text: string, returnFunction){
@@ -129,6 +174,11 @@ export class HeaderComponent implements OnInit {
 
 	newFileDialog(){
 		this.newFile.emit();
+	}
+
+	openSaveFile(){
+		this.isSavingOpen = true;
+		this.saveFileName = this.name;
 	}
 
 	clearBoardDialog(){

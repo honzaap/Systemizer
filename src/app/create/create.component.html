@@ -1,5 +1,5 @@
 <div class="page" *ngIf="!showMobileDisclaimer; else mobileNoPass">
-    <board-header 
+    <board-ui 
         (newFile)="newFile()"
         (saveFile)="saveFile($event)" 
         (loadFile)="loadFile($event)"
@@ -22,7 +22,7 @@
         (onboardTutorial1)="openTutorialMenu()" 
         [getComponents]="getComponents()"
         >
-    </board-header>
+    </board-ui>
     <app-board (changeSystemName)="changeSystemName($event)"></app-board>
     <app-componentmenu></app-componentmenu>
     <app-optionsmenu></app-optionsmenu>

@@ -128,6 +128,10 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 
 	public handleClick(event: MouseEvent){
 		super.handleClick(event);
+		this.updateSelection();
+	}
+
+	updateSelection(){
 		this.connectableEndpoints = this.LogicApiGateway.getConnectableEndpoints();
 		let endpoints = this.LogicApiGateway.getEndpoints();
 		for(let j = 0; j < endpoints.length; j++){

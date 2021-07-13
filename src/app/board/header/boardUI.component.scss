@@ -253,3 +253,59 @@ input[type="file"] {
         background-color: transparent
     }
 }
+.saving{
+    font-size: 0.9em;
+    color: #fff;
+    & .saving-inner{
+        display: flex;
+        flex-flow: row nowrap;
+        background-color: $bg-purple-dark;
+        border-radius: 0.4em;
+        padding: 2em 1em;
+        gap: 1em;
+        position: relative;
+        & .name{
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 0.2em;
+            input {
+                background-color: rgba(0, 0, 0, 0.35);
+                color: #fff;
+                padding: 0.3em 0.5em;
+                border: 0;
+                outline: none;
+                border-bottom: 0.15em solid transparent;
+                &:hover,&:focus{
+                    border-color: $purple-light;
+                }
+            }
+        }
+    }
+}
+.close{
+    position: absolute;
+    color: #d4d4d4;
+    top: 0.2em;
+    right: 0.2em;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.1em;
+    &:hover{
+        color: #fff;
+    }
+}
+.backdrop-centralized{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}

@@ -1,11 +1,12 @@
 import { ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
+import { download, downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
 import { BoardComponent } from '../board/board.component';
-import { HeaderComponent } from '../board/header/header.component';
 import { PlacingService } from '../placing.service';
 import { ExportPngOptions, ExportSvgOptions } from '../export.service';
+import { BoardUIComponent } from '../board/header/boardUI.component';
+import { SavingService } from '../saving.service';
 
 @Component({
 	selector: 'app-create',
@@ -19,9 +20,9 @@ export class CreateComponent implements OnInit {
 	showOnboardIntro = false;
 	showMobileDisclaimer = false;
 	@ViewChild(BoardComponent) board:BoardComponent;
-	@ViewChild(HeaderComponent) header:HeaderComponent;
+	@ViewChild(BoardUIComponent) ui:BoardUIComponent;
 
-  	constructor(private route: ActivatedRoute, private placingService: PlacingService) { }
+  	constructor(private route: ActivatedRoute, private placingService: PlacingService, private savingService: SavingService) { }
 
 	ngOnInit(): void {
 		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
@@ -52,7 +53,13 @@ export class CreateComponent implements OnInit {
 	}
 
 	saveFile(name: string){
-		this.board.saveFile(name);
+		if(this.board.allLogicComponents.length == 0){
+			this.placingService.showSnack("There is nothing to save...");
+			return;
+		}
+		let file = this.savingService.getBoardJson(this.board.allLogicComponents, name, this.board.currentBoardId);
+		this.save();
+		download(`${name}.json`, file);	
 	}
 
 	loadFile(json: string){
@@ -74,7 +81,7 @@ export class CreateComponent implements OnInit {
 			this.placingService.showSnack("You can't export an empty board.");
 			return;
 		}
-		downloadPng(this.header.name+".png", canvas.toDataURL('image/png', 1));
+		downloadPng(this.ui.name+".png", canvas.toDataURL('image/png', 1));
 	}
 
 	async exportSvg(options: ExportSvgOptions){
@@ -83,7 +90,7 @@ export class CreateComponent implements OnInit {
 			this.placingService.showSnack("You can't export an empty board.");
 			return;
 		}
-		downloadSvg(this.header.name+".svg", svg);
+		downloadSvg(this.ui.name+".svg", svg);
 	}
 
 	copy(){
@@ -140,11 +147,11 @@ export class CreateComponent implements OnInit {
 	}
 
 	changeSystemName(name: string){
-		if(this.header == null){
+		if(this.ui == null){
 			setTimeout(() => {this.changeSystemName(name)}, 50);
 		}
 		else{
-			this.header.changeName(name);
+			this.ui.changeName(name);
 		}
 	}
 
