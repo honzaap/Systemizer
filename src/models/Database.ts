@@ -19,7 +19,6 @@ export class Database extends EndpointOperator implements IDataOperator{
     outputPort: Port
     options: DatabaseOptions;
     connectionTable: {[id:string]:Connection} = {};
-    originID: string;
 
     constructor() {
         super();

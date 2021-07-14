@@ -1,32 +1,32 @@
 <main class="container">
-    <div class="section">
+    <section>
         <h1>Getting started with Systemizer</h1>
         <p class="intro-text">Welcome to introduction to basics of Systemizer. If you have used any design tool before, feel free to skip to <a onclick="document.getElementById('connecting').scrollIntoView()">Connecting components</a> section, where useful informations unique to Systemizer is explained. </p>
-    </div>
+    </section>
     <div class="container-inner">
-        <div class="section">
+        <section>
             <h2>Moving the board</h2>
-            <p>Moving the board is done by dragging with the left mouse button. To zoom in or out, use either mouse wheel, or the top menu controls.</p>
+            <p>Moving the board is done by dragging with right or middle mouse button. To zoom in or out, use either mouse wheel, or the top menu controls.</p>
             <img src="./assets/images/getting_started_nav_zoom.PNG" alt="Zooming">
-        </div>
-        <div class="section">
+        </section>
+        <section>
             <h2>Using components</h2>
             <p>To create a component, find it in the component menu and drag & drop it on board.</p>
             <img class="gif" src="./assets/gifs/tutorial2.gif" alt="Creating component">
-            <div class="section">
+            <section>
                 <p>Copy/paste is done either through <span class="highlight">CTRL</span>+<span class="highlight">C</span>/<span class="highlight">V</span> keyboard shortcut or with top menu controls. </p>
                 <img src="./assets/images/getting_started_nav_copy.PNG" alt="Copying">
-            </div>
-            <div class="section">
+            </section>
+            <section>
                 <p>Deleting is done with <span class="highlight">DELETE</span> key, or by clicking delete icon in the top menu. </p>
                 <img src="./assets/images/getting_started_nav_delete.PNG" alt="Deleting">
-            </div>
-            <div class="section">
+            </section>
+            <section>
                 <p>Like any other tool, the undo/redo is done with <span class="highlight">CTRL</span>+<span class="highlight">Z</span>/<span class="highlight">Y</span> keys, or by clicking icons in the top menu. </p>
                 <img src="./assets/images/getting_started_nav_undo_redo.PNG" alt="Undo&Redo">
-            </div>
-        </div>
-        <div class="section" id="connecting">
+            </section>
+        </section>
+        <section id="connecting">
             <h2>Connecting components</h2>
             <p class="text-center">Every component has 1 or 2 ports. </p>
             <div class="components connectig-components">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <p>Input port: On left side of a component, used to receive data from other component<br>Output port: On right side of a component, used to send data to other components</p>
+            <p><strong>Input port</strong>: On left side of a component, used to receive data from other component<br><strong>Output port</strong>: On right side of a component, used to send data to other components</p>
             <p class="small" style="margin-top: 0.7em;">Only an output port can connect to input port, and only an input port can connect to output port. </p>
             <div class="section info-section">
                 <p>There are components that can connect only to other specific components, to learn more about a component, you can click on the question mark icon of the component in component menu.</p>
@@ -63,12 +63,17 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="section">
+        </section>
+        <section>
+            <h2>Selecting multiple components</h2>
+            <p>You can use the left mouse button to start selecting multiple components.</p>
+            <img class="gif" src="./assets/gifs/tutorial8.gif" alt="Selecting multiple components">
+        </section>
+        <section>
             <h2>Component properties</h2>
             <p>Properties of component can be changed in the options menu. To learn what a certain property does, you can click the question mark next to the property name.</p>
             <img class="gif" src="./assets/gifs/tutorial7.gif" alt="Connecting component">
             <p>That is all for basic functions of Systemizer. You can also start <a routerLink="/create" [queryParams]="{'showOnboardTutorial': true}">onboard tutorial</a>, or <a routerLink="/create">go designing</a> right away.</p>
-        </div>
+        </section>
     </div>
 </main>

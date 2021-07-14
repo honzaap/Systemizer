@@ -9,7 +9,6 @@ import { Handler } from "./Shared/EventDispatcher";
 export class TextField extends LogicComponent implements IDataOperator{
     
     options: TextFieldOptions;
-    originID: string;
 
     constructor() {
         super();

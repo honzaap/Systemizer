@@ -11,7 +11,6 @@ export class WebServer extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     options: WebServerOptions;
     connectionTable: { [id:string]: Connection } = {};
-    originID: string;
 
     constructor() {
         super();

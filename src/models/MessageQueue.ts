@@ -14,7 +14,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     outputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
     options: MessageQueueOptions;
-    originID: string;
     roundRobinIndex = 0;
     isSendingData = false;
 

@@ -13,7 +13,6 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
 
     outputPort: Port;
     options: ClientClusterOptions;
-    originID: string;
     streamingConnections: StreamingConnection[] = [];
     isSendingData: boolean;
 

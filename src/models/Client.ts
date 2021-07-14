@@ -12,7 +12,6 @@ export class Client extends LogicComponent implements IDataOperator{
 
     outputPort: Port;
     options: ClientOptions;
-    originID: string;
     isConnectedToEndpoint: boolean = false; // For streaming/websockets
     connectedId: string;
 

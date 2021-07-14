@@ -11,7 +11,6 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     options: CloudStorageOptions;
     connectionTable: { [id:string]: Connection } = {};
-    originID: string;
 
     constructor() {
         super();

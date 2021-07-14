@@ -14,7 +14,6 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     outputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
     options: PubSubOptions;
-    originID: string;
 
     constructor() {
         super();

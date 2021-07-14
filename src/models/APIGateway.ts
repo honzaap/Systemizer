@@ -15,7 +15,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
     options: APIGatewayOptions;
-    originID: string;
 
     constructor() {
         super()

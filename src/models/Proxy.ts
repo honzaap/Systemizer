@@ -13,7 +13,6 @@ export class Proxy extends LogicComponent implements IDataOperator{
     connectionTable: {[id:string]:Connection} = {};
     streamConnectionTable: { [id:string]:Connection } = {};
     options: ProxyOptions;
-    originID: string;
 
     constructor() {
         super();

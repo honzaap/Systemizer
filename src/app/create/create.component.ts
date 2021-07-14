@@ -5,7 +5,7 @@ import { download, downloadPng, downloadSvg } from 'src/shared/ExtensionMethods'
 import { BoardComponent } from '../board/board.component';
 import { PlacingService } from '../placing.service';
 import { ExportPngOptions, ExportSvgOptions } from '../export.service';
-import { BoardUIComponent } from '../board/header/boardUI.component';
+import { BoardUIComponent } from '../board/boardUI/boardUI.component';
 import { SavingService } from '../saving.service';
 
 @Component({

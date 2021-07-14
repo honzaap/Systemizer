@@ -38,7 +38,7 @@ import { WebserverComponent } from './board/components/webserver/webserver.compo
 import { ProxyComponent } from './board/components/proxy/proxy.component';
 import { ClientclusterComponent } from './board/components/clientcluster/clientcluster.component';
 
-import { BoardUIComponent } from './board/header/boardUI.component';
+import { BoardUIComponent } from './board/boardUI/boardUI.component';
 import { OptionsmenuComponent } from './board/optionsmenu/optionsmenu.component';
 import { TutorialControlsComponent } from './board/tutorials/tutorial-controls/tutorial-controls.component';
 import { CreateComponent } from './create/create.component';
