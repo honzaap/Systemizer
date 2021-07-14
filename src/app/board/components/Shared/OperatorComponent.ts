@@ -19,7 +19,7 @@ import { PortComponent } from "../port/port.component";
 import { TitleComponent } from "./title/title.component";
 
 interface Position{
-    top:number;
+    top: number;
     left: number;
 }
 

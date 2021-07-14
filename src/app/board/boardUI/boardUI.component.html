@@ -45,16 +45,16 @@
                     Edit
                 </button>
                 <mat-menu #editMenu="matMenu">
-                    <button mat-menu-item (click)="copy.emit()">
+                    <button mat-menu-item (click)="copyComponent.emit()">
                         <span>Copy</span>
                     </button>
-                    <button mat-menu-item (click)="paste.emit()">
+                    <button mat-menu-item (click)="pasteComponent.emit()">
                         <span>Paste</span>
                     </button>
-                    <button mat-menu-item (click)="cut.emit()">
+                    <button mat-menu-item (click)="cutComponent.emit(); ">
                         <span>Cut</span>
                     </button>
-                    <button mat-menu-item (click)="del.emit()">
+                    <button mat-menu-item (click)="delComponent.emit()">
                         <span>Delete</span>
                     </button>
                     <button mat-menu-item (click)="undo.emit()">
@@ -145,13 +145,13 @@
                 <span (click)="redo.emit()" class="icon"><i class="fas fa-redo"></i></span>
             </li>
             <li class="v-line">
-                <span (click)="copy.emit()" class="icon"><i class="far fa-copy"></i></span>
+                <span (click)="copyComponent.emit()" class="icon"><i class="far fa-copy"></i></span>
             </li>
             <li>
-                <span (click)="paste.emit()" class="icon"><i class="fas fa-paste"></i></span>
+                <span (click)="pasteComponent.emit()" class="icon"><i class="fas fa-paste"></i></span>
             </li>
             <li class="v-line">
-                <span (click)="del.emit()" class="icon"><i class="fas fa-trash"></i></span>
+                <span (click)="delComponent.emit()" class="icon"><i class="fas fa-trash"></i></span>
             </li>
         </ul>
     </nav>

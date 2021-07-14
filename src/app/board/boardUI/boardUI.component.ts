@@ -24,10 +24,10 @@ export class BoardUIComponent implements OnInit {
 	@Output() exportSvg = new EventEmitter();
 
 	// Edit section events
-	@Output() copy = new EventEmitter();
-	@Output() paste = new EventEmitter();
-	@Output() cut = new EventEmitter();
-	@Output() del = new EventEmitter();
+	@Output() copyComponent = new EventEmitter();
+	@Output() pasteComponent = new EventEmitter();
+	@Output() cutComponent = new EventEmitter();
+	@Output() delComponent = new EventEmitter();
 	@Output() undo = new EventEmitter();
 	@Output() redo = new EventEmitter();
 	@Output() clearBoard = new EventEmitter();
@@ -59,6 +59,8 @@ export class BoardUIComponent implements OnInit {
 	isPreviewOpen: boolean = false;
 	isSavingOpen: boolean = false;
 
+	canUseShortcuts: boolean = true;
+
 	exportPngOptions: ExportPngOptions = new ExportPngOptions();
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
 	exportPngPreview: HTMLCanvasElement;
@@ -77,13 +79,13 @@ export class BoardUIComponent implements OnInit {
 	 */
 	controlShortcuts = { 
 		"c": (e: Event) => {
-			this.copy.emit();
+			this.copyComponent.emit();
 		},
 		"v": (e: Event) => {
-			this.paste.emit();
+			this.pasteComponent.emit();
 		},
 		"x": (e: Event) => {
-			this.cut.emit();
+			this.cutComponent.emit();
 		},
 		"s": (e: Event) => {
 			e.preventDefault();
@@ -148,12 +150,20 @@ export class BoardUIComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.scaleControl.setValue(1);
+		document.addEventListener("focusin", () => {
+			this.canUseShortcuts = false;
+		}); 
+		document.addEventListener("focusout", () => {
+			this.canUseShortcuts = true;
+		});
 		window.onkeydown = (e: KeyboardEvent)=>{
+			if(!this.canUseShortcuts)
+				return;
 			if(e.ctrlKey && this.controlShortcuts[e.key]){
 				this.controlShortcuts[e.key](e);
 			}
 			if(e.key === 'Delete')
-				this.del.emit();
+				this.delComponent.emit();
 		}
 	}
 
