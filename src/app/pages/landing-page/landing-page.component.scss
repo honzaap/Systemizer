@@ -4,6 +4,17 @@
     width: 1000px;
     margin: 2em auto;
 }
+h2{
+    font-size: 1.1em;
+    font-weight: normal; 
+}
+h3{
+    font-weight: normal;
+    font-size: 1em;
+}
+.text-center{
+    text-align: center;
+}
 .intro{
     display: flex;
     & .title{
@@ -143,6 +154,16 @@ a.highlight{
     margin-top: 0.7em;
     color: rgba(255, 255, 255, 0.65);
 }
+.open-source{
+    margin-top: 2.5em;
+    & img{
+        margin: 0.5em;
+    }
+}
+.mt-1{
+    margin-top: 0.5em;
+}
+
 
 @keyframes data-anim {
     0%, 20.001%, 30%, 50.001%, 60%, 80.001%, 100%{

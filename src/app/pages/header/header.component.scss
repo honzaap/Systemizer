@@ -19,7 +19,40 @@ header{
             height: 100%;
         }
     }
-
+    & .nav-right{
+        display: flex;
+        gap: 1em;
+        align-items: center;
+    }
+}
+.btn-github-slide{
+    font-size: 1.25rem;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    border: 0;
+    border-radius: 1em;
+    background-color: $text-purple-light;
+    display: flex;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+    transition: width 0.2s ease-in-out;
+    & .icon{
+        position: absolute;
+        width: 1em;
+        height: 1em;
+        right: 0.25em;
+        display: flex;
+    }
+    & .text{
+        font-size: 0.8em;
+        position: absolute;
+        right: 2em;
+    }
+    &:hover{
+        width: 4.75em;
+    }
 }
 
 @media (max-width: 560px){

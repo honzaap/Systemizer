@@ -1,9 +1,8 @@
 <main class="container">
     <div class="intro">
         <div class="title">
-            <h1>The best system design tool available.</h1>
-            <a class="btn-purple fs-5" routerLink="create">Start designing</a>
-            <p class="caption-dark fs-5">Design architecture and simulate the data flow of your distributed system.</p>
+            <h1>The best system design tool.</h1>
+            <h3>Systemizer provides system visualization with customizable components</h3>
             <p class="caption-dark fs-6">Are you new to design tools? This <a class="highlight" routerLink="getting-started">quick introduction</a> is just for you!</p>
         </div>
         <div class="animation components components-intro">
@@ -15,37 +14,36 @@
                 <circle id="anim-data" cx="80" cy="105" r="5" fill="#31B78D"></circle>
             </svg>
             <div class="component-body">
-                <img src="./assets/client.svg" >
+                <img src="./assets/client.svg" alt="Client visualization">
                 <div class="port right"></div>
             </div>
             <div class="component-body" style="margin-left: 4em;">
-                <img src="./assets/loadbalancer.svg" >
+                <img src="./assets/loadbalancer.svg" alt="Load Balancer visualization">
                 <div class="port left"></div>
                 <div class="port right"></div>
             </div>
             <div style="margin-left: 4em; margin-top: -4em;">
                 <div class="component-body">
-                    <img src="./assets/api.svg" >
+                    <img src="./assets/api.svg" alt="API visualization">
                     <div class="port left"></div>
                 </div>
                 <div class="component-body" style="margin-top: 1em;">
-                    <img src="./assets/api.svg">
+                    <img src="./assets/api.svg" alt="API visualization">
                     <div class="port left"></div>
                 </div>
                 <div class="component-body" style="margin-top: 1em;">
-                    <img src="./assets/api.svg" >
+                    <img src="./assets/api.svg" alt="API visualization">
                     <div class="port left"></div>
                 </div>
             </div>
         </div>
     </div>
-    <span class="caption-dark fs-6 info-free">All for free, no need to login or register.</span>
     <div class="components">
         <div class="components-showcase">
             <div class="component-container">
                 <span class="title">Client</span>
                 <div class="component-body">
-                    <img src="./assets/client.svg" >
+                    <img src="./assets/client.svg" alt="Client visualization">
                     <div class="port right"></div>
                 </div>
             </div>
@@ -53,7 +51,7 @@
             <div class="component-container">
                 <span class="title">Web Server</span>
                 <div class="component-body">
-                    <img src="./assets/webserver.svg" >
+                    <img src="./assets/webserver.svg" alt="Client visualization">
                     <div class="port left"></div>
                 </div>
             </div>
@@ -61,7 +59,7 @@
             <div class="component-container">
                 <span class="title">Load Balancer</span>
                 <div class="component-body">
-                    <img src="./assets/loadbalancer.svg" >
+                    <img src="./assets/loadbalancer.svg" alt="Load Balancer visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -70,7 +68,7 @@
             <div class="component-container">
                 <span class="title">API Gateway</span>
                 <div class="component-body high">
-                    <img src="./assets/apigateway.svg" >
+                    <img src="./assets/apigateway.svg" alt="API Gateway visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -79,7 +77,7 @@
             <div class="component-container">
                 <span class="title">API Service</span>
                 <div class="component-body">
-                    <img src="./assets/api.svg" >
+                    <img src="./assets/api.svg" alt="API visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -88,7 +86,7 @@
             <div class="component-container">
                 <span class="title">Pub/Sub Model</span>
                 <div class="component-body">
-                    <img src="./assets/pubsub.svg" >
+                    <img src="./assets/pubsub.svg" alt="Publisher Subscriber visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -97,7 +95,7 @@
             <div class="component-container">
                 <span class="title">Database</span>
                 <div class="component-body">
-                    <img src="./assets/database.svg" >
+                    <img src="./assets/database.svg" alt="Database visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -106,7 +104,7 @@
             <div class="component-container">
                 <span class="title">Cache</span>
                 <div class="component-body">
-                    <img src="./assets/cache.svg" >
+                    <img src="./assets/cache.svg" alt="Cache visualization">
                     <div class="port left"></div>
                     <div class="port right"></div>
                 </div>
@@ -131,12 +129,22 @@
             </div>
         </div>
         <div>
-            <p class="fs-3">Many different components with customizable properties!<br><strong>And more to come!</strong></p>
-            <p class="caption-dark fs-5">Systemizer is still a work in progress, but it's growing every day.</p>
+            <h2 class="fs-3">Create and visualize your backend system</h2>
+            <p class="caption-dark fs-5">Many different components with customizable properties and more to come.</p>
         </div>
     </div>
     <div class="get-started">
-        <h4 class="fs-1">Get started with Systemizer today</h4>
-        <a class="btn-purple" routerLink="create">Systemize</a>
+        <a class="btn-purple" routerLink="create">Get started</a>
+    </div>
+    <div class="open-source text-center">
+        <h3>Open source & Open to contributions!</h3>
+        <div class="mt-1">
+            <a href="https://github.com/honzaap/Systemizer">
+                <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/honzaap/Systemizer?color=df9300&label=Contributors&style=flat-square">
+                <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/honzaap/Systemizer?color=7767d4&label=Open%20issues&style=flat-square">
+                <img alt="GitHub forks" src="https://img.shields.io/github/forks/honzaap/Systemizer?color=080a1a&label=Fork%20us&style=flat-square">
+                <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/honzaap/Systemizer?color=9278ff&label=Star%20us&style=flat-square">
+            </a>
+        </div>
     </div>
 </main>
