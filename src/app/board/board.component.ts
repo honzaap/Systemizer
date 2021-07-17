@@ -54,6 +54,7 @@ export class BoardComponent implements AfterViewChecked  {
 
 	@Input() isReadOnly = false;
 	@Input() loadedSave: any;
+	@Input() viewerEditLink: string;
 
 	AUTOSAVE_INTERVAL = 30;
 	/**
@@ -104,6 +105,7 @@ export class BoardComponent implements AfterViewChecked  {
 	private renderer: Renderer2) { }
 	
 	scroll(event){
+		event.preventDefault();
 		if(event.deltaY < 0)
 			this.zoomIn();
 		else
@@ -189,7 +191,7 @@ export class BoardComponent implements AfterViewChecked  {
 	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
-		
+		this.board.onwheel = (e) => {this.scroll(e)};
 		if(this.loadedSave){
 			this.loadFromSave(this.loadedSave);
 		}
@@ -391,12 +393,13 @@ export class BoardComponent implements AfterViewChecked  {
 			for(let component of this.allLogicComponents){
 				minX = Math.min(component.options.X, minX);
 				minY = Math.min(component.options.Y, minY);
-				maxX = Math.max(component.options.X, maxX);
-				maxY = Math.max(component.options.Y, maxY);
+				let {width, height} = this.exportService.getComponentSize(component);
+				maxX = Math.max(component.options.X + width, maxX);
+				maxY = Math.max(component.options.Y + height, maxY);
 			}
 			
-			let width = maxX - minX + 150;
-			let height = maxY - minY + 90;
+			let width = maxX - minX + 80;
+			let height = maxY - minY + 30;
 
 			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerWidth / width) / 0.1) * 0.1, 2), 0.3);
 			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerHeight / height) / 0.1) * 0.1, this.placingService.boardScale), 0.3);
@@ -404,14 +407,14 @@ export class BoardComponent implements AfterViewChecked  {
 			let xFromCenter = (this.placingService.boardWidth / 2) - minX;
 			let yFromCenter = (this.placingService.boardHeight / 2) - minY;
 
-			this.posX = - minX + xFromCenter + 90;
-			this.posY = - minY + yFromCenter + 15;
-
+			this.posX = - minX + xFromCenter + (window.innerWidth - width * this.placingService.boardScale) / 2 + 20;
+			this.posY = - minY + yFromCenter + (window.innerHeight - height * this.placingService.boardScale) / 2 + 15;
 
 			for(let i = 2; i > this.placingService.boardScale; i -= 0.1){
 				this.posX -= xFromCenter / 10;
 				this.posY -= yFromCenter / 10;
 			}
+
 		}
 		this.updateBoardTransform();
 	}

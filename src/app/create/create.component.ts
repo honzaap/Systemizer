@@ -19,26 +19,57 @@ export class CreateComponent implements OnInit {
 	isTutorialMenuOpen = false;
 	showOnboardIntro = false;
 	showMobileDisclaimer = false;
+	showReadOnlyViewer = false;
+	showReadOnlyViewerError = false;
+	showBoard = true;
+	showEdit = false;
+
+	viewerSave: any;
+	viewerEditLink: string;
+
 	@ViewChild(BoardComponent) board:BoardComponent;
 	@ViewChild(BoardUIComponent) ui:BoardUIComponent;
 
   	constructor(private route: ActivatedRoute, private placingService: PlacingService, private savingService: SavingService) { }
 
 	ngOnInit(): void {
-		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-			this.showMobileDisclaimer = true;
-		}
-		else{
-			let seenIntroTutorial = localStorage.getItem("seenIntroTutorial");
-			this.route.queryParams
-				.subscribe(params => {
-					this.showOnboardIntro = params["showOnboardTutorial"] == "true";
+		let seenIntroTutorial = localStorage.getItem("seenIntroTutorial");
+		this.route.queryParams
+			.subscribe(params => {
+				if(params.viewer){
+					this.showBoard = false;
+					try{
+						this.viewerEditLink = `https://honzaap.github.io/Systemizer/create?edit=${params.viewer}`;
+						let json = atob(params.viewer);
+						this.viewerSave = this.savingService.getSaveFromOptimizedJson(json);
+						this.showReadOnlyViewer = true;
+					}
+					catch{
+						this.showReadOnlyViewerError = true;
+					}
 				}
-			  );
-			if(seenIntroTutorial != "true" || this.showOnboardIntro){
-				this.openTutorialMenu();
-				localStorage.setItem("seenIntroTutorial", "true");
+				if(params.edit){
+					try{
+						let json = atob(params.edit);
+						this.viewerSave = this.savingService.getSaveFromOptimizedJson(json);
+						this.showReadOnlyViewer = false;
+						this.showEdit = true;
+					}
+					catch{
+						this.showReadOnlyViewerError = true;
+					}
+				}
+				this.showOnboardIntro = params["showOnboardTutorial"] == "true";
 			}
+		);
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && !this.showReadOnlyViewer && !this.showReadOnlyViewerError){
+			this.showMobileDisclaimer = true;
+			this.showBoard = false;
+			return;
+		}
+		if(seenIntroTutorial != "true" || this.showOnboardIntro){
+			this.openTutorialMenu();
+			localStorage.setItem("seenIntroTutorial", "true");
 		}
 	}
 

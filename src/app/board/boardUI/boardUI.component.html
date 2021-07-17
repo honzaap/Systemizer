@@ -38,6 +38,14 @@
                             <span>Export as SVG</span>
                         </button>
                     </mat-menu>
+                    <button mat-menu-item mat-icon-button [matMenuTriggerFor]="embedMenu" aria-label="Embed menu">
+                        Embed
+                    </button>
+                    <mat-menu #embedMenu="matMenu">
+                        <button mat-menu-item (click)="openEmbedIFrame()">
+                            <span>Embed IFrame</span>
+                        </button>
+                    </mat-menu>
                 </mat-menu>
             </li>
             <li>
@@ -159,7 +167,7 @@
 <div class="confirm-dialog-container" (click.self)="closeDialog()" [style.display]="confirmDialogOpen ? 'flex' : 'none'">
     <div class="confirm-dialog">
         <p class="title">{{confirmDialogText}}</p>
-        <div class="buttons">
+        <div class="buttons-bottom">
             <button class="btn-cancel" (click)="closeDialog()">No</button>
             <button class="btn-confirm" (click)="confirmDialog()">Yes</button>
         </div>
@@ -203,7 +211,7 @@
             <span>Light color titles: </span>
             <input [disabled]="!exportPngOptions.transparentBackground || !exportPngOptions.showTitles" type="checkbox" [(ngModel)]="exportPngOptions.lightTitles">
         </label>
-        <div class="buttons">
+        <div class="buttons-bottom">
             <button class="btn-preview" (click)="openPreview()">Preview</button>
             <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsPng()">Download</button>
@@ -225,7 +233,7 @@
             <span>Light color titles: </span>
             <input [disabled]="!exportSvgOptions.showTitles" type="checkbox" [(ngModel)]="exportSvgOptions.lightTitles">
         </label>
-        <div class="buttons">
+        <div class="buttons-bottom">
             <button class="btn-preview" (click)="openPreview(false)">Preview</button>
             <button class="btn-cancel" (click)="closeExportSvgDialog()">Cancel</button>
             <button class="btn-confirm" (click)="exportAsSvg()">Download</button>
@@ -234,7 +242,7 @@
 </div>
 <div class="preview-container" (click)="closePreview()" [style.display]="isPreviewOpen ? 'flex' : 'none'">
     <div #preview class="preview">
-
+        <!-- Content added dynamically -->
     </div>
 </div>
 <div class="backdrop-centralized saving" *ngIf="isSavingOpen" (click.self)="isSavingOpen = false">
@@ -245,5 +253,19 @@
         </div>
         <button class="btn-purple" (click)="saveFile.emit(saveFileName)">Download</button>
         <button class="close" (click)="isSavingOpen = false">×</button>
+    </div>
+</div>
+<div class="backdrop-centralized embed" *ngIf="isEmbedIFrameOpen" (click.self)="closeEmbedIFrame()">
+    <div class="confirm-dialog embed-inner">
+        <h5>Embed as IFrame</h5>
+        <p>An IFrame HTML tag will be generated. Copy & paste it into your HTML template to display your system in read-only format.</p>
+        <textarea *ngIf="!showEmbedError; else iframeEmbedError" id="embedIframeText" readonly [textContent]="embedIFrameTemplate"></textarea>
+        <ng-template #iframeEmbedError>
+            <p class="error">You can only embed a system with 2 or more components!</p>
+        </ng-template>
+        <div class="buttons-bottom">
+            <button class="btn-preview" (click)="closeEmbedIFrame()">Close</button>
+            <button [disabled]="showEmbedError" class="btn-confirm" (click)="copyEmbedIFrame()">Copy</button>
+        </div>
     </div>
 </div>

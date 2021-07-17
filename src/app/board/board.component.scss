@@ -6,9 +6,7 @@
     overflow: hidden;
 }
 .board{
-    /* background-color: #120013;*/
     background: $bg-purple-dark;
-    outline: 6px solid $purple-darker;
     z-index: -1;
     &.infocus:hover{
         cursor: default;
@@ -233,6 +231,8 @@
     right: 0;
     display: flex;
     justify-content: center;
+    width: max-content;
+    margin: 0 auto;
     & .controls{ 
         display: flex;
         gap: 0.5em;
@@ -256,6 +256,35 @@
             }
         }
     }
+}
+.read-only-watermark{
+    position: absolute;
+    left: 1em;
+    bottom: 0.5em;
+    color: rgba(#fff, 0.25);
+    font-weight: 100;
+    font-size: 12px;
+    & a{
+        text-decoration: underline;
+        &:hover{
+            color: #fff;
+        }
+    }
+}
+.read-only-tip{
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+    background: $purple-dark;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
 }
 
 @keyframes loadingAnim {

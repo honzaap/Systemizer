@@ -13,8 +13,14 @@
 <div *ngIf="isReadOnly" 
 [style.left.px]="LogicClient.options.X "
 [style.top.px]="LogicClient.options.Y" class="read-only-controls">
-    <button (click)="sendData()">
-        Send data 
+    <button class="icon" (click)="sendData()" *ngIf="canSend">
+        <img src="./assets/send.svg">
+    </button>
+    <button *ngIf="canEstabilishConnection"(click)="estabilishConnection()">
+        Estabilish<br>Connection
+    </button>
+    <button class="bottom" *ngIf="canEndConnection"(click)="endConnection()">
+        End<br>Connection
     </button>
 </div>
 <div style="display:none">

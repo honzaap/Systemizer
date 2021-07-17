@@ -14,10 +14,10 @@
 [style.left.px]="LogicClientCluster.options.X "
 [style.top.px]="LogicClientCluster.options.Y" class="read-only-controls">
     <button *ngIf="!LogicClientCluster.isSendingData" (click)="LogicClientCluster.startSendingData()">
-        Start sending<br> data
+        <img src="./assets/send.svg">
     </button>
     <button *ngIf="LogicClientCluster.isSendingData" (click)="LogicClientCluster.stopSendingData()">
-        Stop sending<br> data 
+        <img src="./assets/send.svg" style="transform: rotateY(180deg);">
     </button>
 </div>
 <div style="display:none">

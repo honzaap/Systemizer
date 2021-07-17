@@ -53,6 +53,8 @@ export class PortComponent implements OnInit {
 
 	public handleClick( event: MouseEvent ) : void {
 		event.preventDefault();
+		if(event.button != 0)
+			return;
 		if(this.placingService.isConnecting)
 			this.placingService.stopConnecting();
 		else{

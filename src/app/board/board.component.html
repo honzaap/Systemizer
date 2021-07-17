@@ -1,4 +1,4 @@
-<div #board class="board infocus" id="board" oncontextmenu="return false;" (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick($event)" (click)="handleClick($event)" (mousewheel.self)="scroll($event)">
+<div #board class="board infocus" id="board" oncontextmenu="return false;" (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick($event)" (click)="handleClick($event)">
     <h1 class="board-bg-title">Systemizer</h1>
     <template #conn></template>
     <svg class="svg-canvas" id="svg-canvas" >
@@ -52,6 +52,12 @@
         <button (click)="zoomOut()" matTooltip="{{ 'Zoom out' }}"><i class="fas fa-search-minus"></i></button>
         <button (click)="resetView()" matTooltip="{{ 'Reset view' }}"><i class="fas fa-search"></i></button>
         <button (click)="toggleTitles()" matTooltip="{{ 'Toggle titles' }}"><i class="fas fa-heading"></i></button>
-        <a matTooltip="{{ 'Edit board' }}"><i class="fas fa-edit"></i></a>
+        <a target="_blank" href="{{viewerEditLink}}" matTooltip="{{ 'Edit board' }}"><i class="fas fa-edit"></i></a>
     </div>
 </div>
+<p class="read-only-watermark" *ngIf="isReadOnly">
+    Visualization provided by <a target="_blank" href="https://honzaap.github.io/Systemizer">Systemizer</a>
+</p>
+<p class="read-only-tip" *ngIf="isReadOnly" matTooltip="{{ 'You can also hover over individual Clients to send data' }}">
+    ?
+</p>

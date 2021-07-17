@@ -84,6 +84,10 @@ export class OperatorComponent {
   	public handleMousedown(event: MouseEvent): void {
 		if(this.placingService.isConnecting) 
 			return;
+		if(event.button != 0){
+			event.preventDefault();
+			return;
+		}
 		this.handleClick(event);
 		this.placingService.startPlacing();
 

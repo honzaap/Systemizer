@@ -41,6 +41,62 @@ export class SavingService {
 		ClientCluster
 	}
 
+	/**
+	 * Dictionary of names that are converted to 1-3 letter names
+	 */
+	 optimizedBoardNames = {
+		t: "type",
+		i: "id",
+		tt: "title",
+		o: "options",
+		p: "protocol",
+		c: "connections",
+		es: "endpoints",
+		e: "endpoint",
+		eR: "endpointRef",
+		u: "url",
+		sM: "supportedMethods",
+		m: "method",
+		as: "actions",
+		gM: "grpcMode",
+		iCn: "isConsumer",
+		iSb: "isSubscriber",
+		rEp: "restEndpoints",
+		rpEp: "rpcEndpoints",
+		gEp: "graphqlEndpoints",
+		gpEp: "grpcEndpoints",
+		wEp: "websocketsEndpoints",
+		ag: "algorithm",
+		rPl: "replacementPolicy",
+		wPl: "writePolicy",
+		w: "width",
+		h: "height",
+		fS: "fontSize",
+		iB: "isBold",
+		iI: "isItalic",
+		iMs: "isMasterShard",
+		iS: "isShard"
+	};
+
+	/**
+	 * Dictionary of types that are converted to 1-3 letter names
+	 */
+	optimizedComponentTypes = {
+		A: "API",
+		AG: "APIGateway",
+		C: "Client",
+		CC: "ClientCluster",
+		CA: "Cache",
+		CS: "CloudStorage",
+		D: "Database",
+		LB: "LoadBalancer",
+		MQ: "MessageQueue",
+		P: "Proxy",
+		PS: "PubSub",
+		TF: "TextField",
+		WS: "WebServer",
+	};
+
 	constructor() { }
 
 	getBoardSave(allLogicComponents: IDataOperator[], systemName: string, id: string){
@@ -136,6 +192,68 @@ export class SavingService {
 		return localStorage.getItem(this.LOCALSTORAGE_BOARDS_KEY);
 	}
 
+	getOptimizedBoardJson(allLogicComponents: IDataOperator[]){
+		let save = this.getBoardSave(allLogicComponents, "", "");
+		if(save.id)
+			delete save.id; // Save ID is unnecesarry
+		for(let component of save.components){
+			component.i = component.id.slice(0, 5);  // Slicing ID's to only 5 characters
+			delete component.id;
+			component.t = Object.keys(this.optimizedComponentTypes).find(
+				key => this.optimizedComponentTypes[key] == component.type
+			); // Optimize type
+			delete component.type;
+			let optimizedConnections = []
+			for(let connection of component.connections){ 
+				optimizedConnections.push(
+					[ 
+						connection.from.slice(0, 5),
+						connection.to.slice(0, 5)
+					]
+				)
+			}
+			if(optimizedConnections.length == 0)
+				delete component.connections
+			else{
+				component.c = optimizedConnections;
+				delete component.connections;
+			}
+			component.o = this.cloneOptionsOptimized(component.options);
+			delete component.options;
+		}
+		let saveJson = JSON.stringify(save.components);
+		return saveJson;
+	}
+
+	/**
+	 * Takes in optimized save string that was made by getOptimizedBoardSave method
+	 */
+	getSaveFromOptimizedJson(saveJson: string){
+		let save = JSON.parse(saveJson);
+		for(let component of save){
+			component.type = this.optimizedComponentTypes[component.t]
+			component.options = this.getOptionsFromOptimized(component.o);
+			component.id = component.i;
+			let normalConnections = []
+			if(component.c != null){
+				for(let connection of component.c){ 
+					normalConnections.push(
+						{
+							from: connection[0],
+							to: connection[1]
+						}
+					)
+				}
+			}
+			component.connections = normalConnections;
+			delete component.o;
+			delete component.i;
+			delete component.c;
+			delete component.t;
+		}
+		return save;
+	}
+
 	/**
 	 * Saves array of save objects from getBoardSave method
 	 */
@@ -160,6 +278,50 @@ export class SavingService {
 				cloneObj[attribut] = this.cloneOptions(options[attribut]);
 			else
 				cloneObj[attribut] = options[attribut];
+		}
+		return cloneObj;
+	}
+
+	cloneOptionsOptimized(options: any){
+		var cloneObj = new (options.constructor as any);
+		for (var attribut in options) {
+			let opt = Object.keys(this.optimizedBoardNames).find(
+				key => this.optimizedBoardNames[key] === attribut
+			); // Optimize type
+			if(opt){
+				if (typeof options[attribut] === "object" && options[attribut] != null)
+					cloneObj[opt] = this.cloneOptionsOptimized(options[attribut]);
+				else
+					cloneObj[opt] = options[attribut];
+				delete cloneObj[attribut];
+			}
+			else{
+				if (typeof options[attribut] === "object" && options[attribut] != null)
+					cloneObj[attribut] = this.cloneOptionsOptimized(options[attribut]);
+				else
+					cloneObj[attribut] = options[attribut];
+			}
+		}
+		return cloneObj;
+	}
+
+	getOptionsFromOptimized(options: any){
+		let cloneObj = new (options.constructor as any);
+		for (var attribut in options) {
+			let opt = this.optimizedBoardNames[attribut]
+			if(opt){
+				if (typeof options[attribut] === "object" && options[attribut] != null)
+					cloneObj[opt] = this.getOptionsFromOptimized(options[attribut]);
+				else
+					cloneObj[opt] = options[attribut];
+			}
+			else{
+				if (typeof options[attribut] === "object" && options[attribut] != null)
+					cloneObj[attribut] = this.getOptionsFromOptimized(options[attribut]);
+				else
+					cloneObj[attribut] = options[attribut];
+			}
+
 		}
 		return cloneObj;
 	}

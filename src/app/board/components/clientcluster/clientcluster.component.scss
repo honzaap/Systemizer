@@ -14,23 +14,33 @@ mat-slider{
     position: absolute;
     width: 40px;
     height: 80px;
+    z-index: 1500;
     &:hover{
         & button{
             opacity: 1;
+            transform: translate(-18px, -10px);
         }
     }
     & button{
         padding: 0.2em 0.6em;
         width: max-content;
         border: 0;
-        transform: translate(-70px, 20px);
         opacity: 0;
         font-size: 10px;
         outline: none;
+        padding-left: 6px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        transform: translate(-18px, 10px);
         cursor: pointer;
         background-color: $purple-dark;
         color: #fff;
-        transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in;
+        transition: opacity 0.2s ease-in, background-color 0.2s ease-in-out, transform 0.2s ease-out;
+        & img{
+            width: 100%;
+            height: 100%;
+        }
         &:hover{
             background-color: $purple-darker;
         }

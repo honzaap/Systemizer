@@ -42,3 +42,20 @@
         margin: 0.5em auto;
     }
 }
+.viewer-error{
+    background-color: $bg-purple-darker;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5em;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    & h5{
+        font-size: 1.5em;
+    }
+    & a{
+        color: $orange-light;
+    }
+}

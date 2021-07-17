@@ -22,6 +22,7 @@ export class BoardUIComponent implements OnInit {
 	@Output() save = new EventEmitter();
 	@Output() exportPng = new EventEmitter();
 	@Output() exportSvg = new EventEmitter();
+	@Output() embedIFrame= new EventEmitter();
 
 	// Edit section events
 	@Output() copyComponent = new EventEmitter();
@@ -58,6 +59,10 @@ export class BoardUIComponent implements OnInit {
 	isTitlesHidden: boolean = false;
 	isPreviewOpen: boolean = false;
 	isSavingOpen: boolean = false;
+	isEmbedIFrameOpen: boolean = false;
+
+	embedIFrameTemplate: string = "";
+	showEmbedError: boolean = false;
 
 	canUseShortcuts: boolean = true;
 
@@ -184,6 +189,36 @@ export class BoardUIComponent implements OnInit {
 
 	newFileDialog(){
 		this.newFile.emit();
+	}
+
+	openEmbedIFrame(){
+		this.isEmbedIFrameOpen = true;
+		let components = this.getComponents();
+		if(components.length <= 1){
+			this.showEmbedError = true;
+			return;
+		}
+		this.showEmbedError = false;
+		let json = this.savingService.getOptimizedBoardJson(components);
+		let base64Encoded = btoa(json);
+		let url = "https://honzaap.github.io/Systemizer/create"
+		let template = `<iframe frameborder="0" style="width:100%;height:600px;" src="${url}?viewer=${base64Encoded}">\n</iframe>`
+		this.embedIFrameTemplate = template;
+	}
+
+	closeEmbedIFrame(){
+		this.isEmbedIFrameOpen = false;
+		this.embedIFrameTemplate = "";
+	}
+
+	copyEmbedIFrame(){
+		var copyText = document.getElementById("embedIframeText") as any;
+		copyText.select();
+		copyText.setSelectionRange(0, 99999);
+
+		document.execCommand("copy");
+
+		alert("Copied to clipboard");
 	}
 
 	openSaveFile(){

@@ -64,6 +64,9 @@ html{
             cursor: move;
         }
     }
+    & img{
+        width: 100%;
+    }
     &.anim{
         animation: receivedatabg 0.5s linear; 
         & img{
@@ -71,9 +74,11 @@ html{
         }
     }
     &.is-current-selection{
-        outline: 2px solid $orange-light;
-        outline-style: dashed;
-        outline-offset: 2px;
+        & .img-container{
+            outline: 2px solid $orange-light !important;
+            outline-style: dashed !important;
+            outline-offset: 2px !important;
+        }
     }
 }
 .status-code-side{
@@ -467,8 +472,6 @@ mat-tooltip-component .mat-tooltip{
 .fs-6{
     font-size: 0.7rem !important;
 }
-
-
 
 @keyframes receivedata{
     0%{
