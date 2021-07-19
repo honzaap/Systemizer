@@ -1,4 +1,5 @@
 export enum Technology{
+    None,
     Angular,
     "Apache Kafka",
     "AWS EC2",

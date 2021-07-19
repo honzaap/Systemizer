@@ -25,7 +25,7 @@ export class ExportService {
 	}
 
 	convertTechnology(tech: Technology){
-		if(tech == null || Technology[tech] == null)
+		if(tech == null || Technology[tech] == null || tech == 0)
 			return "None";
 		return Technology[tech].toLowerCase().replace(/ /g,'').replace(/#/g, 'sharp');
 	}
@@ -95,7 +95,7 @@ export class ExportService {
 		}
 		for(let component of components){
 			let {width, height} = this.getComponentSize(component);
-			if(component.options.technology != null && options.showTechnologies){
+			if(component.options.technology != null && component.options.technology != 0 && options.showTechnologies){
 				let img = new Image();
 				await new Promise(r => {img.onload=r ; img.src=`./assets/technologies/${this.convertTechnology(component.options.technology)}.svg`});
 				ctx.drawImage(img, component.options.X - offsetX + width - 10, component.options.Y - offsetY - 10, 20, 20);
@@ -310,7 +310,7 @@ export class ExportService {
 		}
 		for(let component of components){
 			let {width, height} = this.getComponentSize(component);
-			if(component.options.technology != null && options.showTechnologies){
+			if(component.options.technology != null && component.options.technology != 0 && options.showTechnologies){
 				let img = document.createElementNS(this.svgns,'image') as SVGImageElement;
 				img.setAttributeNS(null,'height','20');
 				img.setAttributeNS(null,'width','20');

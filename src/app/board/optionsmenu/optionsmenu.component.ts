@@ -92,7 +92,8 @@ export class OptionsmenuComponent implements OnInit {
 				}
 			}
 		});
-		this.sortedTechnologies = this.TechnologyKeys.map(key => Technology[key]).sort(function (a, b) {
+		this.sortedTechnologies = this.TechnologyKeys.map(key => Technology[key])
+		.filter(key => key !== "None").sort(function (a, b) {
 			return a.toLowerCase().localeCompare(b.toLowerCase());
 		}).map(key => Technology[key]);
 	}
@@ -102,6 +103,12 @@ export class OptionsmenuComponent implements OnInit {
 	}
 	
 	ngOnInit(): void {
+	}
+
+	handleTechChange(){
+		if(this.selectionService.currentSelections[0].getLogicComponent().options.technology == 0){
+			this.selectionService.currentSelections[0].getLogicComponent().options.technology = null;
+		}
 	}
 
 	updateTitles(){
@@ -136,8 +143,16 @@ export class OptionsmenuComponent implements OnInit {
 	}
 
 	updateTechs(){
-		for(let selection of this.selectionService.currentSelections){
-			selection.getLogicComponent().options.technology = this.multipleSelectionsTechnology;
+		if(this.multipleSelectionsTechnology == 0){
+			for(let selection of this.selectionService.currentSelections){
+				selection.getLogicComponent().options.technology = null;
+			}
 		}
+		else{
+			for(let selection of this.selectionService.currentSelections){
+				selection.getLogicComponent().options.technology = this.multipleSelectionsTechnology;
+			}
+		}
+		
 	}
 }

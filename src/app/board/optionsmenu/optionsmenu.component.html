@@ -36,7 +36,8 @@
                 <div *ngIf="!isSelectionTextField()">
                     <span class="property-name">Technology:</span>
                     <mat-form-field appearance="fill" class="action-endpoint">
-                        <mat-select [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.technology">
+                        <mat-select (selectionChange)="handleTechChange()" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.technology">
+                            <mat-option [value]="0">None</mat-option>
                             <mat-option *ngFor="let type of sortedTechnologies" [value]="type">{{Technology[type]}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -59,6 +60,7 @@
                     <span class="property-name">Technology:</span>
                     <mat-form-field appearance="fill" class="action-endpoint">
                         <mat-select [(ngModel)]="multipleSelectionsTechnology" (selectionChange)="updateTechs()">
+                            <mat-option [value]="0">None</mat-option>
                             <mat-option *ngFor="let type of sortedTechnologies" [value]="type">{{Technology[type]}}</mat-option>
                         </mat-select>
                     </mat-form-field>
