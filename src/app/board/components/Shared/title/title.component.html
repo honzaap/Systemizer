@@ -1,1 +1,2 @@
 <input *ngIf="!viewingService.isTitlesHidden()" type="text" class="component-title" [(ngModel)]="Model.options.title" spellcheck="false">
+<img *ngIf="Model.options.technology != null && !viewingService.isTechnologiesHidden()" class="technology-image" src="./assets/technologies/{{exportService.convertTechnology(Model.options.technology)}}.svg" alt="{{Model.options.technology}}">

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ExportService } from 'src/app/export.service';
 import { ViewingService } from 'src/app/viewing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
+import { Technology } from 'src/models/enums/Technology';
 
 @Component({
 	selector: 'component-title',
@@ -9,9 +11,9 @@ import { IDataOperator } from 'src/interfaces/IDataOperator';
 })
 export class TitleComponent implements OnInit {
 
-	@Input() Model: IDataOperator;
+	@Input() Model: IDataOperator
 
-	constructor(public viewingService: ViewingService) { }
+	constructor(public viewingService: ViewingService, public exportService: ExportService) { }
 
 	ngOnInit(): void { }
 }

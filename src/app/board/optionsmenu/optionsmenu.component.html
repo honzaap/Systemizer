@@ -15,23 +15,31 @@
             <div class="content" *ngIf="isActive && selectionService.currentSelections.length == 1">
                 <div *ngIf="!isSelectionTextField(); else textFieldTitle">
                     <span class="property-name">Title:</span>
-                    <input type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['title']">
+                    <input type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.title">
                 </div>
                 <ng-template #textFieldTitle>
                     <div *ngIf="isSelectionTextField()">
                         <div>
                             <span class="property-name">Content:</span>
-                            <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['title']"></textarea>
+                            <textarea maxlength="250" type="text" spellcheck="false" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.title"></textarea>
                         </div>
                     </div>
                 </ng-template>
                 <div class="small">
                     <span class="property-name">X:</span>
-                    <input #x (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="1960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['X']">
+                    <input #x (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="1960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.X">
                 </div>
                 <div class="small">
                     <span class="property-name">Y:</span>
-                    <input #y (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options['Y']">
+                    <input #y (input)="updatePosition(x.value, y.value)" step="10" type="number" min="0" max="960" [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.Y">
+                </div>
+                <div *ngIf="!isSelectionTextField()">
+                    <span class="property-name">Technology:</span>
+                    <mat-form-field appearance="fill" class="action-endpoint">
+                        <mat-select [(ngModel)]="selectionService.currentSelections[0].getLogicComponent().options.technology">
+                            <mat-option *ngFor="let type of sortedTechnologies" [value]="type">{{Technology[type]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
             </div>
             <div class="content" *ngIf="isActive && selectionService.currentSelections.length > 1">
@@ -46,6 +54,14 @@
                 <div class="small">
                     <span class="property-name">Y:</span>
                     <input #y (input)="updatePosition(multipleSelectionsX, multipleSelectionsY)" step="10" type="number" min="0" max="960" [(ngModel)]="multipleSelectionsY">
+                </div>
+                <div *ngIf="!isSelectionTextField()">
+                    <span class="property-name">Technology:</span>
+                    <mat-form-field appearance="fill" class="action-endpoint">
+                        <mat-select [(ngModel)]="multipleSelectionsTechnology" (selectionChange)="updateTechs()">
+                            <mat-option *ngFor="let type of sortedTechnologies" [value]="type">{{Technology[type]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
             </div>
         </div>

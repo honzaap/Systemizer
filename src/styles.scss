@@ -232,8 +232,9 @@ li{
             & > div{
                 margin-top: 0.4em;
                 flex-grow: 1;
+                flex-basis: 100%;
                 &.small{
-                    width: 35%;
+                    flex-basis: 35%;
                     flex-grow: 0;
                     margin-left: auto;
                     margin-right: auto;

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { APIGateway } from 'src/models/APIGateway';
 import { ClientCluster } from 'src/models/ClientCluster';
+import { Technology } from 'src/models/enums/Technology';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Port } from 'src/models/Port';
 import { TextField } from 'src/models/TextField';
@@ -21,6 +22,12 @@ export class ExportService {
 		if(component instanceof TextField)
 			return {width: component.options.width, height: component.options.height};
 		return {width: component instanceof MessageQueue ? 80 : 40, height: component instanceof APIGateway || component instanceof ClientCluster ? 80 : 40}
+	}
+
+	convertTechnology(tech: Technology){
+		if(tech == null || Technology[tech] == null)
+			return "None";
+		return Technology[tech].toLowerCase().replace(/ /g,'').replace(/#/g, 'sharp');
 	}
 
   	async getCanvas(components: IDataOperator[], options: ExportPngOptions){
@@ -84,6 +91,14 @@ export class ExportService {
 			if(component["inputPort"]){ 
 				// Render connections
 				this.renderConnectionsToCanvas(ctx, component, offsetX, offsetY);
+			}
+		}
+		for(let component of components){
+			let {width, height} = this.getComponentSize(component);
+			if(component.options.technology != null && options.showTechnologies){
+				let img = new Image();
+				await new Promise(r => {img.onload=r ; img.src=`./assets/technologies/${this.convertTechnology(component.options.technology)}.svg`});
+				ctx.drawImage(img, component.options.X - offsetX + width - 10, component.options.Y - offsetY - 10, 20, 20);
 			}
 		}
 		this.renderPortsToCanvas(ctx, components, offsetX, offsetY);
@@ -293,6 +308,20 @@ export class ExportService {
 				this.renderConnectionsToSvg(svg, component, offsetX, offsetY);
 			}
 		}
+		for(let component of components){
+			let {width, height} = this.getComponentSize(component);
+			if(component.options.technology != null && options.showTechnologies){
+				let img = document.createElementNS(this.svgns,'image') as SVGImageElement;
+				img.setAttributeNS(null,'height','20');
+				img.setAttributeNS(null,'width','20');
+				img.setAttributeNS('http://www.w3.org/1999/xlink','href', `https://honzaap.github.io/Systemizer/assets/technologies/${this.convertTechnology(component.options.technology)}.svg`);
+				img.setAttributeNS(null,'x', (component.options.X - offsetX + width -10).toString());
+				img.setAttributeNS(null,'y', (component.options.Y - offsetY - 10).toString());
+				img.setAttributeNS(null, 'visibility', 'visible');
+				
+				svg.appendChild(img);
+			}
+		}
 		this.renderPortsToSvg(svg, components, options.lightMode, offsetX, offsetY);
 		return svg;
 	}
@@ -361,12 +390,14 @@ export class ExportPngOptions{
 	captureUsed: boolean = false;
 	transparentBackground: boolean = false;
 	showTitles: boolean = true;
+	showTechnologies: boolean = true;
 	lightTitles: boolean = true;
 	lightMode: boolean = false;
 }
 
 export class ExportSvgOptions{
 	showTitles: boolean = true;
+	showTechnologies: boolean = true;
 	lightMode: boolean = false;
 	lightTitles: boolean = true;
 }

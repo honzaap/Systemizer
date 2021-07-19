@@ -2,6 +2,7 @@ import { Renderer2, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
+import { Technology } from 'src/models/enums/Technology';
 import { TextfieldComponent } from '../components/textfield/textfield.component';
 
 @Component({
@@ -25,9 +26,15 @@ export class OptionsmenuComponent implements OnInit {
 	multipleSelectionsY: number;
 	multipleSelectionsOldX: number;
 	multipleSelectionsOldY: number;
+	multipleSelectionsTechnology: Technology;
 
 	@ViewChild("optionsWrapper") optionsWrapper;
 	@ViewChild("actionsWrapper") actionsWrapper;
+
+	public Technology: typeof Technology = Technology;
+	public TechnologyKeys = Object.values(Technology).filter(k => !isNaN(Number(k)));
+
+	sortedTechnologies = [];
 
 	constructor(public selectionService: SelectionService, private renderer: Renderer2, private placingService: PlacingService) 
 	{
@@ -60,7 +67,9 @@ export class OptionsmenuComponent implements OnInit {
 			else{
 				this.isActive = true;
 				this.multipleSelectionsTitle = this.selectionService.currentSelections[0].getLogicComponent().options.title;
+				this.multipleSelectionsTechnology = this.selectionService.currentSelections[0].getLogicComponent().options.technology;
 				let sameTitles = true;
+				let sameTechs = true;
 				for(let selection of this.selectionService.currentSelections){
 					let options = selection.getLogicComponent().options;
 					if(options.X < this.multipleSelectionsX)
@@ -70,13 +79,22 @@ export class OptionsmenuComponent implements OnInit {
 					if(options.title != this.multipleSelectionsTitle){
 						sameTitles = false;
 					}
+					if(options.technology != this.multipleSelectionsTechnology){
+						sameTechs = false;
+					}
 				}
 				this.multipleSelectionsOldX = this.multipleSelectionsX;
 				this.multipleSelectionsOldY = this.multipleSelectionsY;
 				if(!sameTitles)
 					this.multipleSelectionsTitle = "Title";
+				if(!sameTechs){
+					this.multipleSelectionsTechnology = null;
+				}
 			}
 		});
+		this.sortedTechnologies = this.TechnologyKeys.map(key => Technology[key]).sort(function (a, b) {
+			return a.toLowerCase().localeCompare(b.toLowerCase());
+		}).map(key => Technology[key]);
 	}
 
 	isSelectionTextField(){
@@ -114,6 +132,12 @@ export class OptionsmenuComponent implements OnInit {
 			
 			this.multipleSelectionsOldX = realX;
 			this.multipleSelectionsOldY = realY;
+		}
+	}
+
+	updateTechs(){
+		for(let selection of this.selectionService.currentSelections){
+			selection.getLogicComponent().options.technology = this.multipleSelectionsTechnology;
 		}
 	}
 }

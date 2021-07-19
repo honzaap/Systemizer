@@ -104,6 +104,12 @@
                             <span>Hide titles</span>
                         </ng-template>
                     </button>
+                    <button mat-menu-item (click)="toggleTechnologiesHidden()">
+                        <span *ngIf="isTechnologiesHidden; else technologiesVisible">Show technologies</span>
+                        <ng-template #technologiesVisible>
+                            <span>Hide technologies</span>
+                        </ng-template>
+                    </button>
                     <hr class="line">
                     <button mat-menu-item (click)="resetView.emit()">
                         <span>Reset view</span>
@@ -204,6 +210,10 @@
             <input type="checkbox" [(ngModel)]="exportPngOptions.showTitles">
         </label>
         <label>
+            <span>Show technologies: </span>
+            <input type="checkbox" [(ngModel)]="exportPngOptions.showTechnologies">
+        </label>
+        <label>
             <span>Light mode: </span>
             <input type="checkbox" [(ngModel)]="exportPngOptions.lightMode">
         </label>
@@ -224,6 +234,10 @@
         <label>
             <span>Show component titles: </span>
             <input type="checkbox" [(ngModel)]="exportSvgOptions.showTitles">
+        </label>
+        <label>
+            <span>Show technologies: </span>
+            <input type="checkbox" [(ngModel)]="exportSvgOptions.showTechnologies">
         </label>
         <label>
             <span>Light mode: </span>

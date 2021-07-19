@@ -57,6 +57,7 @@ export class BoardUIComponent implements OnInit {
 
 	isHelpersDisabled: boolean = false;
 	isTitlesHidden: boolean = false;
+	isTechnologiesHidden: boolean = false;
 	isPreviewOpen: boolean = false;
 	isSavingOpen: boolean = false;
 	isEmbedIFrameOpen: boolean = false;
@@ -283,6 +284,11 @@ export class BoardUIComponent implements OnInit {
 	toggleTitlesHidden(){
 		this.isTitlesHidden = !this.isTitlesHidden;
 		this.viewingService.setTitlesHidden(this.isTitlesHidden);
+	}
+
+	toggleTechnologiesHidden(){
+		this.isTechnologiesHidden = !this.isTechnologiesHidden;
+		this.viewingService.setTechnologiesHidden(this.isTechnologiesHidden);
 	}
 	
 	async openPreview(png: boolean = true){

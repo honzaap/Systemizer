@@ -18,3 +18,12 @@
         border-color: rgba(2, 86, 143,0.45);
     }
 }
+.technology-image{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    right: -10px;
+    z-index: 20;
+    pointer-events: none;
+}

@@ -11,9 +11,13 @@ export class ViewingService {
 	private TITLES_KEY = "titles";
 	private titlesHidden: boolean;
 
+	private TECHNOLOGIES_KEY = "technologies";
+	private technologiesHidden: boolean;
+
 	constructor() { 
 		this.helpersDisabled = localStorage.getItem(this.HELPERS_KEY) == "true" ? true : false;
 		this.titlesHidden = localStorage.getItem(this.TITLES_KEY) == "true" ? true : false;
+		this.technologiesHidden = localStorage.getItem(this.TECHNOLOGIES_KEY) == "true" ? true : false;
 	}
 
 	isHelpersDisabled(){
@@ -33,5 +37,15 @@ export class ViewingService {
 		if(saveToLocalStorage)
 			localStorage.setItem(this.TITLES_KEY, hidden.toString());
 		this.titlesHidden = hidden;
+	}
+
+	isTechnologiesHidden(){
+		return this.technologiesHidden;
+	}
+
+	setTechnologiesHidden(hidden: boolean = true, saveToLocalStorage: boolean = true){
+		if(saveToLocalStorage)
+			localStorage.setItem(this.TECHNOLOGIES_KEY, hidden.toString());
+		this.technologiesHidden = hidden;
 	}
 }
