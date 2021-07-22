@@ -96,13 +96,6 @@ export class Database extends EndpointOperator implements IDataOperator{
         return this.options.endpoints;
     }
 
-    destroy(){
-        this.inputPort.removeConnections();
-        if(this.outputPort != null){
-            this.outputPort.removeConnections();
-        }
-    }
-
     protected removeShardDispatcher = new EventDispatcher<RemoveShardEvent>();
     public onRemoveShard(handler: Handler<RemoveShardEvent>) {
         this.removeShardDispatcher.register(handler);

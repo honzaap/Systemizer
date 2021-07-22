@@ -165,11 +165,6 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
         }
         return connectableEndpoints;
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
-    }
 }
 
 export class LoadBalancerOptions extends Options{

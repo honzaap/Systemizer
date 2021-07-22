@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
-import { sleep, UUID } from 'src/shared/ExtensionMethods';
+import { clone, sleep, UUID } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
 import { ExportPngOptions, ExportService, ExportSvgOptions } from '../export.service';
 import { PlacingService } from '../placing.service';
@@ -165,7 +165,25 @@ export class BoardComponent implements AfterViewChecked  {
 			return;
 		let selections = [];
 		for(let selection of this.selectionService.currentSelections){
-			selections.push({component: selection.constructor, options: selection.getLogicComponent().options})
+			let outputConnectionsList = []
+			let component = selection.getLogicComponent();
+			let outputPort = selection.getPortComponent(true);
+			if(outputPort){
+				outputConnectionsList = outputConnectionsList.concat(
+					outputPort.LogicPort.connections.map(conn => {
+						return {
+							from: outputPort.LogicParent.originID,
+							to: conn.getOtherPort(outputPort.LogicPort).parent.originID
+						};
+					})
+				);
+			} 
+			selections.push({ 
+				component: selection.constructor, 
+				logicComponent: selection.getLogicComponent(),
+				options: clone(component.options),
+				outputConnectionsList: outputConnectionsList
+			})
 		}
 		this.placingService.copyItems(selections);
 	}
@@ -174,11 +192,10 @@ export class BoardComponent implements AfterViewChecked  {
 		this.selectionService.clearSelection();
 		for(let component of this.placingService.pasteItem()){
 			this.pushComponent(component);
-			component.onViewInit = ()=>{
+			component.onViewInit.push(()=>{
 				this.selectionService.addSelection(component, true);
-			}
+			});
 		}
-		this.placingService.startPlacing()
 		this.componentChanged();
 	}
 
@@ -587,7 +604,7 @@ export class BoardComponent implements AfterViewChecked  {
 
 			this.pushComponent(component);
 			const currentComponentIndex = index;
-			component.onViewInit = () => {
+			component.onViewInit.push(() => {
 				if(component instanceof DatabaseComponent && component.getLogicComponent().options.isMasterShard){
 					component.createOutputPort()
 				}
@@ -608,7 +625,7 @@ export class BoardComponent implements AfterViewChecked  {
 						this.connectLoadedComponents(connectionTable, outputPortsTable);
 					}, 150);
 				}
-			}
+			});
 			index++;
 		}
 		if(wasError && showInfo)

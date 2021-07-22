@@ -29,6 +29,9 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 	}
 
 	ngAfterViewInit(): void {
+		if(this.LogicDatabase.options.isMasterShard){
+			this.LogicDatabase.outputPort = new Port(this.LogicDatabase,true,true);
+		}
 		super.Init(this.conn);
 		this.LogicDatabase.onRemoveShard(()=>{
 			this.outputPortRef.destroySelf()
@@ -85,10 +88,10 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 		let ep = new DatabaseEndpoint("/shard");
 		for(let i = 0; i < this.SHARDS_PER_SHRARD; i++){
 			let comp = this.placingService.createComponent(DatabaseComponent, initX + dirX * 80 * i, initY + dirY * 70 * i, { type: this.LogicDatabase.options.type, isShard: true, title: `Shard ${i+1}`, endpoints: [ep] });
-			comp.onViewInit = () => {
+			comp.onViewInit.push(() => {
 				this.placingService.connectPorts(this.getPortComponent(true), comp.getPortComponent(false));
 				this.placingService.pushComponent.emit(comp);
-			}
+			});
 			comp.onAfterDestroySelf = () => {
 				if(this.LogicDatabase.outputPort.connections.length == 0)
 					this.LogicDatabase.options.isMasterShard = false;

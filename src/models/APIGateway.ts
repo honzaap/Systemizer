@@ -211,11 +211,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             .concat(this.options.graphqlEndpoints)
             .concat(this.options.websocketsEndpoints);
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
-    }
 }
 
 export class APIGatewayOptions extends EndpointOptions{

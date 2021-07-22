@@ -123,11 +123,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
-    }
 }
 
 export class MessageQueueOptions extends EndpointOptions{

@@ -1,14 +1,16 @@
 import { ComponentFactory, ComponentFactoryResolver, ComponentRef, EventEmitter, Injectable, Output, Type, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { Options } from 'src/models/Options';
-import { clone } from 'src/shared/ExtensionMethods';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
 import { OperatorComponent } from './board/components/Shared/OperatorComponent';
 
 class CopiedItem {
 	component: any;
+	logicComponent: IDataOperator;
 	options: Options;
+	outputConnectionsList: any[];
 }
 
 @Injectable({
@@ -40,8 +42,6 @@ export class PlacingService{
 	creatingItem: any;
 	creatingItemOptions: any;
 
-	copiedItem: any;
-	copiedItemOptions: any;
 	copiedItems: CopiedItem[] = [];
 
 	startCreating(creatingItem: any, options: any){
@@ -86,13 +86,6 @@ export class PlacingService{
 		});
 	}
 
-	copyItem(item: any, options: any){
-		if(item == null) 	
-			return;
-		this.copiedItem = item;
-		this.copiedItemOptions = options;
-	}
-
 	copyItems(items: CopiedItem[]){
 		if(items.length == 0)
 			return;
@@ -101,13 +94,56 @@ export class PlacingService{
 
 	pasteItem(){
 		let components = [];
-		for(let component of this.copiedItems){
-			let options = clone(component.options);
+		let connectionsList = [];
+		for(let item of this.copiedItems){
+			connectionsList = connectionsList.concat(item.outputConnectionsList);
+		}
+			
+		for(let item of this.copiedItems){
+			let options = item.options;
 
 			let pasteX = Math.min(options.X + 40, this.boardWidth - 40);
 			let pasteY = Math.min(options.Y + 40, this.boardHeight - 40);
 	
-			components.push(this.createComponent(component.component, pasteX, pasteY, options));
+			let component = this.createComponent(item.component, pasteX, pasteY, options);
+			connectionsList = connectionsList.map(conn => {
+				if(conn.from === item.logicComponent.originID){
+					return {
+						from: component.getLogicComponent().originID,
+						to: conn.to
+					}
+				}
+				else if(conn.to === item.logicComponent.originID){
+					return {
+						from: conn.from,
+						to: component.getLogicComponent().originID
+					}
+				}
+				return conn;
+			})
+			components.push(component);
+		}
+		for(let connection of connectionsList){
+
+			let comp1 = components.find(comp => comp.getLogicComponent().originID == connection.from);
+			let comp2 = components.find(comp => comp.getLogicComponent().originID == connection.to);
+
+			if(comp1 && comp2){
+				let comp1Initiated = false;
+				let comp2Initiated = false;
+				comp1.onViewInit.push(()=> {
+					comp1Initiated = true;
+					if(comp2Initiated){
+						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false));
+					}
+				})
+				comp2.onViewInit.push(()=> {
+					comp2Initiated = true;
+					if(comp1Initiated){
+						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false));
+					}
+				})
+			}
 		}
 		return components;
 	}
@@ -115,7 +151,7 @@ export class PlacingService{
 	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false){
 		let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
 		let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
-		
+
 		let logicConn = portComponent1.LogicPort.parent.connectTo(portComponent2.LogicPort.parent, portComponent1.IsOutput, portComponent2.IsOutput);
 		if(logicConn == null){
 			c.destroy();
@@ -130,6 +166,7 @@ export class PlacingService{
 
 		c.instance.portComponent1 = portComponent1;
 		c.instance.portComponent2 = portComponent2;
+
 		return true
 	}
 

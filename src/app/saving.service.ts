@@ -48,6 +48,7 @@ export class SavingService {
 		t: "type",
 		i: "id",
 		tt: "title",
+		te: "technology",
 		o: "options",
 		p: "protocol",
 		c: "connections",

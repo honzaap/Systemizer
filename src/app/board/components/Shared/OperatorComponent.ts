@@ -139,12 +139,12 @@ export class OperatorComponent {
 	public getPortComponent(getOutput = false){
 		if(getOutput && this.outputPortRef != null)
 			return this.outputPortRef.getPortComponent();
-		else if(this.inputPortRef != null)
+		else if(!getOutput && this.inputPortRef != null)
 			return this.inputPortRef.getPortComponent();
 		return null;
 	}
 
-	public onViewInit = () => {}
+	public onViewInit = [];
 
 	/**
 	 * 
@@ -245,7 +245,7 @@ export class OperatorComponent {
 			this.createPort(false);
 		if(outputPort != null)
 			this.createPort(true);
-		this.onViewInit();
+		this.onViewInit.forEach(e => e());
 	}
 
 	createPort(output = false){

@@ -108,10 +108,6 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
         return availableEndpoints;
     }
 
-    destroy(){
-        this.outputPort.removeConnections();
-    }
-
     stopStream(connectionId){
         let streamConnection = this.streamingConnections.find(con => con.connectionId == connectionId);
         if(streamConnection == null || streamConnection.endpoint.grpcMode == gRPCMode.Unary && streamConnection.endpoint.protocol != Protocol.WebSockets)

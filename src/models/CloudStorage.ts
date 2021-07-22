@@ -47,10 +47,6 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-    }
 }
 
 export class CloudStorageOptions extends EndpointOptions{

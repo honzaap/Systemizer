@@ -126,11 +126,6 @@ export class Cache extends LogicComponent implements IDataOperator{
             return this.outputPort.connections[0].getOtherPort(this.outputPort).parent.getAvailableEndpoints();
         return [];
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
-    }
 }
 
 export class CacheOptions extends Options {

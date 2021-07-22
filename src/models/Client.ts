@@ -81,10 +81,6 @@ export class Client extends LogicComponent implements IDataOperator{
             }
         }
     }
-
-    destroy(){
-        this.outputPort.removeConnections();
-    }
 }
 
 export class ClientOptions extends Options{

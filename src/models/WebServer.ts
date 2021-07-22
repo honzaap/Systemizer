@@ -47,10 +47,6 @@ export class WebServer extends EndpointOperator implements IDataOperator{
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-    }
 }
 
 export class WebServerOptions extends EndpointOptions{

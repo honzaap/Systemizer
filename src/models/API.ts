@@ -239,11 +239,6 @@ export class API extends EndpointOperator implements IDataOperator{
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
     }
-
-    destroy(){
-        this.inputPort.removeConnections();
-        this.outputPort.removeConnections();
-    }
 }
 
 export class APIOptions extends EndpointOptions{

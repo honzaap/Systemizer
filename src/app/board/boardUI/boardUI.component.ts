@@ -136,6 +136,7 @@ export class BoardUIComponent implements OnInit {
 		})(file);
 		reader.readAsText(file.files[0]);
 		this.fileInput.nativeElement.value = null;
+		this.canUseShortcuts = true;
 	}
 
 	private isJson(name: string){

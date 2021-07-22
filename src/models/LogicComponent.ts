@@ -41,6 +41,13 @@ export class LogicComponent {
         return this["inputPort"];
     }
 
+    destroy(){
+        if(this["outputPort"])
+            this["outputPort"].removeConnections();
+        if(this["inputPort"])
+            this["inputPort"].removeConnections();
+    }
+
     protected receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
     public onReceiveData(handler: Handler<ReceiveDataEvent>) {
         this.receiveDataDispatcher.register(handler);
