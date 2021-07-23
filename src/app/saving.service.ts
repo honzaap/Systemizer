@@ -76,7 +76,9 @@ export class SavingService {
 		iB: "isBold",
 		iI: "isItalic",
 		iMs: "isMasterShard",
-		iS: "isShard"
+		iS: "isShard",
+		bg: "backgroundColor",
+		co: "color"
 	};
 
 	/**

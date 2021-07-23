@@ -17,11 +17,10 @@
     & textarea{
         font-family: Arial;
         font-size: 12px;
-        min-width: 80px;
-        max-width: 300px;
+        max-width: 360px;
+        max-height: 200px;
         height: 40px;
         min-height: 20px;
-        max-height: 120px;
         outline: none;
         border: 2px solid rgba(0,0,0,0.2);
         background-color: $bg-purple-lighter;

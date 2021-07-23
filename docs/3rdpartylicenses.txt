@@ -66,6 +66,9 @@ MIT
 @angular/router
 MIT
 
+ngx-color-picker
+MIT
+
 ngx-take-until-destroy
 MIT
 

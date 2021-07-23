@@ -17,7 +17,7 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 export class TextfieldComponent extends OperatorComponent implements OnInit{
 
 	public LogicTextField : TextField = new TextField();
-  	private currentSelectionService: SelectionService
+  	private currentSelectionService: SelectionService;
 
   	@ViewChild("field") field: ElementRef;
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
@@ -29,6 +29,19 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
 
 	ngAfterViewInit(): void {
 		super.Init(this.conn, false);
+		this.field.nativeElement.addEventListener('keydown', function(e) {
+			if (e.key == 'Tab') {
+				e.preventDefault();
+				var start = this.selectionStart;
+				var end = this.selectionEnd;
+			
+				this.value = this.value.substring(0, start) +
+					"\t" + this.value.substring(end);
+			
+				this.selectionStart =
+					this.selectionEnd = start + 1;
+			}
+		});
   	}
 
 	ngOnInit(){

@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DelayedHoverDirective } from "../shared/DelayedHoverDirective";
 import { ResizableTextAreaDirective } from "../shared/resizable-textarea";
 import { VueEventModifiersPlugin } from "../shared/vue-event-modifiers.plugin";
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -95,7 +96,8 @@ import { PagesComponent } from './pages/pages.component';
     MatMenuModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatSliderModule
+    MatSliderModule,
+    ColorPickerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [

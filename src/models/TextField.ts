@@ -44,4 +44,6 @@ export class TextFieldOptions extends Options{
     fontSize: number = 12;
     isBold: boolean = false;
     isItalic: boolean = false;
+    backgroundColor: string = "#1e2137";
+    color: string = "#fff";
 }

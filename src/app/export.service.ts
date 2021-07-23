@@ -59,14 +59,14 @@ export class ExportService {
 	
 			// Render image
 			if(component instanceof TextField){
-				ctx.fillStyle = options.lightMode ? "#ebebeb" : "#222947";
-				ctx.strokeStyle = options.lightMode ? "#a0a0a0" : "#101732";
+				ctx.fillStyle = component.options.backgroundColor;
+				ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
 				ctx.lineWidth = 2;
 				ctx.setLineDash([0]);
 				ctx.rect(component.options.X - offsetX, component.options.Y - offsetY, component.options.width, component.options.height);
 				ctx.fill();
 				ctx.stroke();
-				ctx.fillStyle = options.lightMode ? "#000" : "#fff";
+				ctx.fillStyle = component.options.color;
 				ctx.font = `${component.options.isBold ? "bold" : ""}  ${component.options.isItalic ? "italic" : ""} ${component.options.fontSize}px Arial`;
 				ctx.textAlign = 'left'
 				ctx.textBaseline = 'alphabetic'
@@ -177,18 +177,18 @@ export class ExportService {
 	
 	}
 
-	private wrapSvgText(svg: SVGElement, text: string, lightMode: boolean, x: number, y: number, maxWidth: number, maxHeight: number, lineHeight: number, fontSize: number, isBold = false, isItalic = false) {
+	private wrapSvgText(svg: SVGElement, text: string, color: string, x: number, y: number, maxWidth: number, maxHeight: number, lineHeight: number, fontSize: number, isBold = false, isItalic = false) {
         let line = '';
 		let height = lineHeight;
 
 		for(let letter of text){
 			var newLine = line + letter;
-			let newSvgLine = this.createSvgText(newLine, lightMode, x, y, fontSize, isBold, isItalic);
+			let newSvgLine = this.createSvgText(newLine, color, x, y, fontSize, isBold, isItalic);
 			svg.appendChild(newSvgLine);
 			let newWidth = newSvgLine.getComputedTextLength()
 			svg.removeChild(newSvgLine);
 			if(newWidth > maxWidth){
-				let newText = this.createSvgText(line, lightMode, x, y, fontSize, isBold, isItalic);
+				let newText = this.createSvgText(line, color, x, y, fontSize, isBold, isItalic);
 				svg.appendChild(newText);
 				line = letter;
 				y += lineHeight;
@@ -201,11 +201,11 @@ export class ExportService {
 				line = newLine;
 			}
 		}
-		let newText = this.createSvgText(line, lightMode, x, y, fontSize, isBold, isItalic);
+		let newText = this.createSvgText(line, color, x, y, fontSize, isBold, isItalic);
 		svg.appendChild(newText);
 	}
 
-	private createSvgText(text, lightMode: boolean, x, y, fontSize, isBold = false, isItalic = false){
+	private createSvgText(text, color: string, x, y, fontSize, isBold = false, isItalic = false){
 		let textSvg = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		textSvg.setAttributeNS(null,"x",(x).toString());     
 		textSvg.setAttributeNS(null,"y",(y).toString()); 
@@ -213,7 +213,7 @@ export class ExportService {
 		textSvg.setAttributeNS(null,"font-family",'Arial');
 		textSvg.setAttributeNS(null,"font-weight",`${isBold ? "bold" : "normal"}`);
 		textSvg.setAttributeNS(null,"font-style",`${isItalic ? "italic" : "normal"}`);
-		textSvg.setAttributeNS(null,"fill", lightMode ? "#fff" : "#000");
+		textSvg.setAttributeNS(null,"fill", color);
 		textSvg.textContent = text;
 		return textSvg;
 	}
@@ -272,11 +272,11 @@ export class ExportService {
 				rect.setAttributeNS(null, 'y', (component.options.Y - offsetY).toString());
 				rect.setAttributeNS(null, 'width', component.options.width.toString());
 				rect.setAttributeNS(null, 'height', component.options.height.toString());
-				rect.setAttributeNS(null, 'fill', options.lightMode ? "#ebebeb" : "#222947");
+				rect.setAttributeNS(null, 'fill', component.options.backgroundColor);
 				rect.setAttributeNS(null, 'stroke-width', '2');
-				rect.setAttributeNS(null, 'stroke', options.lightMode ? "#a0a0a0" : "#101732");
+				rect.setAttributeNS(null, 'stroke', "rgba(0, 0, 0, 0.1)");
 				svg.appendChild(rect);
-				this.wrapSvgText(svg, component.options.title, !options.lightMode, component.options.X - offsetX + 3, component.options.Y - offsetY + component.options.fontSize + 3, component.options.width - 6, component.options.height - 6, component.options.fontSize, component.options.fontSize, component.options.isBold, component.options.isItalic);
+				this.wrapSvgText(svg, component.options.title, component.options.color, component.options.X - offsetX + 3, component.options.Y - offsetY + component.options.fontSize + 3, component.options.width - 6, component.options.height - 6, component.options.fontSize, component.options.fontSize, component.options.isBold, component.options.isItalic);
 			}
 			else{
 				let rect = document.createElementNS(this.svgns, 'rect');
@@ -376,7 +376,7 @@ export class ExportService {
 
 	private renderComponentTitleToSvg(svg: SVGElement, component: IDataOperator, lightMode: boolean, offsetX: number, offsetY: number){
 		let {width, height} = this.getComponentSize(component);
-		let newText = this.createSvgText(component.options.title, lightMode, component.options.X - offsetX+width/2, component.options.Y - offsetY - 10, 12);
+		let newText = this.createSvgText(component.options.title, lightMode ? "#fff" : "#000", component.options.X - offsetX+width/2, component.options.Y - offsetY - 10, 12);
 		newText.setAttributeNS(null,"text-anchor",'middle');
 		newText.setAttributeNS(null,"fill", lightMode ? "#c9c9c9" : "#454545");
 		svg.appendChild(newText);

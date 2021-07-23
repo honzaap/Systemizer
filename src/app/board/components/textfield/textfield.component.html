@@ -10,6 +10,7 @@
     [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" 
     [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img img-container"
     [style.width]="LogicTextField.options.width+'px'" [style.height]="LogicTextField.options.height+'px'"
+    [style.backgroundColor]="LogicTextField.options.backgroundColor" [style.color]="LogicTextField.options.color" 
     (resize)="resize($event)"></textarea>
 </div>
 <div style="display:none">
@@ -39,6 +40,22 @@
                 <span (click)="toggleItalic(); afterChange()" [class.inactive]="!LogicTextField.options.isItalic" [class.active]="LogicTextField.options.isItalic" class="options-button-icon">
                     <i class="fas fa-italic"></i>
                 </span>
+            </div>
+            <span class="property-name">Color:</span>
+            <div class="text-format-contianer">
+                <input [value]="LogicTextField.options.color"
+                    [cpPosition]="'top-right'"
+                    [(colorPicker)]="LogicTextField.options.color"
+                    [cpPosition]="'top'"/>
+      
+            </div>
+            <span class="property-name">Background color:</span>
+            <div class="text-format-contianer">
+                <input [value]="LogicTextField.options.backgroundColor"
+                    [cpPosition]="'top-right'"
+                    [(colorPicker)]="LogicTextField.options.backgroundColor"
+                    [cpPosition]="'top'"/>
+      
             </div>
         </div>
     </div>
