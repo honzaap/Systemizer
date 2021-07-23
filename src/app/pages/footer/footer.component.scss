@@ -31,6 +31,11 @@ footer{
             }
         }
     }
+    & .contact{
+        & li{
+            margin: 0.45em 0;
+        }
+    }
     & .links-other{
         font-size: 1.4em;
     }
