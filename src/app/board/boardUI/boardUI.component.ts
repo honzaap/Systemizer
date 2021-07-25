@@ -208,6 +208,11 @@ export class BoardUIComponent implements OnInit {
 		this.embedIFrameTemplate = template;
 	}
 
+	previewEmbedIFrame(){
+		var win = window.open("", "Preview");
+		win.document.body.innerHTML = this.embedIFrameTemplate;
+	}
+
 	closeEmbedIFrame(){
 		this.isEmbedIFrameOpen = false;
 		this.embedIFrameTemplate = "";
