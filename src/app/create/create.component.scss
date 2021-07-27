@@ -3,7 +3,7 @@
 .page{
     height: 100vh;
     display: flex;
-    background-color: $bg-purple-darker;
+    background-color: $bg-main-darker;
     flex-flow:column nowrap;
     justify-content: flex-start;
     align-items: stretch;
@@ -29,7 +29,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: $bg-purple-light;
+    background-color: $bg-main-light;
     z-index: 1200;
     color: #fff;
     text-align: center;
@@ -43,7 +43,7 @@
     }
 }
 .viewer-error{
-    background-color: $bg-purple-darker;
+    background-color: $bg-main-darker;
     color: #fff;
     height: 100vh;
     display: flex;

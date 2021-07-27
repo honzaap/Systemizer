@@ -21,17 +21,17 @@ svg{
         }
     }
     & path.blur{
-        stroke: $purple-light;
+        stroke: rgba($main-light, 0.5);
         stroke-width: 3;
         stroke-linecap: round;
         filter: blur(3px);
         transition: stroke 0.2s linear;
         &:hover{
-            stroke: $purple-dark;
+            stroke: $main-dark;
         }
         &.is-current-selection{
             filter: blur(5px);
-            stroke: $purple-darker;
+            stroke: $main-darker;
             stroke-width: 7;
         }
     }

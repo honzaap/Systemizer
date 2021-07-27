@@ -9,7 +9,7 @@
     min-height: 400px;
     padding-bottom: 2em;
     overflow-y: scroll;
-    background-color: $bg-purple-light;
+    background-color: $bg-main-light;
     /*backdrop-filter: blur(6px);*/
     border-radius: 0.5em;
     overflow-x: hidden;
@@ -24,7 +24,7 @@
         padding: 0.3em;
         & .search{
             outline: none;
-            background-color: $bg-purple-lighter;
+            background-color: $bg-main-light;
             border: 0.15em solid rgba(0,0,0,0.2);
             color:#fff;
             padding: 0.2em 0 0.2em 0.5em;
@@ -36,7 +36,7 @@
                 transition: transform 0.1s ease-out;
             }
             &:hover{
-                background-color: $bg-purple-dark;
+                background-color: $bg-main-dark;
                 &::placeholder{
                     transform: translateX(10px);
                 }
@@ -58,7 +58,7 @@
         width: 100%;
         font-size: 1.1rem;
         padding: 0.2em 0.3em;
-        background-color: $bg-purple-dark;
+        background-color: $bg-main-dark;
         display: flex;
         justify-content: space-between;
         &:hover{
@@ -76,7 +76,7 @@
         margin-top: 0.4em;
         position: relative;
         & .section-item{
-            background-color: $bg-purple-dark;
+            background-color: $bg-main-dark;
             border-radius: 0.4em;
             padding: 0.625em;
             flex-basis: 21%;
@@ -84,7 +84,7 @@
             position: relative;
             transition: background-color 0.1s ease-out, transform 0.1s ease-out;
             &:hover{
-                background-color: $purple-darker;
+                background-color: $main-darker;
                 transform: scale(1.05);
                 cursor: pointer;
             }
@@ -95,7 +95,7 @@
                 position: absolute;
                 top: 0em;
                 right: 0em;
-                color: $purple-light;
+                color: $main-light;
                 height: 1em;
                 width: 1em;
                 outline: none;
@@ -157,7 +157,7 @@
     transition: background-color 0.2s ease-out, color 0.2s ease-out, left 0.2s ease-out;
     &:hover{
         color: #C5C5C5;
-        background-color: $purple-dark;    
+        background-color: $main-dark;    
         left: 10px;
         cursor: pointer;
     }
@@ -172,7 +172,7 @@
     font-size: 0.7rem;
     padding: 0.4em 0;
     color: #fff;
-    background-color: $bg-purple-light;
+    background-color: $bg-main-light;
     text-align: center;
     & span{
         margin: 0.1em;
@@ -190,7 +190,7 @@
     position: absolute;
     pointer-events: none;
     &.section-item{
-        background-color: $bg-purple-darker;
+        background-color: $bg-main-darker;
         border-radius: 0.4em;
         padding: 0.3em;
         & img{
@@ -206,7 +206,7 @@
     right: 25%;
     left: 25%;
     backdrop-filter: blur(4px);
-    border: 0.1em solid $bg-purple-light;
+    border: 0.1em solid $bg-main-light;
     box-shadow: 0px 0px 25px 2px #000;
     padding: 2em;
     overflow-y: scroll;
@@ -221,7 +221,7 @@
         height: 4em;
         width: 4em;
         padding: 1em;
-        background-color: $bg-purple-darker;
+        background-color: $bg-main-darker;
         border-radius: 0.8em;
         margin-bottom: 2em;
     }
@@ -234,7 +234,7 @@
         font-size: 0.8em;
     }
     & .highlight{
-        color: $purple-dark;
+        color: $main-dark;
         font-weight: 400;
     }
     & .underline{
@@ -254,7 +254,7 @@
         height: 1.5em;
         transition: color 0.1s linear;
         &:hover{
-            color: $purple-light;
+            color: $main-light;
         }
     }
     &::-webkit-scrollbar {

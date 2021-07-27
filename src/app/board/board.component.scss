@@ -6,7 +6,7 @@
     overflow: hidden;
 }
 .board{
-    background: $bg-purple-dark;
+    background: $bg-main-dark;
     z-index: -1;
     &.infocus:hover{
         cursor: default;
@@ -74,7 +74,7 @@
     top: 3em;
     right: 1em;
     color: #fff;
-    background-color: $purple-darker;
+    background-color: $main-darker;
     width: 2em;
     height: 2em;
     display: flex;
@@ -90,7 +90,7 @@
     min-width: 800px;
     max-width: 950px;
     color: #fff;
-    background-color: $bg-purple-light;
+    background-color: $bg-main-light;
     padding: 1em;
     & .title{
         text-align: center;
@@ -148,7 +148,7 @@
         & .selected-info{
             font-size: 0.85em;
             & .highlight{
-                color: $purple-dark;
+                color: $main-dark;
             }
         }
         & .selected-actions{
@@ -168,15 +168,15 @@
                 cursor: pointer;
                 transition: background-color 0.1s linear;
                 &.delete{
-                    background-color: $text-purple-light;
+                    background-color: $text-main-light;
                     &:hover{
-                        background-color: $text-purple-light2;
+                        background-color: $text-main-light;
                     }
                 }
                 &.load{
-                    background-color: $purple-dark;
+                    background-color: $main-dark;
                     &:hover{
-                        background-color: $purple-darker;
+                        background-color: $main-darker;
                     }
                 }
                 &:disabled{
@@ -190,7 +190,7 @@
 .saved-boards-popup{
     position: absolute;
     top: 100px;
-    background-color: $bg-purple-lighter;
+    background-color: $bg-main-light;
     font-size: 0.8em;
     right: 0;
     display: flex;
@@ -204,7 +204,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: $purple-dark;
+        background-color: $main-dark;
     }
     & .show{
         padding: 0.5em 1em;
@@ -216,11 +216,11 @@
         border: 0;
         padding: 0.5em 0.5em;
         color: #fff;
-        background-color: $purple-dark;
+        background-color: $main-dark;
         cursor: pointer;
         transition: background-color 0.1s linear;
         &:hover{
-            background-color: $purple-darker;
+            background-color: $main-darker;
         }
     }
 }
@@ -281,7 +281,7 @@
     align-items: center;
     width: 1.5em;
     height: 1.5em;
-    background: $purple-dark;
+    background: $main-dark;
     border-radius: 50%;
     font-size: 12px;
     cursor: pointer;

@@ -34,7 +34,7 @@ mat-slider{
         border-radius: 50%;
         transform: translate(-18px, 10px);
         cursor: pointer;
-        background-color: $purple-dark;
+        background-color: $main-dark;
         color: #fff;
         transition: opacity 0.2s ease-in, background-color 0.2s ease-in-out, transform 0.2s ease-out;
         & img{
@@ -42,7 +42,7 @@ mat-slider{
             height: 100%;
         }
         &:hover{
-            background-color: $purple-darker;
+            background-color: $main-darker;
         }
     }
 }

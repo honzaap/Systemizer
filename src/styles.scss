@@ -20,7 +20,7 @@ html{
     color: #fff;
     font-weight: 500;
 }
-.btn-purple{
+.btn-main{
     outline: none;
     display: block;
     width: fit-content;
@@ -31,11 +31,11 @@ html{
     padding: 1em 2em;
     font-weight: 500;
     color: #fff;
-    background-color: $purple-darker;
+    background-color: $main-darker;
     cursor: pointer;
     transition: transform 0.1s ease-in-out, background-color 0.2s ease-in-out;
     &:hover{
-        background-color: $purple-dark;
+        background-color: $main-dark;
         transform: scale(0.95);
     }
 }
@@ -43,7 +43,7 @@ html{
     position: absolute;
     width: 40px;
     height: 40px;
-    background-color: $bg-purple-darker;
+    background-color: $bg-main-darker;
     border-radius: 10%;
     padding: 0.3em;
     z-index: 3;
@@ -176,7 +176,7 @@ li{
     min-height: 350px;
     width: 18.5rem;
     padding-bottom: 2em;
-    background-color: $bg-purple-light;
+    background-color: $bg-main-light;
     color: #C5C5C5;
     border-radius: 0.5em;
     overflow-x: hidden;
@@ -184,7 +184,7 @@ li{
     box-shadow: 4px -7px 20px 7px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 28%), 0px 1px 10px 0px rgb(0 0 0 / 24%);
     & .input{
         outline: none;
-        background-color: $purple-darker;
+        background-color: $main-darker;
         border: 0.15em solid rgba(0,0,0,0.2);
         color: rgba(255,255,255,0.6);
         padding: 0.2em 0 0.2em 0.5em;
@@ -196,7 +196,7 @@ li{
             transition: transform 0.1s ease-out;
         }
         &:hover{
-            background-color: $purple-dark;
+            background-color: $main-dark;
             &::placeholder{
                 transform: translateX(0.1em);
             }
@@ -212,7 +212,7 @@ li{
             width: 100%;
             font-size: 1.1rem;
             padding: 0.2em 0.3em;
-            background-color: $bg-purple-dark;
+            background-color: $bg-main-dark;
             display: flex;
             justify-content: space-between;
             &:hover{
@@ -252,7 +252,7 @@ li{
             & input, & textarea{
                 outline: none;
                 border: 2px solid rgba(0,0,0,0.2);
-                background-color: $bg-purple-lighter;
+                background-color: lighten($bg-main-dark, 4%);
                 color: #fff;
                 padding: 0.2em;
                 cursor: text;
@@ -262,7 +262,7 @@ li{
                     transition: transform 0.1s ease-out;
                 }
                 &:hover{
-                    background-color: $bg-purple-dark;
+                    background-color: $bg-main-dark;
                     &::placeholder{
                         transform: translateX(10px);
                     }
@@ -317,13 +317,13 @@ li{
         }
         & mat-select{
             border: 2px solid rgba(0, 0, 0, 0.2);
-            background-color: $bg-purple-lighter;
+            background-color: lighten($bg-main-dark, 4%);
             color: rgba(255, 255, 255, 0.6);
             padding: 0.2em;
             cursor: pointer;
             transition: background-color 0.1s linear;
             &:hover{
-                background-color: $bg-purple-dark;
+                background-color: $bg-main-dark;
             }
             &.mat-select-disabled{
                 pointer-events: none;
@@ -332,7 +332,7 @@ li{
         }
     }
     & .options-button-icon{
-        color: $purple-light;
+        color: $main-light;
         width: 1em;
         height: 1em;
         margin: 0 1em;
@@ -340,17 +340,17 @@ li{
         cursor: pointer;
         display: inline-block;
         &.active{
-            color: $purple-dark;
+            color: $main-dark;
             &:hover{
                 transform: scale(1.1);
-                color: $purple-darker;
+                color: $main-darker;
             }
         }
         &.inactive{
             color: #999;
             &:hover{
                 transform: scale(1.1);
-                color: $text-purple-light;
+                color: $text-main-light;
             }
         }
         &.disabled{
@@ -373,13 +373,13 @@ li{
         border: none;
         outline: none;
         border-radius: 0.5em;
-        background-color: $purple-dark;
+        background-color: $main-dark;
         color: rgba(255,255,255,0.7);
         padding: 0.25em 0.6em;
         cursor: pointer;
         transition: background-color 0.1s linear, color 0.1s linear;
         &:hover{
-            background-color: $purple-darker;
+            background-color: $main-darker;
             color: #fff;
         }
         &:active{
@@ -388,7 +388,7 @@ li{
         &:disabled{
             filter:grayscale(70%);
             &:hover{
-                background-color: $purple-dark;
+                background-color: $main-dark;
                 color: rgba(255,255,255,0.7);
                 cursor: not-allowed;
             }
@@ -404,7 +404,7 @@ mat-expansion-panel .mat-expansion-panel-body{
 snack-bar-container{
     color: #fff !important;
     font-weight: 500;
-    background-color: $bg-purple-darker !important;
+    background-color: $bg-main-darker !important;
     box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.4) !important;
     & span {
         font-size: 1.15em !important;
@@ -450,7 +450,7 @@ mat-tooltip-component .mat-tooltip{
     position: absolute;
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 2000;
-    outline: 0.1rem dashed $purple-dark;
+    outline: 0.1rem dashed $main-dark;
 }
 
 .fs-1{
@@ -486,13 +486,13 @@ mat-tooltip-component .mat-tooltip{
 
 @keyframes receivedatabg{
     0%{
-        background-color: $bg-purple-darker;
+        background-color: $bg-main-darker;
     }
     50%{
-        background-color: $bg-purple-light;
+        background-color: $bg-main-light;
     }
     100%{
-        background-color: $bg-purple-darker;
+        background-color: $bg-main-darker;
     }
 }
 

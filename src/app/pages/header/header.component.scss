@@ -8,7 +8,7 @@ header{
     padding: 1.35em;
     font-size: 0.9rem;
     & .nav-title{
-        color: $text-purple-light2;
+        color: $main-light;
         font-size: 1.5rem;
         font-weight: 600;
         height: 4.5em;
@@ -32,7 +32,7 @@ header{
     position: relative;
     border: 0;
     border-radius: 1em;
-    background-color: $text-purple-light;
+    background-color: $text-main-light;
     display: flex;
     align-items: center;
     width: 1.5em;

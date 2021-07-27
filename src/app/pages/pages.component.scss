@@ -1,9 +1,11 @@
 @import "../../colors.scss"; 
 
 .page{
-    background-color: $bg-purple-dark;
+    background-color: $bg-main-dark;
     color: #fefefe;
     overflow-y: scroll;
     height: 100vh;
     max-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

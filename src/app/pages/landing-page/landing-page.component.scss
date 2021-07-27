@@ -1,5 +1,9 @@
 @import "../../../colors.scss"; 
 
+:host{
+    flex-grow: 1;
+}
+
 .container{
     width: 1000px;
     margin: 2em auto;
@@ -27,7 +31,7 @@ h3{
 }
 a.highlight{
     cursor: pointer;
-    color: $purple-dark;
+    color: $main-dark;
     &:hover{
         text-decoration: underline;
     }
@@ -64,7 +68,7 @@ a.highlight{
         }
     }
     & .component-body{
-        background-color: $bg-purple-darker;
+        background-color: $bg-main-darker;
         padding: 0.5em;
         width: 3em;
         border-radius: 0.3em;
@@ -101,7 +105,7 @@ a.highlight{
             height: 1em;
             border-radius: 50%;
             border: 0.2em solid $orange-light;
-            background-color: $bg-purple-darker;
+            background-color: $bg-main-darker;
             position: absolute;
             top: 1em;
             &.left{
@@ -119,7 +123,7 @@ a.highlight{
     & h4{
         font-weight: normal;
     }
-    .btn-purple{
+    .btn-main{
         margin: 1em auto;
     }
 }
@@ -201,7 +205,7 @@ a.highlight{
                 width: 100%;                
             }
         }
-        & .btn-purple{
+        & .btn-main{
             margin: 0 auto;
         }
     }

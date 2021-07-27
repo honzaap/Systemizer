@@ -9,6 +9,7 @@
     padding: 0;
     border-radius: 0;
     z-index: 0;
+
     &.read-only{
         & textarea{
             resize: none;
@@ -23,7 +24,7 @@
         min-height: 20px;
         outline: none;
         border: 2px solid rgba(0,0,0,0.2);
-        background-color: $bg-purple-lighter;
+        background-color: $bg-main-light;
         color: #fff;
         padding: 0.2em;
         cursor: move;
@@ -42,7 +43,7 @@
             transition: transform 0.1s ease-out;
         }
         &:hover{
-            background-color: $bg-purple-dark;
+            background-color: $bg-main-dark;
             &::placeholder{
                 transform: translateX(10px);
             }
@@ -87,7 +88,7 @@
     text-align: right;
     & span{
         font-size: 0.55rem;
-        color: $purple-light;
+        color: $main-light;
     }
 }
 .actions-container{
