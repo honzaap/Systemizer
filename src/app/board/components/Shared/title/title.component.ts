@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ExportService } from 'src/app/export.service';
 import { ViewingService } from 'src/app/viewing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
-import { Technology } from 'src/models/enums/Technology';
 
 @Component({
 	selector: 'component-title',

@@ -47,7 +47,7 @@ export class BoardComponent implements AfterViewChecked  {
 	posY = 0;
 
 	isLoading = false;
-	autosaving = false;
+	isAutosaving = false;
 	currentBoardId: string = UUID();
 	isAllClientsSendingData = false;
 	canToggleClientsSendingData = true;
@@ -116,6 +116,7 @@ export class BoardComponent implements AfterViewChecked  {
 		this.board = document.getElementById("board");
 		this.board.style.width = `${this.placingService.boardWidth}px`;
 		this.board.style.height = `${this.placingService.boardHeight}px`;
+		this.board.onwheel = (e) => {this.scroll(e)};
 
 		this.updateBoardTransform();
 
@@ -161,8 +162,6 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	copyItem(){
-		if(this.selectionService.currentSelections.length == 0)
-			return;
 		let selections = [];
 		for(let selection of this.selectionService.currentSelections){
 			let outputConnectionsList = []
@@ -205,17 +204,17 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
+	
 	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
 		this.placingService.snackBar = this.snackBar;
-		this.board.onwheel = (e) => {this.scroll(e)};
 		if(this.loadedSave){
 			this.loadFromSave(this.loadedSave);
 		}
 		else if(!this.isReadOnly){
 			this.loadLatestBoard();
 		}
-		
+
 		if(!this.isReadOnly){
 			// Loading saved boards
 			let savedBoardsJson = this.savingService.getSavedBoardsJson();
@@ -261,7 +260,7 @@ export class BoardComponent implements AfterViewChecked  {
 			this.closeSavedBoards();
 			this.loadFromSave(savedBoard.save);
 		}
-		let canvas = await this.getBoardCanvas(savedBoard.board);
+		let canvas = await this.exportService.getCanvas(savedBoard.board, new ExportPngOptions())
 		canvas.style.width = "100%";
 		canvas.style.marginBottom = "-5px";
 
@@ -303,10 +302,6 @@ export class BoardComponent implements AfterViewChecked  {
 			this.saveCurrentBoardToAllBoards();
 		this.closeSavedBoards();
 		this.loadFromSave(this.selectedSavedBoard.save);
-	}
-
-	async getBoardCanvas(board: IDataOperator[]){
-		return await this.exportService.getCanvas(board, new ExportPngOptions());
 	}
 
 	async getCurrentBoardCanvas(options: ExportPngOptions){
@@ -540,9 +535,9 @@ export class BoardComponent implements AfterViewChecked  {
 		this.savingService.save(this.allLogicComponents, this.currentBoardId);
 		this.saveCurrentBoardToAllBoards();
 		if(showIcon){
-			this.autosaving = true;
+			this.isAutosaving = true;
 			setTimeout(()=>{
-				this.autosaving = false;
+				this.isAutosaving = false;
 			}, 1000)
 		}
 	}

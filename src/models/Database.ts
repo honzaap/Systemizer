@@ -1,7 +1,7 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { DatabaseEndpoint, Endpoint, EndpointRef } from "./Endpoint";
 import { DatabaseType } from "./enums/DatabaseType";
 import { Protocol } from "./enums/Protocol";

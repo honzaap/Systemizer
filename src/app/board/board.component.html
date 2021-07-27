@@ -9,7 +9,7 @@
     <img src="./assets/logo.svg">
 </div>
 <div *ngIf="!isReadOnly">
-    <div class="autosave" *ngIf="autosaving">
+    <div class="autosave" *ngIf="isAutosaving">
         <i class="far fa-save"></i>
     </div>
     <div class="backdrop-centralized" [style.display]="showSavedBoards ? 'flex' : 'none'" (click.self)="closeSavedBoards()">

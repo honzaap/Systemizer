@@ -5,7 +5,7 @@ import { Port } from "./Port";
 import { Endpoint, EndpointRef, MQEndpoint } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
 
 export class MessageQueue extends EndpointOperator implements IDataOperator{
@@ -18,6 +18,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     isSendingData = false;
 
     messages: RequestData[] = []
+    isConsumable: boolean = true;
 
     constructor() {
         super();

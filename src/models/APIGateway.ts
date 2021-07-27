@@ -1,7 +1,7 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";

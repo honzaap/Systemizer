@@ -1,15 +1,13 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
 import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
 import { Protocol } from "./enums/Protocol";
-import { MessageQueue } from "./MessageQueue";
 import { Port } from "./Port";
-import { PubSub } from "./PubSub";
 import { RequestData, RequestDataHeader } from "./RequestData";
 
 export class API extends EndpointOperator implements IDataOperator{
@@ -33,16 +31,19 @@ export class API extends EndpointOperator implements IDataOperator{
 
     async receiveData(data: RequestData, fromOutput:boolean) {
         if(fromOutput){
+            // API received data from action 
             let targetConnection = this.connectionTable[data.responseId]
-            if(targetConnection == null) throw new Error("Target connection can not be null")
+            if(targetConnection == null) 
+                throw new Error("Target connection can not be null")
             this.connectionTable[data.responseId] = null; // reset request id
             this.fireReceiveData(data);
-            // API received data from action 
         }
         else{
             // Null check
-            if(data.requestId == "" || data.requestId == null) throw new Error("Request ID can not be null");
-            if(data.header.endpoint == null) throw new Error("Endpoint can not be null")
+            if(data.requestId == "" || data.requestId == null) 
+                throw new Error("Request ID can not be null");
+            if(data.header.endpoint == null) 
+                throw new Error("Endpoint can not be null")
 
             let targetEndpoint = this.getTargetEndpoint(data);
             if(targetEndpoint == null)
@@ -175,7 +176,7 @@ export class API extends EndpointOperator implements IDataOperator{
         if(this.inputPort.connections.length == 0)
             return false;
         for(let conn of this.inputPort.connections){
-            if(conn.getOtherPort(this.inputPort).parent instanceof PubSub)
+            if((conn.getOtherPort(this.inputPort).parent as any).isSubscribable)
                 return true;
         }
         return false;
@@ -213,7 +214,7 @@ export class API extends EndpointOperator implements IDataOperator{
             return this.outputPort.connectTo(otherPort);
         let conn = this.inputPort.connectTo(otherPort);
         if(conn != null && this.isConsumableOperator(operator))
-            this.initiateConsumer(conn, operator instanceof PubSub);
+            this.initiateConsumer(conn, (operator as any).subscribeable);
         return conn;
     }
 
@@ -233,7 +234,7 @@ export class API extends EndpointOperator implements IDataOperator{
     }
 
     private isConsumableOperator(operator: IDataOperator): boolean{
-        return operator instanceof MessageQueue || operator instanceof PubSub;
+        return (operator as any).isSubscribable || (operator as any).isConsumable;
     }
 
     getAvailableEndpoints(): Endpoint[]{

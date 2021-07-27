@@ -1,6 +1,6 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { Endpoint } from "./Endpoint";
 import { HTTPMethod } from "./enums/HTTPMethod";
 import { Port } from "./Port";

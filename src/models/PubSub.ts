@@ -5,7 +5,7 @@ import { Port } from "./Port";
 import { Endpoint } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
-import { EndpointOperator, EndpointOptions } from "./EdpointOperator";
+import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
 
 export class PubSub extends EndpointOperator implements IDataOperator{
@@ -14,6 +14,7 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     outputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
     options: PubSubOptions;
+    isSubscribable: boolean = true;
 
     constructor() {
         super();

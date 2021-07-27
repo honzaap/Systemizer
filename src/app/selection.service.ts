@@ -113,6 +113,8 @@ export class SelectionService {
 	}
 
 	startSelecting(e: MouseEvent, scale: number){
+		this.clearConnectionSelection();
+		this.clearSelection();
 		let board = document.getElementById("board");
 		let rect = document.createElement("div");
 		rect.style.left = `${e.clientX}px`;

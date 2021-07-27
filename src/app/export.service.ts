@@ -25,13 +25,10 @@ export class ExportService {
 	}
 
 	convertTechnology(tech: Technology){
-		if(tech == null || Technology[tech] == null || tech == 0)
-			return "None";
 		return Technology[tech].toLowerCase().replace(/ /g,'').replace(/#/g, 'sharp');
 	}
 
   	async getCanvas(components: IDataOperator[], options: ExportPngOptions){
-
 		let canvas = document.createElement("canvas");
 		canvas.width = this.placingService.boardWidth;
 		canvas.height = this.placingService.boardHeight;
@@ -49,12 +46,11 @@ export class ExportService {
 			ctx.fillStyle = options.lightMode ? "#fff" : "#141625";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		}
-		if(components.length == 0)
-			return canvas;
+		let componentBg = options.lightMode ? "#b7b7b7" : "#080a1a";
 		for(let component of components){
 			// Render component
 			ctx.beginPath()
-			ctx.fillStyle = options.lightMode ? "#b7b7b7" : "#080a1a";
+			ctx.fillStyle = componentBg;
 			let {width, height} = this.getComponentSize(component);
 	
 			// Render image
@@ -77,10 +73,6 @@ export class ExportService {
 				let img = new Image();
 				await new Promise(r => {img.onload=r ; img.src=`./assets/${this.savingService.getComponentType(component).toLowerCase()}.svg`});
 				ctx.drawImage(img, component.options.X - offsetX + width/2 - 20 + 7, component.options.Y - offsetY + height/2 - 20 + 7, 26, 26);
-			}
-
-			// Render title
-			if(options.showTitles && !(component instanceof TextField)){
 				this.renderComponentTitleToCanvas(ctx, component, options.transparentBackground ? options.lightTitles : !options.lightMode, offsetX, offsetY);
 			}
 
@@ -261,7 +253,7 @@ export class ExportService {
 		offsetY = Math.max(0, minY - 40);
 		svg.setAttribute("width", `${Math.min(this.placingService.boardWidth, maxX + 40 - offsetX)}`);
 		svg.setAttribute("height", `${Math.min(this.placingService.boardHeight, maxY + 40 - offsetY)}`);
-
+		let componentBg = options.lightMode ? "#b7b7b7" : "#080a1a";
 		for(let component of components){
 			let {width, height} = this.getComponentSize(component);
 	
@@ -286,7 +278,7 @@ export class ExportService {
 				rect.setAttributeNS(null, 'ry', "5");
 				rect.setAttributeNS(null, 'width', width.toString());
 				rect.setAttributeNS(null, 'height', height.toString());
-				rect.setAttributeNS(null, 'fill',  options.lightMode ? "#b7b7b7" : "#080a1a");
+				rect.setAttributeNS(null, 'fill',  componentBg);
 				svg.appendChild(rect);
 				let img = document.createElementNS(this.svgns,'image') as SVGImageElement;
 				img.setAttributeNS(null,'height','26');
@@ -297,13 +289,9 @@ export class ExportService {
 				img.setAttributeNS(null, 'visibility', 'visible');
 				
 				svg.appendChild(img);
-			}
-
-			// Render title
-			if(options.showTitles && !(component instanceof TextField)){
 				this.renderComponentTitleToSvg(svg, component, options.lightTitles, offsetX, offsetY);
 			}
-			
+
 			if(component["inputPort"]){ 
 				this.renderConnectionsToSvg(svg, component, offsetX, offsetY);
 			}
