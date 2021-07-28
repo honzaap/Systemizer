@@ -49,6 +49,7 @@ import { GettingStartedComponent } from './pages/getting-started/getting-started
 import { PagesHeaderComponent } from './pages/header/header.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { PagesComponent } from './pages/pages.component';
+import { CDNComponent } from './board/components/cdn/cdn.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { PagesComponent } from './pages/pages.component';
     CloudStorageComponent,
     ProxyComponent,
     ClientclusterComponent,
+    CDNComponent,
   ],
   imports: [
     BrowserModule,

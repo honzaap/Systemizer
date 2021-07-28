@@ -17,6 +17,7 @@ import { ProxyComponent } from '../components/proxy/proxy.component';
 import { PubsubComponent } from '../components/pubsub/pubsub.component';
 import { TextfieldComponent } from '../components/textfield/textfield.component';
 import { WebserverComponent } from '../components/webserver/webserver.component';
+import { CDNComponent } from '../components/cdn/cdn.component';
 
 class MenuItem<T>{
 	component: T;
@@ -83,6 +84,7 @@ export class ComponentmenuComponent implements OnInit {
 			new MenuItem(DatabaseComponent, "SQL Database", "SQL","./assets/database.svg", '<p>Database component simulates a database server with one default endpoint.</p> <p>Use the input port to connect services to database and receive data through.</p> <p>You can use the <span class="highlight">Shard Database</span> action to shard the database and create 3 default shards. </p>',{ type: DatabaseType.SQL }),
 			new MenuItem(DatabaseComponent, "NoSQL Database", "NoSQL","./assets/database.svg",'<p>Database component simulates a database server with one default endpoint.</p> <p>Use the input port to connect services to database and receive data through.</p> <p>You can use the <span class="highlight">Shard Database</span> action to shard the database and create 3 default shards. </p>', { type: DatabaseType.NoSQL }),
 			new MenuItem(CloudStorageComponent, "Cloud Storage", "CLOUD","./assets/cloudstorage.svg",'<p>Cloud storage component simulates any cloud storage with one default endpoint.</p> <p>Use the input port to connect services to cloud and receive data through.</p>'),
+			new MenuItem(CDNComponent, "Content Delivery Network", "CDN","./assets/cdn.svg",'<p>CDN component simulates a Content Delivery Network with one default endpoint.</p> <p>Use the input port to connect services to CDN and receive data through.</p>'),
 		]));
 		this.allCategories.push(new Category("Caches",[
 			new MenuItem(CacheComponent, "Write-Through Cache", "WT","./assets/cache.svg", '<p>Cache component simulates a distributed cache with a <span class="underline">random</span> hit/miss chance.</p> <p>Receive data through input port. The output port is connected to <span class="highlight">Database</span>.</p> <p>You can change Write and Replacement policies to better specify the behaviour of your cache.</p>', { writePolicy: WritePolicy['Write-Through'] }),

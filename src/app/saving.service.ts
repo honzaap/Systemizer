@@ -15,6 +15,7 @@ import { Proxy } from 'src/models/Proxy';
 import { PubSub } from 'src/models/PubSub';
 import { TextField } from 'src/models/TextField';
 import { WebServer } from 'src/models/WebServer';
+import { CDN } from 'src/models/CDN';
 
 @Injectable({
   	providedIn: 'root'
@@ -38,7 +39,8 @@ export class SavingService {
 		WebServer,
 		TextField,
 		Proxy,
-		ClientCluster
+		ClientCluster,
+		CDN
 	}
 
 	/**
@@ -98,6 +100,7 @@ export class SavingService {
 		PS: "PubSub",
 		TF: "TextField",
 		WS: "WebServer",
+		CD: "CDN"
 	};
 
 	constructor() { }

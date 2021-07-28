@@ -11,6 +11,7 @@ import { ViewingService } from '../viewing.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
 import { CacheComponent } from './components/cache/cache.component';
+import { CDNComponent } from './components/cdn/cdn.component';
 import { ClientComponent } from './components/client/client.component';
 import { ClientclusterComponent } from './components/clientcluster/clientcluster.component';
 import { CloudStorageComponent } from './components/cloudstorage/cloudstorage.component';
@@ -73,7 +74,8 @@ export class BoardComponent implements AfterViewChecked  {
 		PubSub: PubsubComponent,
 		Proxy: ProxyComponent,
 		TextField: TextfieldComponent,
-		WebServer: WebserverComponent
+		WebServer: WebserverComponent,
+		CDN: CDNComponent
 	}
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
