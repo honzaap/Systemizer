@@ -1,10 +1,9 @@
-@import "../../../colors";
 nav{
     z-index: 30;
     display:flex;
     flex-flow: row nowrap;
     align-items: stretch;
-    background-color: $bg-main-light;
+    background-color: var(--bg-main-light);
     color: rgba(255,255,255,0.6);
     position: relative;
 }
@@ -17,19 +16,19 @@ nav{
         outline: none;
         font-size: 1.2rem;
         width: 8em;
-        color: $main-light;
+        color: var(--main-light);
     }
     & a, button{
         background-color: transparent;
         border: none;
         outline: none;    
         font-size: 1em;    
-        color: $text-main-light;
+        color: var(--text-main-light);
         transition: color 0.1s linear;
         cursor: pointer;
     }
     & a:hover, button:hover{
-        color: $text-main-light;
+        color: var(--text-main-light);
     }
     .file-form{
         border: 1px solid #ccc;
@@ -67,7 +66,7 @@ nav{
     }
     & .icon:hover{
         transform: scale(1.05);
-        color: $main-dark;
+        color: var(--main-dark);
         cursor: pointer;
     }
 }
@@ -97,7 +96,7 @@ input[type="file"] {
     max-width: 480px;
     padding: 1.5em 1em;
     text-align: center;
-    background-color: $bg-main-dark;    
+    background-color: var(--bg-main-dark);    
     color: #fff;
     &.export{
         min-width: 550px;
@@ -116,40 +115,40 @@ input[type="file"] {
         cursor: pointer;
         transition: background-color 0.15s ease-in-out;
         &.btn-cancel{
-            border: 0.15em solid $text-main-light;
-            color: $text-main-light;
+            border: 0.15em solid var(--text-main-light);
+            color: var(--text-main-light);
             background-color: transparent;
             &:hover{
-                color: $bg-main-dark;
-                background-color: $text-main-light;
+                color: var(--bg-main-dark);
+                background-color: var(--text-main-light);
             }
         }
         &.btn-confirm{
-            background-color: $orange-light;
+            background-color: var(--orange-light);
             color: #fff;
-            border: 0.15em solid $orange-light;
+            border: 0.15em solid var(--orange-light);
             &:hover{
-                border-color: $orange-light;
-                color: $orange-light;
+                border-color: var(--orange-light);
+                color: var(--orange-light);
                 background-color: transparent;
             }
             &:disabled{
                 filter: grayscale(1);
                 cursor: not-allowed;
                 &:hover{
-                    background-color: $orange-light;
-                    border-color: $orange-light;
+                    background-color: var(--orange-light);
+                    border-color: var(--orange-light);
                     color: #fff;
                 }
             }
         }
         &.btn-preview{
-            border: 0.15em solid $main-dark;
-            color: $main-dark;
+            border: 0.15em solid var(--main-dark);
+            color: var(--main-dark);
             background-color: transparent;
             &:hover{
-                color: $bg-main-dark;
-                background-color: $main-dark;
+                color: var(--bg-main-dark);
+                background-color: var(--main-dark);
             }
         }
     }
@@ -190,7 +189,7 @@ input[type="file"] {
     flex-basis: 80%;
     outline: 0.1em solid #c0c0c0;
     height: fit-content;
-    background-color: $bg-main-light;
+    background-color: var(--bg-main-light);
 }
 .keyboard-shortcuts-window{
     color: #fff;
@@ -199,8 +198,8 @@ input[type="file"] {
     bottom: 30%;
     right: 25%;
     left: 25%;
-    border: 0.2em solid $bg-main-light;
-    background-color: $bg-main-dark;
+    border: 0.2em solid var(--bg-main-light);
+    background-color: var(--bg-main-dark);
     box-shadow: 0px 0px 25px 2px #000;
     padding: 2em;
     overflow-y: scroll;
@@ -211,7 +210,7 @@ input[type="file"] {
         font-size: 1.15em;
     }
     & .highlight{
-        color: $main-dark;
+        color: var(--main-dark);
         font-weight: 400;
     }
     & .close{
@@ -228,7 +227,7 @@ input[type="file"] {
         height: 1.5em;
         transition: color 0.1s linear;
         &:hover{
-            color: $main-light;
+            color: var(--main-light);
         }
     }
     & .shortcuts-list{
@@ -268,7 +267,7 @@ input[type="file"] {
     & .saving-inner{
         display: flex;
         flex-flow: row nowrap;
-        background-color: $bg-main-dark;
+        background-color: var(--bg-main-dark);
         border-radius: 0.4em;
         padding: 2em 1em;
         gap: 1em;
@@ -285,7 +284,7 @@ input[type="file"] {
                 outline: none;
                 border-bottom: 0.15em solid transparent;
                 &:hover,&:focus{
-                    border-color: $main-light;
+                    border-color: var(--main-light);
                 }
             }
         }
@@ -335,11 +334,11 @@ input[type="file"] {
         font-size: 0.7rem;
         font-family: 'Roboto';
         font-weight: 300;
-        border: 0.2em solid $bg-main-light;
+        border: 0.2em solid var(--bg-main-light);
         padding: 1em 0.5em;
         outline: none;
         color: #fff;    
-        background-color: $bg-main-darker;
+        background-color: var(--bg-main-darker);
     }
     & .error{
         margin: 1.5em 0;

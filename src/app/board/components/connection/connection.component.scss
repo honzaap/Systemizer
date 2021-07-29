@@ -1,5 +1,3 @@
-@import "../../../../colors";
-
 svg{
     position: absolute;
     width: 100%;
@@ -10,7 +8,7 @@ svg{
         pointer-events: none;
     }
     & path{
-        stroke: $orange-light;
+        stroke: var(--orange-light);
         stroke-width: 2;
         stroke-linecap: round;
         stroke-dasharray: 3;
@@ -21,17 +19,18 @@ svg{
         }
     }
     & path.blur{
-        stroke: rgba($main-light, 0.5);
+        stroke: var(--main-light);
+        opacity: 0.5;
         stroke-width: 3;
         stroke-linecap: round;
         filter: blur(3px);
         transition: stroke 0.2s linear;
         &:hover{
-            stroke: $main-dark;
+            stroke: var(--main-dark);
         }
         &.is-current-selection{
             filter: blur(5px);
-            stroke: $main-darker;
+            stroke: var(--main-darker);
             stroke-width: 7;
         }
     }

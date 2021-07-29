@@ -1,8 +1,6 @@
-@import "../../../colors";
-
 footer{
     font-size: 0.8rem;
-    background-color: $bg-main-darker;
+    background-color: var(--bg-main-darker);
     padding: 8em 1em 1em;
     display: flex;
     color: #fff;

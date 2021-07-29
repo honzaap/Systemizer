@@ -1,9 +1,7 @@
-@import "../../colors";
-
 .page{
     height: 100vh;
     display: flex;
-    background-color: $bg-main-darker;
+    background-color: var(--bg-main-darker);
     flex-flow:column nowrap;
     justify-content: flex-start;
     align-items: stretch;
@@ -29,7 +27,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: $bg-main-light;
+    background-color: var(--bg-main-light);
     z-index: 1200;
     color: #fff;
     text-align: center;
@@ -43,7 +41,7 @@
     }
 }
 .viewer-error{
-    background-color: $bg-main-darker;
+    background-color: var(--bg-main-darker);
     color: #fff;
     height: 100vh;
     display: flex;
@@ -56,6 +54,6 @@
         font-size: 1.5em;
     }
     & a{
-        color: $orange-light;
+        color: var(--orange-light);
     }
 }

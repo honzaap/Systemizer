@@ -1,5 +1,3 @@
-@import "../../../../colors";
-
 :host{
     position: relative;
 }
@@ -16,7 +14,7 @@
         flex-basis: calc(10% - 1px);
         flex-grow: 0;
         flex-shrink: 0;
-        background-color: $orange-light;
+        background-color: var(--orange-light);
         &.fill{
             background-color: transparent;
             pointer-events: none;
@@ -64,7 +62,7 @@
 }
 input:disabled{
     pointer-events: none;
-    filter: brightness(0.45);
+    filter: brightness(0.45) !important;
 }
 .options-endpoints-top{
     display: flex;

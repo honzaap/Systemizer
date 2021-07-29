@@ -1,5 +1,3 @@
-@import "../../colors.scss";
-
 :host{
     position: relative;
 }
@@ -7,9 +5,9 @@
 .property-info-button{
     font-size: 0.7rem;
     vertical-align: top;
-    color: $main-light;
+    color: var(--main-light);
     cursor: pointer;
     &:hover{
-        color: $main-dark;
+        color: var(--main-dark);
     }
 }

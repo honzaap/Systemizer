@@ -1,12 +1,10 @@
-@import "../../colors";
-
 :host{
     height: 100%;
     min-height: 100vh;
     overflow: hidden;
 }
 .board{
-    background: $bg-main-dark;
+    background: var(--bg-main-dark);
     z-index: -1;
     &.infocus:hover{
         cursor: default;
@@ -74,7 +72,7 @@
     top: 3em;
     right: 1em;
     color: #fff;
-    background-color: $main-darker;
+    background-color: var(--main-darker);
     width: 2em;
     height: 2em;
     display: flex;
@@ -90,7 +88,7 @@
     min-width: 800px;
     max-width: 950px;
     color: #fff;
-    background-color: $bg-main-light;
+    background-color: var(--bg-main-light);
     padding: 1em;
     & .title{
         text-align: center;
@@ -148,7 +146,7 @@
         & .selected-info{
             font-size: 0.85em;
             & .highlight{
-                color: $main-dark;
+                color: var(--main-dark);
             }
         }
         & .selected-actions{
@@ -168,15 +166,15 @@
                 cursor: pointer;
                 transition: background-color 0.1s linear;
                 &.delete{
-                    background-color: $text-main-light;
+                    background-color: var(--text-main-light);
                     &:hover{
-                        background-color: $text-main-light;
+                        background-color: var(--text-main-light);
                     }
                 }
                 &.load{
-                    background-color: $main-dark;
+                    background-color: var(--main-dark);
                     &:hover{
-                        background-color: $main-darker;
+                        background-color: var(--main-darker);
                     }
                 }
                 &:disabled{
@@ -190,7 +188,7 @@
 .saved-boards-popup{
     position: absolute;
     top: 100px;
-    background-color: $bg-main-light;
+    background-color: var(--bg-main-light);
     font-size: 0.8em;
     right: 0;
     display: flex;
@@ -204,7 +202,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: $main-dark;
+        background-color: var(--main-dark);
     }
     & .show{
         padding: 0.5em 1em;
@@ -216,11 +214,11 @@
         border: 0;
         padding: 0.5em 0.5em;
         color: #fff;
-        background-color: $main-dark;
+        background-color: var(--main-dark);
         cursor: pointer;
         transition: background-color 0.1s linear;
         &:hover{
-            background-color: $main-darker;
+            background-color: var(--main-darker);
         }
     }
 }
@@ -281,7 +279,7 @@
     align-items: center;
     width: 1.5em;
     height: 1.5em;
-    background: $main-dark;
+    background: var(--main-dark);
     border-radius: 50%;
     font-size: 12px;
     cursor: pointer;

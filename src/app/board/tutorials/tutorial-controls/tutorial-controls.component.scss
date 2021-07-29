@@ -1,10 +1,8 @@
-@import "../../../../colors";
-
 .window{
     height: 20.5rem;
     width: 19rem;
-    border: 0.2em solid $orange-light;
-    background-color: $bg-main-darker;
+    border: 0.2em solid var(--orange-light);
+    background-color: var(--bg-main-darker);
     color: #e0e0e0;
     position: relative;
     font-size: 0.8em;
@@ -23,11 +21,11 @@
         left: 15%;
         right: 15%; 
         text-align: center;
-        color: $bg-main-light;
+        color: var(--bg-main-light);
         font-weight: bold;
         & .progress-bar{
             height: 100%;
-            background-color: $orange-light;
+            background-color: var(--orange-light);
             position: absolute;
         }
         & .progress-text{
@@ -49,16 +47,17 @@
             display: block;     
             cursor: pointer;
             &.close{
-                background-color: $main-dark;
+                background-color: var(--main-dark);
                 &:hover{
-                    background-color: $main-light;
+                    background-color: var(--main-light);
                 }
             }
             &.min{
                 transition: transform 0.5s ease-in-out;
-                background-color: $text-main-light;
+                background-color: var(--text-main-light);
                 &:hover{
-                    background-color: lighten($text-main-light, 10%);
+                    background-color: var(--text-main-light);
+                    filter: brightness(1.1);
                 }
             }
         }
@@ -96,16 +95,16 @@
         }
         & .prev{
             margin-right: auto;
-            background-color: $text-main-light;
+            background-color: var(--text-main-light);
             &:hover{
-                background-color: lighten($text-main-light, 10%);
+                filter: brightness(1.1);
             }
         }
         & .next{
             margin-left: auto;
-            background-color: $main-dark;
+            background-color: var(--main-dark);
             &:hover{
-                background-color: $main-light;
+                background-color: var(--main-light);
             }
         }
     }

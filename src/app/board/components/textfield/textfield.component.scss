@@ -1,5 +1,3 @@
-@import "../../../../colors";
-
 :host{
     position: relative;
 }
@@ -24,7 +22,7 @@
         min-height: 20px;
         outline: none;
         border: 2px solid rgba(0,0,0,0.2);
-        background-color: $bg-main-light;
+        background-color: var(--bg-main-light);
         color: #fff;
         padding: 0.2em;
         cursor: move;
@@ -43,7 +41,7 @@
             transition: transform 0.1s ease-out;
         }
         &:hover{
-            background-color: $bg-main-dark;
+            background-color: var(--bg-main-dark);
             &::placeholder{
                 transform: translateX(10px);
             }
@@ -88,7 +86,7 @@
     text-align: right;
     & span{
         font-size: 0.55rem;
-        color: $main-light;
+        color: var(--main-light);
     }
 }
 .actions-container{

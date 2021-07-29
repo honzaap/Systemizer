@@ -1,7 +1,5 @@
-@import "../../colors.scss"; 
-
 .page{
-    background-color: $bg-main-dark;
+    background-color: var(--bg-main-dark);
     color: #fefefe;
     overflow-y: scroll;
     height: 100vh;

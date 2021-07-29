@@ -1,5 +1,3 @@
-@import "../../../../colors";
-
 :host{
     position: relative;
 }
@@ -35,7 +33,7 @@
 }
 input:disabled{
     pointer-events: none;
-    filter: brightness(0.45);
+    filter: brightness(0.45) !important;
 }
 .options-endpoints-top{
     display: flex;
