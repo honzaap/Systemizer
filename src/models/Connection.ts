@@ -4,9 +4,19 @@ import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 
 interface SendDataEvent {}
 
+export class LineBreak{
+    x: number;
+    y: number;
+    constructor(x: number,y: number){
+        this.x = x;
+        this.y = y;
+    }
+}
+
 export class Connection{
     port1: Port;
     port2: Port;
+    lineBreaks: LineBreak[];
 
     constructor(port1: Port, port2: Port) {
         this.port1 = port1;
@@ -23,11 +33,13 @@ export class Connection{
     public async sendData(data: RequestData, origin: Port) {
         if(origin === this.port1){
             this.fireSendData(origin);
-            await this.port2.receiveData(data);
+            let delay = this.getSendDataDelay();
+            await this.port2.receiveData(data, delay);
         }
         else if(origin === this.port2){
             this.fireSendData(origin);
-            await this.port1.receiveData(data);
+            let delay = this.getSendDataDelay();
+            await this.port1.receiveData(data, delay);
         }
         else
             throw new Error("Invalid origin in Connection.sendData");
@@ -45,4 +57,6 @@ export class Connection{
     private fireSendData(event: SendDataEvent) { 
         this.sendDataDispatcher.fire(event);
     }
+
+    public getSendDataDelay: () => number = () => {return 180};
 }

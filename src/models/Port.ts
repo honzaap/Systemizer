@@ -48,8 +48,8 @@ export class Port{
     /**
      * receiveData: sends data received from connection to parent property
      */
-    public async receiveData(data: RequestData) {
-        await sleep(180);
+    public async receiveData(data: RequestData, delay: number = 180) {
+        await sleep(delay);
         await this.parent.receiveData(data,this.isOutput);
     }
 

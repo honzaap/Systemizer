@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
+import { LineBreak } from 'src/models/Connection';
 import { EventDispatcher, Handler } from 'src/models/Shared/EventDispatcher';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { OperatorComponent } from './board/components/Shared/OperatorComponent';
-import { PlacingService } from './placing.service';
 
 class StopSelectingEvent {
 	top: number;
@@ -24,6 +24,8 @@ export class SelectionService {
 	prevY: number;
 
 	currentConnectionSelection: ConnectionComponent;
+	currentLineBreakSelection: LineBreak;
+	currentLineBreakList: LineBreak[];
 	currentSelections: OperatorComponent[] = [];
 
 	selectionRect: HTMLDivElement;
@@ -57,6 +59,7 @@ export class SelectionService {
 			}
 		}
 		this.clearConnectionSelection();
+		this.clearLineBreakSelection();
 		this.fireChangeSelection({});
 	}
 
@@ -73,12 +76,11 @@ export class SelectionService {
 		if(selection != this.currentConnectionSelection){
 			if(this.currentConnectionSelection != null){
 				this.currentConnectionSelection.mainPath.nativeElement.classList.remove("is-current-selection")
-				this.currentConnectionSelection.secondPath.nativeElement.classList.remove("is-current-selection")
 			}
 			selection.mainPath.nativeElement.classList.add("is-current-selection")
-			selection.secondPath.nativeElement.classList.add("is-current-selection")
 			this.currentConnectionSelection = selection;
 			this.clearSelection();
+			this.clearLineBreakSelection();
 			this.fireChangeSelection({});
 		}
 	}
@@ -86,8 +88,26 @@ export class SelectionService {
 	clearConnectionSelection(){
 		if(this.currentConnectionSelection != null){
 			this.currentConnectionSelection.mainPath.nativeElement.classList.remove("is-current-selection")
-			this.currentConnectionSelection.secondPath.nativeElement.classList.remove("is-current-selection")
 			this.currentConnectionSelection = null;
+			this.fireChangeSelection({});
+		}  
+	}
+
+	// LineBreak
+	setLineBreakSelection(selection: LineBreak, list: LineBreak[]){
+		if(selection != this.currentLineBreakSelection){
+			this.currentLineBreakSelection = selection;
+			this.currentLineBreakList = list;
+			this.clearSelection();
+			this.clearConnectionSelection();
+			this.fireChangeSelection({});
+		}
+	}
+
+	clearLineBreakSelection(){
+		if(this.currentLineBreakSelection != null){
+			this.currentLineBreakList = [];
+			this.currentLineBreakSelection = null;
 			this.fireChangeSelection({});
 		}  
 	}
@@ -96,24 +116,31 @@ export class SelectionService {
 	 * Returns true if something was deleted, false otherwise
 	 */
 	deleteSelection(): boolean{
-		if(this.currentConnectionSelection == null && this.currentSelections.length == 0)
+		if(this.currentConnectionSelection == null && this.currentSelections.length == 0 && this.currentLineBreakSelection == null)
 			return false;
 		if(this.currentConnectionSelection){
 			this.currentConnectionSelection.destroySelf();
-			this.clearSelection();
-			this.clearConnectionSelection();
+			return true;
+		}
+		else if(this.currentLineBreakSelection){
+			let index = this.currentLineBreakList.findIndex(b => b.x === this.currentLineBreakSelection.x && b.y === this.currentLineBreakSelection.y);
+			if(index === -1)
+				return false;
+			this.currentLineBreakList.splice(index, 1);
 			return true;
 		}
 		for(let selection of this.currentSelections){
 			selection.destroySelf();    
 		}
 		this.clearSelection();
+		this.clearLineBreakSelection();
 		this.clearConnectionSelection();
 		return true;
 	}
 
 	startSelecting(e: MouseEvent, scale: number){
 		this.clearConnectionSelection();
+		this.clearLineBreakSelection();
 		this.clearSelection();
 		let board = document.getElementById("board");
 		let rect = document.createElement("div");

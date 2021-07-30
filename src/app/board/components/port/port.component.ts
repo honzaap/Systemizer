@@ -24,7 +24,7 @@ export class PortComponent implements OnInit {
 	linePrevX = 0;
 	linePrevY = 0;
 
-	constructor(private placingService : PlacingService) {
+	constructor(public placingService : PlacingService) {
 	}
 
 	ngOnInit(): void {
@@ -93,7 +93,9 @@ export class PortComponent implements OnInit {
 	}
 	
 	public handleMouseUp(event: MouseEvent){
+		console.log("mouseup")
 		if(this.placingService.isConnecting){
+			console.log("is connecting")
 			if(this !== this.placingService.connectingPort)
 				if(this.placingService.connectPorts(this,this.placingService.connectingPort))
 					this.placingService.componentChanged.emit();

@@ -300,6 +300,8 @@ export class BoardUIComponent implements OnInit {
 	async openPreview(png: boolean = true){
 		if(png){
 			this.exportPngPreview = await this.exportService.getCanvas(this.getComponents(), this.exportPngOptions);
+			if(this.exportPngPreview == null)
+				return;
 			this.exportPngPreview.style.width = "100%";
 			this.exportPngPreview.style.marginBottom = "-5px";
 			this.preview.nativeElement.innerHTML = "";
@@ -308,6 +310,8 @@ export class BoardUIComponent implements OnInit {
 		else{
 			let components = this.getComponents();
 			this.exportSvgPreview = await this.exportService.getSvg(components, this.exportSvgOptions);
+			if(this.exportSvgPreview == null)
+				return;
 			this.exportSvgPreview.style.marginBottom = "-5px";
 			this.preview.nativeElement.innerHTML = "";
 			this.preview.nativeElement.appendChild(this.exportSvgPreview);

@@ -4,34 +4,52 @@ svg{
     height: 100%;
     z-index: 1;
     pointer-events: none;
-    &.read-only > *{
-        pointer-events: none;
+    &.read-only *{
+        pointer-events: none !important;
     }
-    & path{
+    & path.main{
+        fill: transparent;
         stroke: var(--orange-light);
         stroke-width: 2;
         stroke-linecap: round;
         stroke-dasharray: 3;
-        cursor: pointer;
-        pointer-events: all;
+        pointer-events: none;
         &.is-current-selection{
             stroke: #ccc91c;
         }
     }
-    & path.blur{
-        stroke: var(--main-light);
-        opacity: 0.5;
-        stroke-width: 3;
-        stroke-linecap: round;
-        filter: blur(3px);
-        transition: stroke 0.2s linear;
-        &:hover{
-            stroke: var(--main-dark);
-        }
+    & path.interactive{
+        cursor: pointer;
+        pointer-events: stroke;
+        stroke: transparent;
+        fill: transparent;
+        stroke-width: 14;
+    }
+    & .break{
+        cursor: pointer;
+        fill: var(--main-dark);
+        pointer-events: all;
         &.is-current-selection{
-            filter: blur(5px);
-            stroke: var(--main-darker);
-            stroke-width: 7;
+            display: block !important;
+            fill: var(--main-light);
+            filter: brightness(1.25);
+        }
+    }
+    & .break-available{
+        cursor: pointer;
+        fill: var(--text-main-light);
+        stroke-width: 2;
+        stroke: var(--bg-main-light);
+        pointer-events: all;
+    }
+    & .line-breaks-container{
+        & circle{
+            display: none;
+        }
+        &:hover, &.active{
+            & circle{
+                display: block;
+            }
         }
     }
 }

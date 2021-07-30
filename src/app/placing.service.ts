@@ -1,6 +1,7 @@
 import { ComponentFactory, ComponentFactoryResolver, ComponentRef, EventEmitter, Injectable, Output, Type, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
+import { LineBreak } from 'src/models/Connection';
 import { Options } from 'src/models/Options';
 import { ConnectionComponent } from './board/components/connection/connection.component';
 import { PortComponent } from './board/components/port/port.component';
@@ -148,7 +149,7 @@ export class PlacingService{
 		return components;
 	}
 
-	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false){
+	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false, lineBreaks: LineBreak[] = []){
 		let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
 		let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
 
@@ -157,6 +158,7 @@ export class PlacingService{
 			c.destroy();
 			return false;
 		}
+		logicConn.lineBreaks = lineBreaks;
 		c.instance.LogicConnection = logicConn;
 		c.instance.isReadOnly = isReadOnly;
 
@@ -167,6 +169,7 @@ export class PlacingService{
 		c.instance.portComponent1 = portComponent1;
 		c.instance.portComponent2 = portComponent2;
 
+		console.log("return true")
 		return true
 	}
 

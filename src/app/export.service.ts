@@ -144,16 +144,17 @@ export class ExportService {
 	private renderConnectionsToCanvas(ctx: CanvasRenderingContext2D, component: IDataOperator, offsetX: number, offsetY: number){
 		for(let connection of (component["inputPort"] as Port).connections){
 			let {width, height} = this.getComponentSize(component);
-
 			ctx.strokeStyle = "#df9300";
 			let comp2 = connection.getOtherPort(component["inputPort"]).parent;
 			let comp2Size = this.getComponentSize(comp2);
 			let comp2Width = comp2Size.width;
 			let comp2Height = comp2Size.height;
 			ctx.beginPath();
-			ctx.moveTo(component.options.X - offsetX - 12, component.options.Y - offsetY + height/2);
-			ctx.lineTo(comp2.options.X - offsetX + comp2Width + 12, comp2.options.Y - offsetY + comp2Height/2);
-			ctx.stroke()
+			ctx.moveTo(connection.lineBreaks[0].x - offsetX, connection.lineBreaks[0].y - offsetY);
+			for(let lineBreak of connection.lineBreaks){
+				ctx.lineTo(lineBreak.x - offsetX, lineBreak.y - offsetY);
+				ctx.stroke()
+			}
 			ctx.closePath() 
 		}
 	}
@@ -229,6 +230,19 @@ export class ExportService {
 				let sizes = this.getComponentSize(component);
 				width = sizes.width;
 				height = sizes.height;
+			}
+
+			let outputPort = component["outputPort"]
+			if(outputPort){
+				let connections = outputPort.connections;
+				connections.forEach(connection => {
+					connection.lineBreaks.forEach(lineBreak => {
+						minX = Math.min(minX, lineBreak.x);
+						minY = Math.min(minY, lineBreak.y);
+						maxX = Math.max(maxX, lineBreak.x);
+						maxY = Math.max(maxY, lineBreak.y);
+					})
+				})
 			}
 
 			minX = Math.min(minX, component.options.X);
@@ -342,19 +356,13 @@ export class ExportService {
 
 	private renderConnectionsToSvg(svg: SVGElement, component: IDataOperator, offsetX: number, offsetY: number){
 		// Render connections
-		let {width, height} = this.getComponentSize(component);
 		for(let connection of (component["inputPort"] as Port).connections){
-			let comp1 = component;
-			let comp2 = connection.getOtherPort(component["inputPort"]).parent;
-			let comp2Size = this.getComponentSize(comp2);
-			let comp2Width = comp2Size.width;
-			let comp2Height = comp2Size.height;
-			var newLine = document.createElementNS(this.svgns,'line');
-			newLine.setAttribute('x1', (comp1.options.X - offsetX - 12).toString());
-			newLine.setAttribute('y1', (comp1.options.Y - offsetY + height/2).toString());
-			newLine.setAttribute('x2', (comp2.options.X - offsetX + comp2Width + 12).toString());
-			newLine.setAttribute('y2', (comp2.options.Y - offsetY + comp2Height/2).toString());
+			var newLine = document.createElementNS(this.svgns,'path');
+			let line = 'M'+(connection.lineBreaks[0].x-offsetX) + ' ' + (connection.lineBreaks[0].y-offsetY)
+			+ connection.lineBreaks.map(b => [b.x-offsetX,b.y-offsetY]).map(b => ' L'+b.toString().replace(/,/g, " ")).toString().replace(/,/g, " ");
+			newLine.setAttribute("d", line);
 			newLine.setAttribute("stroke", "#df9300");
+			newLine.setAttribute("fill", "transparent");
 			newLine.setAttribute("stroke-width", "2");
 			newLine.setAttribute("stroke-linecap", "round");
 			newLine.setAttribute("stroke-dasharray", "3");

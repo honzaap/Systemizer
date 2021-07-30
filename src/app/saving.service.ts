@@ -123,6 +123,7 @@ export class SavingService {
 						let connectedCompoent = connection.getOtherPort(inputPort).parent;
 						jsonReadyConnection.to = connectedCompoent.originID.slice(0, 6);
 						jsonReadyComponent.connections.push(jsonReadyConnection);
+						jsonReadyConnection.lineBreaks = connection.lineBreaks;
 					}
 				}
 				jsonReadyComponents.push(jsonReadyComponent);
@@ -175,8 +176,10 @@ export class SavingService {
 		}
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				if(outputsTable[con.to])
-					connection.component.connectTo(outputsTable[con.to], false, true);
+				if(outputsTable[con.to]){
+					let logicConnection = connection.component.connectTo(outputsTable[con.to], false, true);
+					logicConnection.lineBreaks = con.lineBreaks;
+				}
 			});
 		}
 		return components;
@@ -214,7 +217,8 @@ export class SavingService {
 				optimizedConnections.push(
 					[ 
 						connection.from.slice(0, 5),
-						connection.to.slice(0, 5)
+						connection.to.slice(0, 5),
+						connection.lineBreaks
 					]
 				)
 			}
@@ -243,12 +247,14 @@ export class SavingService {
 			let normalConnections = []
 			if(component.c != null){
 				for(let connection of component.c){ 
-					normalConnections.push(
+					let normalConnection: any =
 						{
 							from: connection[0],
-							to: connection[1]
+							to: connection[1],
 						}
-					)
+					if(connection.length > 2)
+						normalConnection.lineBreaks = connection[2]
+					normalConnections.push(normalConnection);
 				}
 			}
 			component.connections = normalConnections;

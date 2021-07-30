@@ -644,7 +644,7 @@ export class BoardComponent implements AfterViewChecked  {
 	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				this.placingService.connectPorts(connection.port, outputPortsTable[con.to], this.isReadOnly);
+				this.placingService.connectPorts(connection.port, outputPortsTable[con.to], this.isReadOnly, con.lineBreaks);
 			});
 		}
 		setTimeout(()=>{
