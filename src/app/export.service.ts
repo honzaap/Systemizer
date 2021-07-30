@@ -149,13 +149,22 @@ export class ExportService {
 			let comp2Size = this.getComponentSize(comp2);
 			let comp2Width = comp2Size.width;
 			let comp2Height = comp2Size.height;
-			ctx.beginPath();
-			ctx.moveTo(connection.lineBreaks[0].x - offsetX, connection.lineBreaks[0].y - offsetY);
-			for(let lineBreak of connection.lineBreaks){
-				ctx.lineTo(lineBreak.x - offsetX, lineBreak.y - offsetY);
+			if(connection.lineBreaks.length == 0){
+				ctx.beginPath();
+				ctx.moveTo(component.options.X - offsetX - 12, component.options.Y - offsetY + height/2);
+				ctx.lineTo(comp2.options.X - offsetX + comp2Width + 12, comp2.options.Y - offsetY + comp2Height/2);
 				ctx.stroke()
+				ctx.closePath() 
 			}
-			ctx.closePath() 
+			else{
+				ctx.beginPath();
+				ctx.moveTo(connection.lineBreaks[0].x - offsetX, connection.lineBreaks[0].y - offsetY);
+				for(let lineBreak of connection.lineBreaks){
+					ctx.lineTo(lineBreak.x - offsetX, lineBreak.y - offsetY);
+					ctx.stroke()
+				}
+				ctx.closePath() 
+			}
 		}
 	}
 
