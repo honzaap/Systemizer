@@ -17,7 +17,6 @@ interface ChangeSelectionEvent {}
   	providedIn: 'root'
 })
 export class SelectionService {
-
 	@Output() onStopSelecting = new EventEmitter<StopSelectingEvent>();
 
 	prevX: number;
@@ -26,6 +25,7 @@ export class SelectionService {
 	currentConnectionSelection: ConnectionComponent;
 	currentLineBreakSelection: LineBreak;
 	currentLineBreakList: LineBreak[];
+	currentConnectionSelections: ConnectionComponent[] = [];
 	currentSelections: OperatorComponent[] = [];
 
 	selectionRect: HTMLDivElement;
@@ -49,6 +49,53 @@ export class SelectionService {
 			if(multiple){ // Add to current multiple selections
 				selection.anchorRef.nativeElement.classList.add("is-current-selection")
 				this.currentSelections.push(selection);
+				// Look if the component is connected to already selected component
+				let selectionOutputPort = selection.getLogicComponent().getPort(true);
+				let selectionInputPort = selection.getLogicComponent().getPort(false);
+				for(let component of this.currentSelections){
+					let logicComponent = component.getLogicComponent();
+					let outputPort = logicComponent.getPort(true);
+					let inputPort = logicComponent.getPort(false);
+					if(outputPort){
+						if(selectionInputPort){
+							let logicConnection = outputPort.connections.find(connection =>
+								connection.getOtherPort(outputPort) === selectionInputPort	
+							)
+							if(logicConnection != null){
+								let comp = selection.getPortComponent(false).getConnectionComponent(logicConnection);
+								if(comp)
+									this.currentConnectionSelections.push(comp);
+								else{
+									setTimeout(()=>{
+										comp = selection.getPortComponent(false).getConnectionComponent(logicConnection);
+										if(comp)
+											this.currentConnectionSelections.push(comp);
+									}, 50);
+								}
+							}
+						}
+					}
+					if(inputPort){
+						if(selectionOutputPort){
+							let logicConnection = inputPort.connections.find(connection =>
+								connection.getOtherPort(inputPort) === selectionOutputPort	
+							)
+							if(logicConnection != null){
+								let comp = selection.getPortComponent(true).getConnectionComponent(logicConnection);
+								if(comp)
+									this.currentConnectionSelections.push(comp);
+								else{
+									setTimeout(()=>{
+										comp = selection.getPortComponent(true).getConnectionComponent(logicConnection);
+										if(comp)
+											this.currentConnectionSelections.push(comp);
+									}, 50);
+								}
+							}
+						}
+					}
+				}
+				
 			}
 			else{ // Set as currently selected
 				for(let oldSelection of this.currentSelections){
@@ -56,10 +103,12 @@ export class SelectionService {
 				}
 				selection.anchorRef.nativeElement.classList.add("is-current-selection")
 				this.currentSelections = [selection];
+				this.clearCurrentConnectionSelections();
 			}
 		}
 		this.clearConnectionSelection();
 		this.clearLineBreakSelection();
+		
 		this.fireChangeSelection({});
 	}
 
@@ -81,6 +130,7 @@ export class SelectionService {
 			this.currentConnectionSelection = selection;
 			this.clearSelection();
 			this.clearLineBreakSelection();
+			this.clearCurrentConnectionSelections();
 			this.fireChangeSelection({});
 		}
 	}
@@ -112,6 +162,10 @@ export class SelectionService {
 		}  
 	}
 
+	clearCurrentConnectionSelections(){
+		this.currentConnectionSelections = [];
+	}
+
 	/**
 	 * Returns true if something was deleted, false otherwise
 	 */
@@ -134,6 +188,7 @@ export class SelectionService {
 		}
 		this.clearSelection();
 		this.clearLineBreakSelection();
+		this.clearCurrentConnectionSelections();
 		this.clearConnectionSelection();
 		return true;
 	}
@@ -141,6 +196,7 @@ export class SelectionService {
 	startSelecting(e: MouseEvent, scale: number){
 		this.clearConnectionSelection();
 		this.clearLineBreakSelection();
+		this.clearCurrentConnectionSelections();
 		this.clearSelection();
 		let board = document.getElementById("board");
 		let rect = document.createElement("div");
@@ -211,8 +267,29 @@ export class SelectionService {
 			);
 			
 		}
+		for(let connection of this.currentConnectionSelections){
+			if(connection.LogicConnection.lineBreaks.length > 2){
+				connection.LogicConnection.lineBreaks.filter((c ,i) => {
+					return i!==0 && i < connection.LogicConnection.lineBreaks.length-1;
+				}).forEach(br => {
+					let lineBreak = this.convertLineBreak(
+						{x: br.x - (this.prevX - event.clientX) / scale,
+						y: br.y - (this.prevY - event.clientY) / scale})
+					br.x = lineBreak.x;
+					br.y = lineBreak.y;
+				})
+			}
+		}
 		this.prevX = this.convertScaledPosition(event.clientX, scale);
 		this.prevY = this.convertScaledPosition(event.clientY, scale);
+	}
+
+	moveSelectedConnections(event: MouseEvent, boardScale: number) {
+		
+	}
+
+	private convertLineBreak(lineBreak: LineBreak){
+		return {x: Math.round(lineBreak.x / 10) * 10, y: Math.round(lineBreak.y / 10) * 10};
 	}
 
 	private convertScaledPosition(number, scale: number){

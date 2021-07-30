@@ -6,6 +6,7 @@ import { Technology } from 'src/models/enums/Technology';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Port } from 'src/models/Port';
 import { TextField } from 'src/models/TextField';
+import { createRoundedCanvasPath, createRoundedPath } from 'src/shared/ExtensionMethods';
 import { PlacingService } from './placing.service';
 import { SavingService } from './saving.service';
 
@@ -73,7 +74,8 @@ export class ExportService {
 				let img = new Image();
 				await new Promise(r => {img.onload=r ; img.src=`./assets/${this.savingService.getComponentType(component).toLowerCase()}.svg`});
 				ctx.drawImage(img, component.options.X - offsetX + width/2 - 20 + 7, component.options.Y - offsetY + height/2 - 20 + 7, 26, 26);
-				this.renderComponentTitleToCanvas(ctx, component, options.transparentBackground ? options.lightTitles : !options.lightMode, offsetX, offsetY);
+				if(options.showTitles)
+					this.renderComponentTitleToCanvas(ctx, component, options.transparentBackground ? options.lightTitles : !options.lightMode, offsetX, offsetY);
 			}
 
 			ctx.fillStyle = options.lightMode ? "#fff" : "#080a1a"
@@ -149,7 +151,7 @@ export class ExportService {
 			let comp2Size = this.getComponentSize(comp2);
 			let comp2Width = comp2Size.width;
 			let comp2Height = comp2Size.height;
-			if(connection.lineBreaks.length == 0){
+			if(connection.lineBreaks == null || connection.lineBreaks.length == 0){
 				ctx.beginPath();
 				ctx.moveTo(component.options.X - offsetX - 12, component.options.Y - offsetY + height/2);
 				ctx.lineTo(comp2.options.X - offsetX + comp2Width + 12, comp2.options.Y - offsetY + comp2Height/2);
@@ -157,13 +159,7 @@ export class ExportService {
 				ctx.closePath() 
 			}
 			else{
-				ctx.beginPath();
-				ctx.moveTo(connection.lineBreaks[0].x - offsetX, connection.lineBreaks[0].y - offsetY);
-				for(let lineBreak of connection.lineBreaks){
-					ctx.lineTo(lineBreak.x - offsetX, lineBreak.y - offsetY);
-					ctx.stroke()
-				}
-				ctx.closePath() 
+				createRoundedCanvasPath(ctx, connection.lineBreaks.map(br => {return {x: br.x - offsetX, y: br.y - offsetY}}), 10);
 			}
 		}
 	}
@@ -312,7 +308,8 @@ export class ExportService {
 				img.setAttributeNS(null, 'visibility', 'visible');
 				
 				svg.appendChild(img);
-				this.renderComponentTitleToSvg(svg, component, options.lightTitles, offsetX, offsetY);
+				if(options.showTitles)
+					this.renderComponentTitleToSvg(svg, component, options.lightTitles, offsetX, offsetY);
 			}
 
 			if(component["inputPort"]){ 
@@ -367,8 +364,7 @@ export class ExportService {
 		// Render connections
 		for(let connection of (component["inputPort"] as Port).connections){
 			var newLine = document.createElementNS(this.svgns,'path');
-			let line = 'M'+(connection.lineBreaks[0].x-offsetX) + ' ' + (connection.lineBreaks[0].y-offsetY)
-			+ connection.lineBreaks.map(b => [b.x-offsetX,b.y-offsetY]).map(b => ' L'+b.toString().replace(/,/g, " ")).toString().replace(/,/g, " ");
+			let line = createRoundedPath(connection.lineBreaks.map(br => {return {x: br.x - offsetX, y: br.y - offsetY}}), 10, false);
 			newLine.setAttribute("d", line);
 			newLine.setAttribute("stroke", "#df9300");
 			newLine.setAttribute("fill", "transparent");

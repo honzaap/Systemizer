@@ -33,7 +33,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     }
 
     async receiveData(data: RequestData) {
-        //console.log("Message Queue got data: ",data);
         if(data.requestId == "" || data.requestId == null )
             throw new Error("requestId can not be null. Please specify property requestId of RequestData");
 

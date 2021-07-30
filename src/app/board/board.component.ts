@@ -130,6 +130,7 @@ export class BoardComponent implements AfterViewChecked  {
 			this.selectionService.onStopSelecting.subscribe((e) => {
 				for(let component of this.allComponents){
 					let logicComponent = component.getLogicComponent();
+
 					let size = this.exportService.getComponentSize(logicComponent);
 					let pos = {top: logicComponent.options.Y, left: logicComponent.options.X};
 					if(pos.top >= e.top && pos.left >= e.left && pos.left + size.width < e.left + e.width && pos.top + size.height < e.top + e.height){
@@ -174,7 +175,8 @@ export class BoardComponent implements AfterViewChecked  {
 					outputPort.LogicPort.connections.map(conn => {
 						return {
 							from: outputPort.LogicParent.originID,
-							to: conn.getOtherPort(outputPort.LogicPort).parent.originID
+							to: conn.getOtherPort(outputPort.LogicPort).parent.originID,
+							lineBreaks: conn.lineBreaks
 						};
 					})
 				);
@@ -191,6 +193,7 @@ export class BoardComponent implements AfterViewChecked  {
 
 	pasteItem(){
 		this.selectionService.clearSelection();
+		this.selectionService.clearCurrentConnectionSelections();
 		for(let component of this.placingService.pasteItem()){
 			this.pushComponent(component);
 			component.onViewInit.push(()=>{
@@ -374,6 +377,8 @@ export class BoardComponent implements AfterViewChecked  {
 	public handleSelfClick(event: Event){
 		this.selectionService.clearSelection();
 		this.selectionService.clearConnectionSelection();
+		this.selectionService.clearCurrentConnectionSelections();
+		this.selectionService.clearLineBreakSelection();
 	}
 
 	zoomOut(){
@@ -644,7 +649,7 @@ export class BoardComponent implements AfterViewChecked  {
 	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				this.placingService.connectPorts(connection.port, outputPortsTable[con.to], this.isReadOnly, con.lineBreaks);
+				this.placingService.connectPorts(outputPortsTable[con.to], connection.port, this.isReadOnly, con.lineBreaks);
 			});
 		}
 		setTimeout(()=>{

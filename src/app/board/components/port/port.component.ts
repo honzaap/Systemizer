@@ -1,7 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
+import { Connection } from 'src/models/Connection';
 import { Port } from 'src/models/Port';
+import { ConnectionComponent } from '../connection/connection.component';
 
 @Component({
 	selector: 'port',
@@ -13,6 +15,7 @@ export class PortComponent implements OnInit {
 	@Input() IsOutput : boolean;
 	public LogicPort : Port;
 	@ViewChild('port') public port : ElementRef<HTMLDivElement>;
+	connectionComponents: ConnectionComponent[] = [];
 	board : HTMLElement;
 	line : SVGPathElement;
 	svgCanvas: HTMLElement;
@@ -32,6 +35,26 @@ export class PortComponent implements OnInit {
 		this.board = document.getElementById("board");
 		this.svgCanvas = document.getElementById("svg-canvas");
   	}  
+
+	removeConnection(connection: ConnectionComponent){
+		let index = this.connectionComponents.findIndex(con => con === connection);
+		if(index !== -1){
+			this.connectionComponents.splice(index, 1);
+		}
+	}
+	
+	addConnection(connection: ConnectionComponent){
+		let index = this.connectionComponents.findIndex(con => con === connection);
+		if(index === -1){
+			this.connectionComponents.push(connection);
+		}
+	}
+
+	getConnectionComponent(logicConnection: Connection){
+		return this.connectionComponents.find(
+			connection => connection.LogicConnection === logicConnection
+		);
+	}
 
 	autoAttach(){
 		if(this.placingService.isConnecting){
@@ -93,13 +116,17 @@ export class PortComponent implements OnInit {
 	}
 	
 	public handleMouseUp(event: MouseEvent){
-		console.log("mouseup")
 		if(this.placingService.isConnecting){
-			console.log("is connecting")
 			if(this !== this.placingService.connectingPort)
-				if(this.placingService.connectPorts(this,this.placingService.connectingPort))
-					this.placingService.componentChanged.emit();
-		}
+				if(this.IsOutput){
+					if(this.placingService.connectPorts(this,this.placingService.connectingPort))
+						this.placingService.componentChanged.emit();
+				}
+				else{
+					if(this.placingService.connectPorts(this.placingService.connectingPort, this))
+						this.placingService.componentChanged.emit();
+				}
+			}
 	}
 
 	destroySelf = () => {}

@@ -101,6 +101,7 @@ export class OperatorComponent {
 		this.selectionService.prevY = event.clientY;
 
 		this.board.addEventListener( "mousemove", this.handleMousemove );
+		this.selectionService.moveSelectedConnections(event, this.placingService.boardScale); // Move connections
 		window.addEventListener( "mouseup", this.handleMouseup );
 	}
 

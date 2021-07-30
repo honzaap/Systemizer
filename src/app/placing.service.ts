@@ -111,13 +111,15 @@ export class PlacingService{
 				if(conn.from === item.logicComponent.originID){
 					return {
 						from: component.getLogicComponent().originID,
-						to: conn.to
+						to: conn.to,
+						lineBreaks: conn.lineBreaks
 					}
 				}
 				else if(conn.to === item.logicComponent.originID){
 					return {
 						from: conn.from,
-						to: component.getLogicComponent().originID
+						to: component.getLogicComponent().originID,
+						lineBreaks: conn.lineBreaks
 					}
 				}
 				return conn;
@@ -135,13 +137,15 @@ export class PlacingService{
 				comp1.onViewInit.push(()=> {
 					comp1Initiated = true;
 					if(comp2Initiated){
-						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false));
+						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
+						false, connection.lineBreaks.map(br => {return {x: Math.min(br.x+40, this.boardWidth),y: Math.min(br.y+40, this.boardHeight) }}));
 					}
 				})
 				comp2.onViewInit.push(()=> {
 					comp2Initiated = true;
 					if(comp1Initiated){
-						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false));
+						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
+						false, connection.lineBreaks.map(br => {return {x: Math.min(br.x+40, this.boardWidth),y: Math.min(br.y+40, this.boardHeight) }}));
 					}
 				})
 			}
@@ -169,7 +173,6 @@ export class PlacingService{
 		c.instance.portComponent1 = portComponent1;
 		c.instance.portComponent2 = portComponent2;
 
-		console.log("return true")
 		return true
 	}
 

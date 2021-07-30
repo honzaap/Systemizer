@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SelectionService } from 'src/app/selection.service';
 import { Connection, LineBreak } from 'src/models/Connection';
+import { createRoundedPath } from 'src/shared/ExtensionMethods';
 import { PortComponent } from '../port/port.component';
 
 @Component({
@@ -34,21 +35,17 @@ export class ConnectionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if(this.LogicConnection.lineBreaks == null || this.LogicConnection.lineBreaks.length === 0){
-			this.LogicConnection.lineBreaks = [
-				new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2),(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)),
-				new LineBreak((this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2),(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2))
-			]
-		}
 		this.portComponent1.LogicPort.onRemoveConnection((conn) => {
 			if(conn === this.LogicConnection){
 				this.destroyComponent();
+				this.portComponent1.removeConnection(this);
 			}
 		});
 
 		this.portComponent2.LogicPort.onRemoveConnection((conn) => {
 			if(conn === this.LogicConnection){
 				this.destroyComponent();
+				this.portComponent2.removeConnection(this);
 			}    
 		});
 
@@ -97,6 +94,17 @@ export class ConnectionComponent implements OnInit {
 		this.selectionService.setConnectionSelection(this);
 	}
 
+	ngAfterViewInit(){
+		this.portComponent1.addConnection(this);
+		this.portComponent2.addConnection(this);
+		if(this.LogicConnection.lineBreaks == null || this.LogicConnection.lineBreaks.length === 0){
+			this.LogicConnection.lineBreaks = [
+				new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2),(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)),
+				new LineBreak((this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2),(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2))
+			]
+		}
+	}
+
 	destroySelf = () => {
 		this.LogicConnection.destroy();
 		this.destroyComponent();
@@ -106,13 +114,13 @@ export class ConnectionComponent implements OnInit {
 
 	ngAfterViewChecked(){
 		this.cdRef.detectChanges();
-		this.LogicConnection.lineBreaks[0] = 
-			new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2),(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)),
-		this.LogicConnection.lineBreaks[this.LogicConnection.lineBreaks.length-1] =
-			new LineBreak((this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2),(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2))
-		
-		this.line = 'M'+this.LogicConnection.lineBreaks[0].x + ' ' + this.LogicConnection.lineBreaks[0].y
-		+ this.LogicConnection.lineBreaks.map(b => [b.x,b.y]).map(b => ' L'+b.toString().replace(/,/g, " ")).toString().replace(/,/g, " ");
+		if(this.portComponent1.port && this.portComponent2.port){
+			this.LogicConnection.lineBreaks[0] = 
+				new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2),(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)),
+			this.LogicConnection.lineBreaks[this.LogicConnection.lineBreaks.length-1] =
+				new LineBreak((this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2),(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2))
+			this.line = createRoundedPath(this.LogicConnection.lineBreaks, 10, false);
+		}
 	}
 
 	breakLine(previous: LineBreak, next: LineBreak, event: MouseEvent){
@@ -128,7 +136,8 @@ export class ConnectionComponent implements OnInit {
 	}
 
 	moveLine(line: LineBreak, event: MouseEvent){
-		this.selectionService.setLineBreakSelection(line, this.LogicConnection.lineBreaks);
+		if(this.selectionService.currentConnectionSelections.length === 0)
+			this.selectionService.setLineBreakSelection(line, this.LogicConnection.lineBreaks);
 		let index = this.LogicConnection.lineBreaks.findIndex(br => br.x === line.x && br.y === line.y);
 		let prev = this.LogicConnection.lineBreaks[index-1];
 		let next = this.LogicConnection.lineBreaks[index+1];
@@ -141,22 +150,6 @@ export class ConnectionComponent implements OnInit {
 		board.onmousemove = (e: MouseEvent) => {
 			this.lineCurrX = this.lineCurrX - (this.linePrevX - e.clientX) / this.portComponent1.placingService.boardScale;
 			this.lineCurrY = this.lineCurrY - (this.linePrevY - e.clientY) / this.portComponent1.placingService.boardScale;
-
-			// Snapping to next line break
-			let deltaXNext = this.lineCurrX - next.x;
-			let deltaYNext = this.lineCurrY - next.y;
-			let angleNext = Math.atan2(deltaYNext, deltaXNext) * (180/Math.PI); 
-
-			let degreesLeftNext = Math.min(Math.abs(angleNext) - 90, Math.abs(angleNext) - 180) % 90;
-			degreesLeftNext = Math.min(Math.abs(degreesLeftNext), 90 - Math.abs(degreesLeftNext))
-
-			// Snapping to previous line break
-			let deltaXPrev = prev.x - this.lineCurrX;
-			let deltaYPrev = prev.y - this.lineCurrY;
-			let anglePrev = Math.atan2(deltaYPrev, deltaXPrev) * (180/Math.PI); 
-
-			let degreesLeftPrev = Math.min(Math.abs(anglePrev) - 90, Math.abs(anglePrev) - 180) % 90;
-			degreesLeftPrev = Math.min(Math.abs(degreesLeftPrev), 90 - Math.abs(degreesLeftPrev))
 
 			let moveX = true;
 			let moveY = true;

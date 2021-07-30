@@ -82,10 +82,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 			endpoint.url = `api/v${Math.floor(10*Math.random())}`;
 	}
 
-	test(){
-		console.log("changed");
-	}
-
 	public handleClick(event: MouseEvent){
 		super.handleClick(event);
 		this.updateSelection();
