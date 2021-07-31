@@ -15,6 +15,7 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
     options: ClientClusterOptions;
     streamingConnections: StreamingConnection[] = [];
     isSendingData: boolean;
+    color = "#2ebf91";
 
     constructor() {
         super();

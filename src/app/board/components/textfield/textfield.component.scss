@@ -22,7 +22,7 @@
         min-height: 20px;
         outline: none;
         border: 2px solid rgba(0,0,0,0.2);
-        background-color: var(--bg-main-light);
+        background-color: var(--background);
         color: #fff;
         padding: 0.2em;
         cursor: move;
@@ -41,7 +41,7 @@
             transition: transform 0.1s ease-out;
         }
         &:hover{
-            background-color: var(--bg-main-dark);
+            background-color: var(--background-light);
             &::placeholder{
                 transform: translateX(10px);
             }
@@ -66,27 +66,12 @@
         margin: 0;
     }
 }
-.options-endpoint{
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-    gap: 0.3em;
-    margin-top: 0.3em;
-    & .endpoint-url{
-        flex-grow: 1;
-        flex-shrink: 1;
-    }
-    & .endpoint-method{
-        flex-basis: 30%;
-        flex-shrink: 0;
-    }
-}
 .endpoint-protocol{
     flex-grow: 1;
     text-align: right;
     & span{
         font-size: 0.55rem;
-        color: var(--main-light);
+        color: var(--main);
     }
 }
 .actions-container{

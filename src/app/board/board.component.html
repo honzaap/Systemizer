@@ -1,5 +1,4 @@
 <div #board class="board infocus" id="board" oncontextmenu="return false;" (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick($event)" (click)="handleClick($event)">
-    <h1 class="board-bg-title">Systemizer</h1>
     <template #conn></template>
     <svg class="svg-canvas" id="svg-canvas" >
     </svg>
@@ -36,7 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="saved-boards-popup" [style.transform]="showSavedBoardsPopup ? 'translateX(0)' : 'translateX(calc(100% - 2em))' ">
+    <div class="saved-boards-popup" [style.transform]="showSavedBoardsPopup ? 'translateX(0)' : 'translateX(calc(100% - 2.15em))' ">
         <span class="hidden">{{ savedBoards.length }}</span>
         <div class="show" >
             <span class="text">You have {{ savedBoards.length }} saved system<span *ngIf="savedBoards.length != 1">s</span></span>

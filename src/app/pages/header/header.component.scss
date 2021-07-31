@@ -1,12 +1,12 @@
 header{
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
     padding: 1.35em;
     font-size: 0.9rem;
     & .nav-title{
-        color: var(--main-light);
+        color: var(--main);
         font-size: 1.5rem;
         font-weight: 600;
         height: 4.5em;
@@ -30,7 +30,7 @@ header{
     position: relative;
     border: 0;
     border-radius: 1em;
-    background-color: var(--text-main-light);
+    background-color: rgba(#000, 0.5);
     display: flex;
     align-items: center;
     width: 1.5em;
@@ -52,6 +52,26 @@ header{
         width: 4.75em;
     }
 }
+
+.mode-switch{
+    display: flex;
+    align-items: center;
+    width: 3em;
+    font-size: 1.1rem;
+    background-color: var(--main);
+    filter: saturate(0.3);
+    color: #fff;
+    border-radius: 1em;
+    padding: 0.1em;
+    padding-left: 1.8em;
+    transition: padding 0.2s ease-in-out;
+    &.dark{
+        filter: none;
+        padding-left: 0.1em;
+    }
+}
+
+
 
 @media (max-width: 560px){
     header{

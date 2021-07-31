@@ -209,6 +209,16 @@ export class OperatorComponent {
 		this.board = document.getElementById("board");
 		this.comp = this.anchorRef.nativeElement;
 		this.comp.classList.add("component");
+		if(this.LogicComponent.fillColor){
+			this.comp.style.backgroundColor = this.LogicComponent.color;
+		}
+		else{
+			this.comp.classList.add("bordered")
+			Array.from(this.comp.getElementsByClassName("img")).forEach(el => {
+				(el as HTMLElement).style.backgroundColor = this.LogicComponent.color;
+			});
+			this.comp.style.border = "2px solid " + this.LogicComponent.color;
+		}
 		if(this.isReadOnly)
 			this.comp.classList.add("read-only")
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
@@ -287,5 +297,9 @@ export class OperatorComponent {
 	afterChange(){
 		this.hasChanged.emit();
 		this.beforeOptions = clone(this.LogicComponent.options);
+	}
+
+	static getColor(): string{
+		return "6059DF";
 	}
 }

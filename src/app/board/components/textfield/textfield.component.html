@@ -8,7 +8,7 @@
     <template #conn></template>
     <textarea [class.bold]="LogicTextField.options.isBold" [class.italic]="LogicTextField.options.isItalic" 
     [style.font-size]="LogicTextField.options.fontSize + 'px'" spellcheck="false" 
-    [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img img-container"
+    [(ngModel)]="LogicTextField.options.title" maxlength="250" #field class="img-container"
     [style.width]="LogicTextField.options.width+'px'" [style.height]="LogicTextField.options.height+'px'"
     [style.backgroundColor]="LogicTextField.options.backgroundColor" [style.color]="LogicTextField.options.color" 
     (resize)="resize($event)"></textarea>

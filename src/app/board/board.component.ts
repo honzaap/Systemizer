@@ -243,7 +243,6 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 		else{
 			this.resetView();
-			this.viewingService.setTitlesHidden(false, false);
 		}
 	}
 

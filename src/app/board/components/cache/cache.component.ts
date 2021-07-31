@@ -38,4 +38,9 @@ export class CacheComponent extends OperatorComponent implements OnInit {
     public getLogicComponent(){
         return this.LogicCache;
     }
+
+    static getColor(): string{
+		let c = new Cache();
+		return c.color;
+	}
 }

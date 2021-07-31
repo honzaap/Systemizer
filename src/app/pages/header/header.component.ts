@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ViewingService } from 'src/app/viewing.service';
 
 @Component({
   selector: 'pages-header',
@@ -7,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PagesHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(public viewingService: ViewingService) { }
 
   ngOnInit(): void {
   }
-
 }

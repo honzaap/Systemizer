@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ViewingService } from './viewing.service';
 
 @Component({
 	selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   	title = 'Systemizer';
+	constructor(private viewingService: ViewingService){
+		if(viewingService.isDarkMode())
+			document.documentElement.classList.add("dark-mode");
+	}
 }

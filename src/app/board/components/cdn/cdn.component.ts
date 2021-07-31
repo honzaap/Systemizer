@@ -35,4 +35,9 @@ export class CDNComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicCDN;
 	}
+
+	static getColor(): string{
+		let c = new CDN();
+		return c.color;
+	}
 }

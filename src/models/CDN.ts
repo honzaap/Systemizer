@@ -11,6 +11,7 @@ export class CDN extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     options: CDNOptions;
     connectionTable: { [id:string]: Connection } = {};
+    color = "#EB5757";
 
     constructor() {
         super();

@@ -19,6 +19,7 @@ export class Database extends EndpointOperator implements IDataOperator{
     outputPort: Port
     options: DatabaseOptions;
     connectionTable: {[id:string]:Connection} = {};
+    color = "#E94057";
 
     constructor() {
         super();

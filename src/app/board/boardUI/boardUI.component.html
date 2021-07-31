@@ -82,6 +82,12 @@
                     View
                 </button>
                 <mat-menu #viewMenu="matMenu">
+                    <button mat-menu-item (click)="viewingService.setDarkMode(!viewingService.isDarkMode())">
+                        <span *ngIf="viewingService.isDarkMode(); else lightMode">Light mode</span>
+                        <ng-template #lightMode>
+                            <span>Dark mode</span>
+                        </ng-template>
+                    </button>
                     <button mat-menu-item (click)="fullscreen.emit()">
                         <span>Go fullscreen</span>
                     </button>
@@ -222,8 +228,8 @@
             <input [disabled]="!exportPngOptions.transparentBackground || !exportPngOptions.showTitles" type="checkbox" [(ngModel)]="exportPngOptions.lightTitles">
         </label>
         <div class="buttons-bottom">
-            <button class="btn-preview" (click)="openPreview()">Preview</button>
             <button class="btn-cancel" (click)="closeExportPngDialog()">Cancel</button>
+            <button class="btn-preview" (click)="openPreview()">Preview</button>
             <button class="btn-confirm" (click)="exportAsPng()">Download</button>
         </div>
     </div>
@@ -240,16 +246,12 @@
             <input type="checkbox" [(ngModel)]="exportSvgOptions.showTechnologies">
         </label>
         <label>
-            <span>Light mode: </span>
-            <input type="checkbox" [(ngModel)]="exportSvgOptions.lightMode">
-        </label>
-        <label>
             <span>Light color titles: </span>
             <input [disabled]="!exportSvgOptions.showTitles" type="checkbox" [(ngModel)]="exportSvgOptions.lightTitles">
         </label>
         <div class="buttons-bottom">
-            <button class="btn-preview" (click)="openPreview(false)">Preview</button>
             <button class="btn-cancel" (click)="closeExportSvgDialog()">Cancel</button>
+            <button class="btn-preview" (click)="openPreview(false)">Preview</button>
             <button class="btn-confirm" (click)="exportAsSvg()">Download</button>
         </div>
     </div>
@@ -260,19 +262,30 @@
     </div>
 </div>
 <div class="backdrop-centralized saving" *ngIf="isSavingOpen" (click.self)="isSavingOpen = false">
-    <div class="saving-inner">
+    <div class="saving-inner confirm-dialog">
         <div class="name">
             <label>File name</label>
             <input spellcheck="false" required [(ngModel)]="saveFileName" placeholder="File name">
         </div>
-        <button class="btn-main" (click)="saveFile.emit(saveFileName)">Download</button>
         <button class="close" (click)="isSavingOpen = false">×</button>
+        <div class="buttons-bottom">
+            <button class="btn-cancel" (click)="isSavingOpen = false">Close</button>
+            <button class="btn-confirm" (click)="saveFile.emit(saveFileName)">Download</button>
+        </div>
     </div>
 </div>
 <div class="backdrop-centralized embed" *ngIf="isEmbedIFrameOpen" (click.self)="closeEmbedIFrame()">
     <div class="confirm-dialog embed-inner">
         <h5>Embed as IFrame</h5>
         <p>An IFrame HTML tag will be generated. Copy & paste it into your HTML template to display your system in read-only format.</p>
+        <label>
+            <span>Show component titles by default: </span>
+            <input (change)="changeEmbedIFrameOptions()" type="checkbox" [(ngModel)]="embedIFrameOptions.showTitles">
+        </label>
+        <label>
+            <span>Dark mode: </span>
+            <input (change)="changeEmbedIFrameOptions()" type="checkbox" [(ngModel)]="embedIFrameOptions.darkMode">
+        </label>
         <textarea *ngIf="!showEmbedError; else iframeEmbedError" id="embedIframeText" readonly [textContent]="embedIFrameTemplate"></textarea>
         <ng-template #iframeEmbedError>
             <p class="error">You can only embed a system with 2 or more components!</p>

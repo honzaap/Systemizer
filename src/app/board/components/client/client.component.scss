@@ -21,7 +21,7 @@
     text-align: right;
     & span{
         font-size: 0.55rem;
-        color: var(--main-light);
+        color: var(--main);
     }
 }
 .actions-container{
@@ -51,8 +51,8 @@
         outline: none;
         cursor: pointer;
         transform: translate(-100%, 0);
-        background-color: var(--main-dark);
-        color: #fff;
+        background-color: var(--main);
+        color: var(--text);
         transition: opacity 0.2s ease-in, background-color 0.2s ease-in-out;
         & img{
             width: 100%;
@@ -71,7 +71,7 @@
             position: absolute;
         }
         &:hover{
-            background-color: var(--main-darker);
+            background-color: var(--main);
         }
     }
 }

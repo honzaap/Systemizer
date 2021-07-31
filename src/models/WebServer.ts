@@ -11,6 +11,8 @@ export class WebServer extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     options: WebServerOptions;
     connectionTable: { [id:string]: Connection } = {};
+    fillColor = false;
+    color = "#009FFF";
 
     constructor() {
         super();

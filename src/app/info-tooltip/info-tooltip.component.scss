@@ -5,9 +5,9 @@
 .property-info-button{
     font-size: 0.7rem;
     vertical-align: top;
-    color: var(--main-light);
+    color: var(--main);
     cursor: pointer;
     &:hover{
-        color: var(--main-dark);
+        color: var(--main);
     }
 }

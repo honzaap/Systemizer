@@ -33,4 +33,9 @@ export class ClientclusterComponent extends OperatorComponent implements OnInit 
 	public getLogicComponent(){
 		return this.LogicClientCluster;
 	}
+
+	static getColor(): string{
+		let c = new ClientCluster();
+		return c.color;
+	}
 }

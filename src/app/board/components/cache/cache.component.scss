@@ -1,10 +1,6 @@
 :host{
     position: relative;
 }
-input:disabled{
-    pointer-events: none;
-    filter: brightness(0.45) !important;
-}
 .options-type-container{
     margin-bottom: 1em;
 }

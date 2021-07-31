@@ -16,6 +16,8 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     options: MessageQueueOptions;
     roundRobinIndex = 0;
     isSendingData = false;
+    fillColor = false;
+    color = "#F2994A";
 
     messages: RequestData[] = []
     isConsumable: boolean = true;

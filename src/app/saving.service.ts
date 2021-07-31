@@ -238,8 +238,7 @@ export class SavingService {
 	/**
 	 * Takes in optimized save string that was made by getOptimizedBoardSave method
 	 */
-	getSaveFromOptimizedJson(saveJson: string){
-		let save = JSON.parse(saveJson);
+	getSaveFromOptimizedSave(save: any){
 		for(let component of save){
 			component.type = this.optimizedComponentTypes[component.t]
 			component.options = this.getOptionsFromOptimized(component.o);

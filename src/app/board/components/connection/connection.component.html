@@ -1,5 +1,9 @@
 <svg #svg *ngIf="portComponent1 && portComponent2 && portComponent1.port != null && portComponent2.port != null" [class.read-only]="isReadOnly">
-	<path #mainPath class="main" [attr.d]="line"/>
+	<linearGradient id="linear-{{connectionID}}" x1="0" y1="0" x2="100%" y2="0">
+		<stop offset="0%"   [attr.stop-color]="portComponent1.LogicPort.parent.color"/>
+		<stop offset="100%" [attr.stop-color]="portComponent2.LogicPort.parent.color"/>
+	</linearGradient>
+	<path #mainPath class="main" [attr.d]="line" [attr.stroke]="'url(#linear-' + connectionID + ')'"/>
 	<g class="line-breaks-container" [class.active]="LogicConnection.lineBreaks.includes(selectionService.currentLineBreakSelection)">
 		<path #secondPath class="interactive"(click)="handleClick()" [attr.d]="line"/>
 		<ng-container *ngFor="let break of LogicConnection.lineBreaks; index as i">

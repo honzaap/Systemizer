@@ -42,4 +42,9 @@ export class MessagequeueComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicMessageQueue;
 	}
+
+	static getColor(): string{
+		let c = new MessageQueue();
+		return c.color;
+	}
 }

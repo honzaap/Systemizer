@@ -35,4 +35,9 @@ export class WebserverComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicWebServer;
 	}
+
+	static getColor(): string{
+		let c = new WebServer();
+		return c.color;
+	}
 }

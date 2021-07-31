@@ -9,13 +9,10 @@ svg{
     }
     & path.main{
         fill: transparent;
-        stroke: var(--orange-light);
         stroke-width: 2;
-        stroke-linecap: round;
-        stroke-dasharray: 3;
         pointer-events: none;
         &.is-current-selection{
-            stroke: #ccc91c;
+            stroke: var(--main) !important;
         }
     }
     & path.interactive{
@@ -27,19 +24,19 @@ svg{
     }
     & .break{
         cursor: pointer;
-        fill: var(--main-dark);
+        fill: var(--main);
         pointer-events: all;
         &.is-current-selection{
             display: block !important;
-            fill: var(--main-light);
+            fill: var(--main);
             filter: brightness(1.25);
         }
     }
     & .break-available{
         cursor: pointer;
-        fill: var(--text-main-light);
+        fill: var(--text);
         stroke-width: 2;
-        stroke: var(--bg-main-light);
+        stroke: var(--background);
         pointer-events: all;
     }
     & .line-breaks-container{

@@ -45,4 +45,9 @@ export class LoadbalancerComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicLoadBalancer;
 	}
+
+	static getColor(): string{
+		let c = new LoadBalancer();
+		return c.color;
+	}
 }

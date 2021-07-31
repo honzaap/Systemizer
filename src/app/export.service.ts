@@ -6,7 +6,7 @@ import { Technology } from 'src/models/enums/Technology';
 import { MessageQueue } from 'src/models/MessageQueue';
 import { Port } from 'src/models/Port';
 import { TextField } from 'src/models/TextField';
-import { createRoundedCanvasPath, createRoundedPath } from 'src/shared/ExtensionMethods';
+import { createRoundedCanvasPath, createRoundedPath, UUID } from 'src/shared/ExtensionMethods';
 import { PlacingService } from './placing.service';
 import { SavingService } from './saving.service';
 
@@ -44,14 +44,13 @@ export class ExportService {
 		}
 		let ctx = canvas.getContext("2d");
 		if(!options.transparentBackground){
-			ctx.fillStyle = options.lightMode ? "#fff" : "#141625";
+			ctx.fillStyle = options.lightMode ? "#fff" : "#282A37";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		}
-		let componentBg = options.lightMode ? "#b7b7b7" : "#080a1a";
 		for(let component of components){
 			// Render component
 			ctx.beginPath()
-			ctx.fillStyle = componentBg;
+			ctx.fillStyle = component.color;
 			let {width, height} = this.getComponentSize(component);
 	
 			// Render image
@@ -59,7 +58,6 @@ export class ExportService {
 				ctx.fillStyle = component.options.backgroundColor;
 				ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
 				ctx.lineWidth = 2;
-				ctx.setLineDash([0]);
 				ctx.rect(component.options.X - offsetX, component.options.Y - offsetY, component.options.width, component.options.height);
 				ctx.fill();
 				ctx.stroke();
@@ -77,11 +75,9 @@ export class ExportService {
 				if(options.showTitles)
 					this.renderComponentTitleToCanvas(ctx, component, options.transparentBackground ? options.lightTitles : !options.lightMode, offsetX, offsetY);
 			}
-
-			ctx.fillStyle = options.lightMode ? "#fff" : "#080a1a"
-			ctx.strokeStyle = "#df9300";
+			ctx.fillStyle = options.lightMode ? "#fff" : "#282A37"
+			//ctx.strokeStyle = "#df9300";
 			ctx.lineWidth = 2;
-			ctx.setLineDash([4]);
 			if(component["inputPort"]){ 
 				// Render connections
 				this.renderConnectionsToCanvas(ctx, component, offsetX, offsetY);
@@ -95,6 +91,7 @@ export class ExportService {
 				ctx.drawImage(img, component.options.X - offsetX + width - 10, component.options.Y - offsetY - 10, 20, 20);
 			}
 		}
+		ctx.fillStyle = "#282A37";
 		this.renderPortsToCanvas(ctx, components, offsetX, offsetY);
 		return canvas;
 	}
@@ -123,9 +120,8 @@ export class ExportService {
 	}
 
 	private renderPortsToCanvas(ctx: CanvasRenderingContext2D, components: IDataOperator[], offsetX: number, offsetY: number){
-		ctx.setLineDash([0]);
 		for(let component of components){ // Render ports (render them over connections)
-			ctx.strokeStyle = "#df9300";
+			ctx.strokeStyle = component.color;
 			ctx.lineWidth = 2;
 			let {width, height} = this.getComponentSize(component);
 			if(component["inputPort"] && component["inputPort"].connections.length > 0){ // Render input port
@@ -146,7 +142,13 @@ export class ExportService {
 	private renderConnectionsToCanvas(ctx: CanvasRenderingContext2D, component: IDataOperator, offsetX: number, offsetY: number){
 		for(let connection of (component["inputPort"] as Port).connections){
 			let {width, height} = this.getComponentSize(component);
-			ctx.strokeStyle = "#df9300";
+			let component2 = connection.getOtherPort(component["inputPort"]).parent;
+			let size2 = this.getComponentSize(component2);
+			var grad= ctx.createLinearGradient(component.options.X - offsetX, component.options.Y - offsetY,
+				 component2.options.X - offsetX + size2.width, component2.options.Y - offsetY + size2.height);
+			grad.addColorStop(0, component.color);
+			grad.addColorStop(1, component2.color);
+			ctx.strokeStyle = grad;
 			let comp2 = connection.getOtherPort(component["inputPort"]).parent;
 			let comp2Size = this.getComponentSize(comp2);
 			let comp2Width = comp2Size.width;
@@ -159,7 +161,13 @@ export class ExportService {
 				ctx.closePath() 
 			}
 			else{
-				createRoundedCanvasPath(ctx, connection.lineBreaks.map(br => {return {x: br.x - offsetX, y: br.y - offsetY}}), 10);
+				ctx.beginPath();
+				ctx.moveTo(connection.lineBreaks[0].x, connection.lineBreaks[0].y);
+				ctx.closePath() 
+				for(let lineBreak of connection.lineBreaks){
+					ctx.lineTo(lineBreak.x, lineBreak.y);
+					ctx.stroke()
+				}
 			}
 		}
 	}
@@ -272,7 +280,6 @@ export class ExportService {
 		offsetY = Math.max(0, minY - 40);
 		svg.setAttribute("width", `${Math.min(this.placingService.boardWidth, maxX + 40 - offsetX)}`);
 		svg.setAttribute("height", `${Math.min(this.placingService.boardHeight, maxY + 40 - offsetY)}`);
-		let componentBg = options.lightMode ? "#b7b7b7" : "#080a1a";
 		for(let component of components){
 			let {width, height} = this.getComponentSize(component);
 	
@@ -293,11 +300,11 @@ export class ExportService {
 				let rect = document.createElementNS(this.svgns, 'rect');
 				rect.setAttributeNS(null, 'x', (component.options.X - offsetX).toString());
 				rect.setAttributeNS(null, 'y', (component.options.Y - offsetY).toString());
-				rect.setAttributeNS(null, 'rx', "5");
-				rect.setAttributeNS(null, 'ry', "5");
+				rect.setAttributeNS(null, 'rx', "3");
+				rect.setAttributeNS(null, 'ry', "3");
 				rect.setAttributeNS(null, 'width', width.toString());
 				rect.setAttributeNS(null, 'height', height.toString());
-				rect.setAttributeNS(null, 'fill',  componentBg);
+				rect.setAttributeNS(null, 'fill',  component.color);
 				svg.appendChild(rect);
 				let img = document.createElementNS(this.svgns,'image') as SVGImageElement;
 				img.setAttributeNS(null,'height','26');
@@ -330,11 +337,11 @@ export class ExportService {
 				svg.appendChild(img);
 			}
 		}
-		this.renderPortsToSvg(svg, components, options.lightMode, offsetX, offsetY);
+		this.renderPortsToSvg(svg, components, offsetX, offsetY);
 		return svg;
 	}
 
-	private renderPortsToSvg(svg: SVGElement, components: IDataOperator[], lightMode: boolean, offsetX: number, offsetY: number){
+	private renderPortsToSvg(svg: SVGElement, components: IDataOperator[], offsetX: number, offsetY: number){
 		for(let component of components){ // Render ports (render then over connections)
 			let {width, height} = this.getComponentSize(component);
 			if(component["inputPort"] && component["inputPort"].connections.length > 0){ // Render input port
@@ -342,8 +349,8 @@ export class ExportService {
 				port.setAttribute("cx", (component.options.X - offsetX - 12).toString());
 				port.setAttribute("cy", (component.options.Y - offsetY + height/2).toString());
 				port.setAttribute("r", "7.5");
-				port.setAttribute("fill", lightMode ? "#fff" : "#080a1a");
-				port.setAttribute("stroke", "#df9300");
+				port.setAttribute("fill", "#282A37");
+				port.setAttribute("stroke", component.color);
 				port.setAttribute("stroke-width", "2");
 				svg.appendChild(port);
 			}
@@ -352,8 +359,8 @@ export class ExportService {
 				port.setAttribute("cx", (component.options.X - offsetX + width + 12).toString());
 				port.setAttribute("cy", (component.options.Y - offsetY + height/2).toString());
 				port.setAttribute("r", "7.5");
-				port.setAttribute("fill", lightMode ? "#fff" : "#080a1a");
-				port.setAttribute("stroke", "#df9300");
+				port.setAttribute("fill", "#282A37");
+				port.setAttribute("stroke", component.color);
 				port.setAttribute("stroke-width", "2");
 				svg.appendChild(port);
 			}
@@ -364,13 +371,27 @@ export class ExportService {
 		// Render connections
 		for(let connection of (component["inputPort"] as Port).connections){
 			var newLine = document.createElementNS(this.svgns,'path');
+			let grad = document.createElementNS(this.svgns, "linearGradient");
+			let stop1 = document.createElementNS(this.svgns, "stop");
+			let stop2 = document.createElementNS(this.svgns, "stop");
+			let id = UUID().slice(0, 6);
+			grad.id = id;
+			grad.setAttribute("x1", "0");
+			grad.setAttribute("y1", "0");
+			grad.setAttribute("x2", "100%");
+			grad.setAttribute("y2", "0");
+			stop1.setAttribute("offset", "0%");
+			stop2.setAttribute("offset", "100%");
+			stop1.setAttribute("stop-color", connection.getOtherPort(component["inputPort"]).parent.color);
+			stop2.setAttribute("stop-color", component.color);
 			let line = createRoundedPath(connection.lineBreaks.map(br => {return {x: br.x - offsetX, y: br.y - offsetY}}), 10, false);
 			newLine.setAttribute("d", line);
-			newLine.setAttribute("stroke", "#df9300");
+			newLine.setAttribute("stroke", `url(#${id})`);
 			newLine.setAttribute("fill", "transparent");
 			newLine.setAttribute("stroke-width", "2");
-			newLine.setAttribute("stroke-linecap", "round");
-			newLine.setAttribute("stroke-dasharray", "3");
+			grad.appendChild(stop1);
+			grad.appendChild(stop2);
+			svg.appendChild(grad);
 			svg.appendChild(newLine);
 		}
 	}
@@ -399,6 +420,10 @@ export class ExportPngOptions{
 export class ExportSvgOptions{
 	showTitles: boolean = true;
 	showTechnologies: boolean = true;
-	lightMode: boolean = false;
 	lightTitles: boolean = true;
+}
+
+export class EmbedIFrameOptions{
+	showTitles: boolean = true;
+	darkMode: boolean = false;
 }

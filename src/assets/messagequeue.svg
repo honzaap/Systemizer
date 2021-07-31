@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 20 20"
-   version="1.1"
-   id="svg4"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    sodipodi:docname="messagequeue.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+   id="svg4"
+   version="1.1"
+   viewBox="0 0 20 20">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -26,39 +26,39 @@
   <defs
      id="defs8" />
   <sodipodi:namedview
-     inkscape:document-rotation="0"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     id="namedview6"
-     showgrid="false"
-     inkscape:zoom="30.052038"
-     inkscape:cx="9.2209931"
-     inkscape:cy="10.603075"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:current-layer="svg4"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:cy="7.7758843"
+     inkscape:cx="-3.5380138"
+     inkscape:zoom="15.026019"
+     showgrid="false"
+     id="namedview6"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:document-rotation="0" />
   <path
-     d="M 0.1400005,0.1200005 V 11.999999 H 2.4177737 V 3.4863869 H 14 V 0.1200005 Z"
-     style="fill:#df9300;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill"
-     id="rect864" />
+     id="rect864"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill"
+     d="M 0.1400005,0.1200005 V 11.999999 H 2.4177737 V 3.4863869 H 14 V 0.1200005 Z" />
   <path
-     d="M 3.1400005,4.1200005 V 16 H 5.4177738 V 7.486387 H 17 V 4.1200005 Z"
-     style="fill:#df9300;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill"
-     id="rect864-38" />
+     id="rect864-38"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill"
+     d="M 3.1400005,4.1200005 V 16 H 5.4177738 V 7.486387 H 17 V 4.1200005 Z" />
   <rect
-     y="8.1200008"
-     x="6.1400003"
-     height="11.879999"
-     width="13.859999"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill"
      id="rect864-38-3"
-     style="fill:#df9300;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:markers stroke fill" />
+     width="13.859999"
+     height="11.879999"
+     x="6.1400003"
+     y="8.1200008" />
 </svg>

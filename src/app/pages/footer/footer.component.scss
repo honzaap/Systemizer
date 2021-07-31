@@ -1,9 +1,9 @@
 footer{
     font-size: 0.8rem;
-    background-color: var(--bg-main-darker);
+    background-color: var(--background-dark);
     padding: 8em 1em 1em;
     display: flex;
-    color: #fff;
+    color: var(--text);
     gap: 0.5em;
     clip-path: polygon(0 0, 0% 100%, 40rem 100%);
     & .logo{

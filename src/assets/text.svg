@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 20 20"
-   version="1.1"
-   id="svg4"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    sodipodi:docname="text.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+   id="svg4"
+   version="1.1"
+   viewBox="0 0 20 20">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -26,34 +26,34 @@
   <defs
      id="defs8" />
   <sodipodi:namedview
-     inkscape:document-rotation="0"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     id="namedview6"
-     showgrid="false"
-     inkscape:zoom="21.25"
-     inkscape:cx="11.974752"
-     inkscape:cy="10.083402"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:current-layer="svg4"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:cy="10.083402"
+     inkscape:cx="10.257105"
+     inkscape:zoom="21.25"
+     showgrid="false"
+     id="namedview6"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:document-rotation="0" />
   <text
-     id="text832"
-     y="19.721853"
+     xml:space="preserve"
+     style="font-size:29.3333px;line-height:1.25;font-family:serif;-inkscape-font-specification:serif;fill:#edffff;fill-opacity:1;"
      x="0.8619802"
-     style="font-size:29.3333px;line-height:1.25;font-family:serif;-inkscape-font-specification:serif;fill:#df9300;fill-opacity:1"
-     xml:space="preserve"><tspan
-       y="19.721853"
-       x="0.8619802"
+     y="19.721853"
+     id="text832"><tspan
+       sodipodi:role="line"
        id="tspan830"
-       sodipodi:role="line">T</tspan></text>
+       x="0.8619802"
+       y="19.721853">T</tspan></text>
 </svg>

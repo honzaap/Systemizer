@@ -13,6 +13,8 @@ export class Proxy extends LogicComponent implements IDataOperator{
     connectionTable: {[id:string]:Connection} = {};
     streamConnectionTable: { [id:string]:Connection } = {};
     options: ProxyOptions;
+    fillColor = false;
+    color = "#283c86";
 
     constructor() {
         super();

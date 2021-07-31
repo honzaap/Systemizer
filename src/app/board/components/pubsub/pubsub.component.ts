@@ -60,4 +60,9 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicPubSub;
 	}
+
+	static getColor(): string{
+		let c = new PubSub();
+		return c.color;
+	}
 }

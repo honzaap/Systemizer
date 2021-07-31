@@ -14,6 +14,7 @@ export class Client extends LogicComponent implements IDataOperator{
     options: ClientOptions;
     isConnectedToEndpoint: boolean = false; // For streaming/websockets
     connectedId: string;
+    color = "#0EC35B";
 
     constructor() {
         super();

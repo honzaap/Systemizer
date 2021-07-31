@@ -172,4 +172,9 @@ export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 	}
 
 	ngOnInit(){}
+
+	static getColor(): string{
+		let c = new APIGateway();
+		return c.color;
+	}
 }

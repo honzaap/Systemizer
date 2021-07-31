@@ -13,6 +13,9 @@ export interface IDataOperator{
     options: Options;
     originID: string;
 
+    color: string;
+    fillColor: boolean;
+
     /**
      * receiveData: receives data
      */

@@ -9,7 +9,7 @@
     </div>  
     <div class="img-container messages" (mousedown)="handleMousedown( $event )"
     (click)="handleClick($event)">
-        <div class="message" *ngFor="let message of LogicMessageQueue.messages | slice:0:10;"></div>
+        <div class="message img" [style.backgroundColor]="LogicMessageQueue.color" *ngFor="let message of LogicMessageQueue.messages | slice:0:10;"></div>
         <div class="message fill" *ngFor="let num of [].constructor(10)"></div>
     </div>  
 </div>

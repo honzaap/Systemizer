@@ -101,4 +101,9 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 			this.afterChange();
 		}, 300);
 	}
+
+	static getColor(): string{
+		let c = new Database();
+		return c.color;
+	}
 }

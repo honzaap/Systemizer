@@ -4,9 +4,10 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { download, downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
 import { BoardComponent } from '../board/board.component';
 import { PlacingService } from '../placing.service';
-import { ExportPngOptions, ExportSvgOptions } from '../export.service';
+import { EmbedIFrameOptions, ExportPngOptions, ExportSvgOptions } from '../export.service';
 import { BoardUIComponent } from '../board/boardUI/boardUI.component';
 import { SavingService } from '../saving.service';
+import { ViewingService } from '../viewing.service';
 
 @Component({
 	selector: 'app-create',
@@ -30,7 +31,7 @@ export class CreateComponent implements OnInit {
 	@ViewChild(BoardComponent) board:BoardComponent;
 	@ViewChild(BoardUIComponent) ui:BoardUIComponent;
 
-  	constructor(private route: ActivatedRoute, private placingService: PlacingService, private savingService: SavingService) { }
+  	constructor(private route: ActivatedRoute, private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService) { }
 
 	ngOnInit(): void {
 		let seenIntroTutorial = localStorage.getItem("seenIntroTutorial");
@@ -41,7 +42,15 @@ export class CreateComponent implements OnInit {
 					try{
 						this.viewerEditLink = `https://honzaap.github.io/Systemizer/create?edit=${params.viewer}`;
 						let json = atob(params.viewer);
-						this.viewerSave = this.savingService.getSaveFromOptimizedJson(json);
+						let save = JSON.parse(json);
+						if(Array.isArray(save)){
+							this.viewerSave = this.savingService.getSaveFromOptimizedSave(save);
+						}
+						else{
+							this.viewingService.setDarkMode(save.darkMode, false);
+							this.viewingService.setTitlesHidden(!save.showTitles, false);
+							this.viewerSave = this.savingService.getSaveFromOptimizedSave(save.comp);
+						}
 						this.showReadOnlyViewer = true;
 					}
 					catch{
@@ -51,7 +60,7 @@ export class CreateComponent implements OnInit {
 				if(params.edit){
 					try{
 						let json = atob(params.edit);
-						this.viewerSave = this.savingService.getSaveFromOptimizedJson(json);
+						this.viewerSave = this.savingService.getSaveFromOptimizedSave(JSON.parse(json));
 						this.showReadOnlyViewer = false;
 						this.showEdit = true;
 					}

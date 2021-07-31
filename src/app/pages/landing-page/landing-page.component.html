@@ -7,33 +7,49 @@
         </div>
         <div class="animation components components-intro">
             <svg>
-                <path #mainPath d="M120 105 L80 105"></path>
-                <path #mainPath d="M250 30 L205 105"></path>
-                <path #mainPath d="M250 180 L205 105"></path>
-                <path #mainPath d="M250 105 L200 105"></path>
+                <linearGradient id="linear-1" x1="0" y1="0" x2="100%" y2="0">
+                    <stop offset="0%"   stop-color="#0EC35B"/>
+                    <stop offset="100%" stop-color="#021B79"/>
+                </linearGradient>
+                <linearGradient id="linear-2" x1="0" y1="0" x2="100%" y2="0">
+                    <stop offset="0%"   stop-color="#021B79"/>
+                    <stop offset="100%" stop-color="#4CA1AF"/>
+                </linearGradient>
+                <linearGradient id="linear-3" x1="0" y1="0" x2="100%" y2="0">
+                    <stop offset="0%"   stop-color="#021B79"/>
+                    <stop offset="100%" stop-color="#4CA1AF"/>
+                </linearGradient>
+                <linearGradient id="linear-4" x1="0" y1="0" x2="100%" y2="0">
+                    <stop offset="0%"   stop-color="#021B79"/>
+                    <stop offset="100%" stop-color="#4CA1AF"/>
+                </linearGradient>
+                <path stroke="url(#linear-1)" #mainPath d="M120.1 105.1 L80 105"></path>
+                <path stroke="url(#linear-2)" #mainPath d="M250.1 30.1 L205 105"></path>
+                <path stroke="url(#linear-3)" #mainPath d="M250.1 180.1 L205 105"></path>
+                <path stroke="url(#linear-4)" #mainPath d="M250.1 105.1 L200 105"></path>
                 <circle id="anim-data" cx="80" cy="105" r="5" fill="#31B78D"></circle>
             </svg>
-            <div class="component-body">
+            <div class="component-body" style="background-color: #0EC35B;">
                 <img src="./assets/client.svg" alt="Client visualization">
-                <div class="port right"></div>
+                <div style="border-color: #0EC35B;" class="port right"></div>
             </div>
-            <div class="component-body" style="margin-left: 4em;">
+            <div class="component-body" style="margin-left: 4em; background-color: #021B79;">
                 <img src="./assets/loadbalancer.svg" alt="Load Balancer visualization">
-                <div class="port left"></div>
-                <div class="port right"></div>
+                <div style="border-color: #021B79;" class="port left"></div>
+                <div style="border-color: #021B79;" class="port right"></div>
             </div>
             <div style="margin-left: 4em; margin-top: -4em;">
-                <div class="component-body">
+                <div class="component-body" style="background-color: #4CA1AF;">
                     <img src="./assets/api.svg" alt="API visualization">
-                    <div class="port left"></div>
+                    <div style="border-color: #4CA1AF;" class="port left"></div>
                 </div>
-                <div class="component-body" style="margin-top: 1em;">
+                <div class="component-body" style="margin-top: 1em; background-color: #4CA1AF;">
                     <img src="./assets/api.svg" alt="API visualization">
-                    <div class="port left"></div>
+                    <div style="border-color: #4CA1AF;" class="port left"></div>
                 </div>
-                <div class="component-body" style="margin-top: 1em;">
+                <div class="component-body" style="margin-top: 1em; background-color: #4CA1AF;">
                     <img src="./assets/api.svg" alt="API visualization">
-                    <div class="port left"></div>
+                    <div style="border-color: #4CA1AF;" class="port left"></div>
                 </div>
             </div>
         </div>
@@ -42,77 +58,77 @@
         <div class="components-showcase">
             <div class="component-container">
                 <span class="title">Client</span>
-                <div class="component-body">
+                <div style="background-color: #0EC35B;" class="component-body">
                     <img src="./assets/client.svg" alt="Client visualization">
-                    <div class="port right"></div>
+                    <div style="border-color: #0EC35B;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Web Server</span>
-                <div class="component-body">
-                    <img src="./assets/webserver.svg" alt="Client visualization">
-                    <div class="port left"></div>
+                <div style="border: 2px solid #009FFF; background-color: transparent;" class="component-body">
+                    <span style="background-color: #009FFF; border-color: #009FFF;" class="img bg-webserver"></span>
+                    <div style="border-color: #009FFF;" class="port left"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Load Balancer</span>
-                <div class="component-body">
+                <div style="background-color: #021B79;" class="component-body">
                     <img src="./assets/loadbalancer.svg" alt="Load Balancer visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #021B79;" class="port left"></div>
+                    <div style="border-color: #021B79;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">API Gateway</span>
-                <div class="component-body high">
+                <div style="background-color: #2C5364;" class="component-body high">
                     <img src="./assets/apigateway.svg" alt="API Gateway visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #2C5364;" class="port left"></div>
+                    <div style="border-color: #2C5364;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">API Service</span>
-                <div class="component-body">
+                <div style="background-color: #4CA1AF;" class="component-body">
                     <img src="./assets/api.svg" alt="API visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #4CA1AF;" class="port left"></div>
+                    <div style="border-color: #4CA1AF;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Pub/Sub Model</span>
-                <div class="component-body">
+                <div style="background-color: #FF7D35;" class="component-body">
                     <img src="./assets/pubsub.svg" alt="Publisher Subscriber visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #FF7D35;" class="port left"></div>
+                    <div style="border-color: #FF7D35;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Database</span>
-                <div class="component-body">
+                <div style="background-color: #E94057;" class="component-body">
                     <img src="./assets/database.svg" alt="Database visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #E94057;" class="port left"></div>
+                    <div style="border-color: #E94057;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Cache</span>
-                <div class="component-body">
+                <div style="background-color: #b21f1f;" class="component-body">
                     <img src="./assets/cache.svg" alt="Cache visualization">
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #b21f1f;" class="port left"></div>
+                    <div style="border-color: #b21f1f;" class="port right"></div>
                 </div>
             </div>
 
             <div class="component-container">
                 <span class="title">Message Queue</span>
-                <div class="component-body long mq">
+                <div style="border: 2px solid #F2994A; background-color: transparent;" class="component-body long mq">
                     <div class="cell"></div>
                     <div class="cell"></div>
                     <div class="cell"></div>
@@ -123,8 +139,8 @@
                     <div class="cell"></div>
                     <div class="cell"></div>
                     <div class="cell"></div>
-                    <div class="port left"></div>
-                    <div class="port right"></div>
+                    <div style="border-color: #F2994A;" class="port left"></div>
+                    <div style="border-color: #F2994A;" class="port right"></div>
                 </div>
             </div>
         </div>

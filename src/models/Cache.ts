@@ -18,6 +18,7 @@ export class Cache extends LogicComponent implements IDataOperator{
     outputPort: Port
     options: CacheOptions;
     connectionTable: { [id:string]: Connection } = {};
+    color = "#b21f1f";
 
     constructor() {
         super();

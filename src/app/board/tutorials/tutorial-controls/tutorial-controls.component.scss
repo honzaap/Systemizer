@@ -1,9 +1,9 @@
 .window{
     height: 20.5rem;
     width: 19rem;
-    border: 0.2em solid var(--orange-light);
-    background-color: var(--bg-main-darker);
-    color: #e0e0e0;
+    border: 0.1rem solid var(--border);
+    background-color: var(--background-dark);
+    color: var(--text);
     position: relative;
     font-size: 0.8em;
     z-index: 1000;
@@ -16,16 +16,16 @@
     & .progress{
         position: absolute;
         height: 1rem;
-        background-color: #c4c4c4;
+        background-color: #959595;
         top: -1.5rem;
         left: 15%;
         right: 15%; 
         text-align: center;
-        color: var(--bg-main-light);
+        color: var(--background);
         font-weight: bold;
         & .progress-bar{
             height: 100%;
-            background-color: var(--orange-light);
+            background-color: var(--main);
             position: absolute;
         }
         & .progress-text{
@@ -47,17 +47,18 @@
             display: block;     
             cursor: pointer;
             &.close{
-                background-color: var(--main-dark);
+                background-color: var(--main);
+                color: #fff;
                 &:hover{
-                    background-color: var(--main-light);
+                    filter: brightness(1.25);
                 }
             }
             &.min{
-                transition: transform 0.5s ease-in-out;
-                background-color: var(--text-main-light);
+                background-color: var(--main);
+                filter: saturate(0.3);
+                color: #fff;
                 &:hover{
-                    background-color: var(--text-main-light);
-                    filter: brightness(1.1);
+                    filter: brightness(0.8);
                 }
             }
         }
@@ -68,7 +69,7 @@
         }
         & .title{
             font-size: 1.2em;
-            color: #fff;
+            color: var(--text);
             font-weight: 600;
             text-align: center;
             margin-top: 0.4em;
@@ -76,6 +77,7 @@
         & .line{
             width: 70%;
             margin: 0.4em auto 0.8em;
+            border-color: var(--text);
         }
         .text{
             padding: 0 0.8em 1em;
@@ -91,20 +93,24 @@
             cursor: pointer;
             padding: 0.5em;
             width: 120px;
-            color: #fff;
         }
         & .prev{
+            color: #fff;
             margin-right: auto;
-            background-color: var(--text-main-light);
+            background-color: var(--main);
+            filter: saturate(0.4);
             &:hover{
                 filter: brightness(1.1);
+                background-color: var(--main);
+                color: #fff;
             }
         }
         & .next{
+            color: #fff;
             margin-left: auto;
-            background-color: var(--main-dark);
+            background-color: var(--main);
             &:hover{
-                background-color: var(--main-light);
+                filter: brightness(1.25);
             }
         }
     }

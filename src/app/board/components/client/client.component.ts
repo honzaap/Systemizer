@@ -207,4 +207,9 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 		this.updateSelection();
 	}
+
+	static getColor(): string{
+		let c = new Client();
+		return c.color;
+	}
 }

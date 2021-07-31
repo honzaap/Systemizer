@@ -7,6 +7,8 @@ import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 export class LogicComponent {
 
     originID: string = UUID();
+    color: string = "#6059DF";
+    fillColor: boolean = true;
 
     connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
         let otherPort = operator.getPort(connectingToOutput);

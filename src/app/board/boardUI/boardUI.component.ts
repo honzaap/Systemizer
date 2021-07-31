@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
+import { EmbedIFrameOptions, ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
 import { ViewingService } from 'src/app/viewing.service';
@@ -64,6 +64,8 @@ export class BoardUIComponent implements OnInit {
 
 	embedIFrameTemplate: string = "";
 	showEmbedError: boolean = false;
+	embedIFrameOptions: EmbedIFrameOptions = new EmbedIFrameOptions();
+	embedIFrameJson: string = "";
 
 	canUseShortcuts: boolean = true;
 
@@ -71,6 +73,7 @@ export class BoardUIComponent implements OnInit {
 	exportSvgOptions: ExportSvgOptions = new ExportSvgOptions();
 	exportPngPreview: HTMLCanvasElement;
 	exportSvgPreview: SVGElement;
+
 
 	scaleControl: FormControl = new FormControl();
 	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
@@ -115,7 +118,7 @@ export class BoardUIComponent implements OnInit {
 		}
 	}
 
-	constructor(private placingService: PlacingService, private savingService: SavingService, private viewingService: ViewingService, private exportService: ExportService) { 
+	constructor(private placingService: PlacingService, private savingService: SavingService, public viewingService: ViewingService, private exportService: ExportService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
 		this.isTitlesHidden = viewingService.isTitlesHidden();
 	}
@@ -201,11 +204,27 @@ export class BoardUIComponent implements OnInit {
 			return;
 		}
 		this.showEmbedError = false;
-		let json = this.savingService.getOptimizedBoardJson(components);
-		let base64Encoded = btoa(json);
+		this.embedIFrameJson = this.savingService.getOptimizedBoardJson(components);
+		let obj: any = {comp: JSON.parse(this.embedIFrameJson)};
+		obj.showTitles = this.embedIFrameOptions.showTitles;
+		obj.darkMode = this.embedIFrameOptions.darkMode;
+		this.embedIFrameJson = JSON.stringify(obj);
+		let base64Encoded = btoa(this.embedIFrameJson);
+		this.generateEmbedIFrameTemplate(base64Encoded);
+	}
+
+	generateEmbedIFrameTemplate(encodedSave: string){
 		let url = "https://honzaap.github.io/Systemizer/create"
-		let template = `<iframe frameborder="0" style="width:100%;height:600px;" src="${url}?viewer=${base64Encoded}">\n</iframe>`
+		let template = `<iframe frameborder="0" style="width:100%;height:600px;" src="${url}?viewer=${encodedSave}">\n</iframe>`
 		this.embedIFrameTemplate = template;
+	}
+
+	changeEmbedIFrameOptions(){
+		let obj = JSON.parse(this.embedIFrameJson);
+		obj.showTitles = this.embedIFrameOptions.showTitles;
+		obj.darkMode = this.embedIFrameOptions.darkMode;
+		this.embedIFrameJson = JSON.stringify(obj);
+		this.generateEmbedIFrameTemplate(btoa(this.embedIFrameJson));
 	}
 
 	previewEmbedIFrame(){

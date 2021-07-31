@@ -5,6 +5,10 @@
 .container{
     width: 1000px;
     margin: 2em auto;
+    color: var(--text);
+}
+h1{
+    color: var(--main)
 }
 h2{
     font-size: 1.1em;
@@ -29,7 +33,7 @@ h3{
 }
 a.highlight{
     cursor: pointer;
-    color: var(--main-dark);
+    color: var(--main);
     &:hover{
         text-decoration: underline;
     }
@@ -62,17 +66,26 @@ a.highlight{
             font-size: 12px;
             margin-bottom: 0.2em;
             display: block;
-            color: #c0c0c0;
+            color: var(--text-light);
         }
     }
     & .component-body{
-        background-color: var(--bg-main-darker);
+        background-color: var(--background-dark);
         padding: 0.5em;
         width: 3em;
         border-radius: 0.3em;
         height: 3em;
         position: relative;
         margin: 0 auto;
+        & > .img{
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        & .bg-webserver{
+            mask: url("/assets/webserver.svg") no-repeat center;
+            -webkit-mask: url("/assets/webserver.svg") no-repeat center;
+        }
         &.long{
             width: 6em;
             & img{
@@ -96,14 +109,15 @@ a.highlight{
         & .cell{
             width: 0.55em;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--text);
+            opacity: 0.2;
         }
         & .port{
             width: 1em;
             height: 1em;
             border-radius: 50%;
-            border: 0.2em solid var(--orange-light);
-            background-color: var(--bg-main-darker);
+            border: 0.2em solid;
+            background-color: var(--background-light);
             position: absolute;
             top: 1em;
             &.left{
@@ -139,12 +153,7 @@ a.highlight{
         width: 17em;
         margin-top: -4em;
         & path{
-            stroke: #df9300;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-dasharray: 3;
-            cursor: pointer;
-            pointer-events: all;
+            stroke-width: 3;
         }
         & #anim-data{
             transform: translate(-10px, 0);
@@ -154,7 +163,7 @@ a.highlight{
 }
 .caption-dark{
     margin-top: 0.7em;
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--text-light);
 }
 .open-source{
     margin-top: 2.5em;

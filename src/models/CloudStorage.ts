@@ -11,6 +11,8 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     options: CloudStorageOptions;
     connectionTable: { [id:string]: Connection } = {};
+    fillColor = false;
+    color = "#dd1818";
 
     constructor() {
         super();

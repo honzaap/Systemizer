@@ -33,4 +33,9 @@ export class ProxyComponent extends OperatorComponent implements OnInit {
 	getLogicComponent(){
 		return this.LogicProxy;
 	}
+
+	static getColor(): string{
+		let c = new Proxy();
+		return c.color;
+	}
 }

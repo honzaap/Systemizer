@@ -15,6 +15,7 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
     connectionTable: {[id:string]:Connection} = {};
     streamConnectionTable: { [id:string]:Connection } = {};
     options: LoadBalancerOptions;
+    color = "#021B79";
 
     roundRobinIndex = -1;
 

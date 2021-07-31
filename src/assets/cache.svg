@@ -31,7 +31,7 @@
      inkscape:window-y="-8"
      inkscape:window-x="1912"
      inkscape:cy="13.626686"
-     inkscape:cx="6.8030019"
+     inkscape:cx="3.5768273"
      inkscape:zoom="22.627417"
      showgrid="false"
      id="namedview6"
@@ -47,16 +47,11 @@
      pagecolor="#ffffff"
      inkscape:document-rotation="0" />
   <path
-     d="M 9.8237018,0.07143074 A 7.9998259,1.7713014 0 0 0 2.0000655,1.8427897 V 18.214353 a 7.9998259,1.7713014 0 0 0 0,0.01428 v 0.145015 h 0.029632 A 7.9998259,1.7713014 0 0 0 9.9985451,19.999999 7.9998259,1.7713014 0 0 0 17.97036,18.373648 H 18 V 18.228568 1.8427897 a 7.9998259,1.7713014 0 0 0 -8.0014549,-1.77135896 7.9998259,1.7713014 0 0 0 -0.1748433,0 z"
-     style="fill:#df9300;fill-opacity:1;stroke:#df9300;stroke-width:0;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:stroke markers fill"
+     d="M 9.8242188 0.072265625 A 7.9998259 1.7713014 0 0 0 2 1.84375 L 2 18.214844 A 7.9998259 1.7713014 0 0 0 2 18.228516 L 2 18.373047 L 2.0292969 18.373047 A 7.9998259 1.7713014 0 0 0 9.9980469 20 A 7.9998259 1.7713014 0 0 0 17.970703 18.373047 L 18 18.373047 L 18 18.228516 L 18 1.84375 A 7.9998259 1.7713014 0 0 0 9.9980469 0.072265625 A 7.9998259 1.7713014 0 0 0 9.8242188 0.072265625 z M 10.960938 5.703125 L 10.337891 10.224609 L 13.455078 10.224609 L 8.6757812 16.712891 L 9.2988281 12.191406 L 6.1816406 12.191406 L 10.960938 5.703125 z "
+     style="fill:#ffffff;fill-opacity:1;stroke:#df9300;stroke-width:0;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:0;paint-order:stroke markers fill"
      id="path830-9" />
-  <path
-     sodipodi:nodetypes="ccccccc"
-     id="path1018"
-     d="M 8.6752579,16.712659 9.2987918,12.191025 H 6.1814391 L 10.961259,5.7034688 10.337806,10.2251 h 3.117274 z"
-     style="fill:#c08200;fill-opacity:0;stroke:#feffff;stroke-width:0.971849;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <ellipse
-     style="fill:#bd6900;fill-opacity:1;stroke:#df9300;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+     style="fill:#bcbcbc;fill-opacity:1;stroke:#df9300;stroke-width:0;stroke-linecap:square;stroke-miterlimit:3.8;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
      id="path879-3"
      cx="9.9936981"
      cy="1.8635355"

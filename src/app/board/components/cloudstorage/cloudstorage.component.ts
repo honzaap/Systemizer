@@ -35,4 +35,9 @@ export class CloudStorageComponent extends OperatorComponent implements OnInit {
 	public getLogicComponent(){
 		return this.LogicCloudStorage;
 	}
+
+	static getColor(): string{
+		let c = new CloudStorage();
+		return c.color;
+	}
 }

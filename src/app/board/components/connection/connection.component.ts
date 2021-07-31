@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SelectionService } from 'src/app/selection.service';
 import { Connection, LineBreak } from 'src/models/Connection';
-import { createRoundedPath } from 'src/shared/ExtensionMethods';
+import { createRoundedPath, UUID } from 'src/shared/ExtensionMethods';
 import { PortComponent } from '../port/port.component';
 
 @Component({
@@ -25,13 +25,14 @@ export class ConnectionComponent implements OnInit {
 	@ViewChild("secondPath") secondPath: ElementRef;
 	@ViewChild("data") data: ElementRef;
 	@ViewChild("dataAnim") dataAnim: ElementRef;
+	connectionID: string = UUID();
 
 	lineCurrX: number = 0;
 	lineCurrY: number = 0;
 	linePrevX: number = 0;
 	linePrevY: number = 0;
 
-	constructor(public elem: ElementRef, private cdRef: ChangeDetectorRef, public selectionService: SelectionService){
+	constructor(private cdRef: ChangeDetectorRef, public selectionService: SelectionService){
 	}
 
 	ngOnInit(): void {
@@ -54,7 +55,7 @@ export class ConnectionComponent implements OnInit {
 			dataSvg.style.display = "none"
 			this.svg.nativeElement.appendChild(dataSvg);
 			let anim = document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
-			let delay = Math.max(this.mainPath.nativeElement.getTotalLength(), 0.18);
+			let delay = Math.max(this.mainPath.nativeElement.getTotalLength(), 230);
 
 			anim.setAttribute("attributeName", "cx");
 
@@ -116,7 +117,7 @@ export class ConnectionComponent implements OnInit {
 		this.cdRef.detectChanges();
 		if(this.portComponent1.port && this.portComponent2.port){
 			this.LogicConnection.lineBreaks[0] = 
-				new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2),(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)),
+				new LineBreak((this.portComponent1.port.nativeElement.offsetLeft+this.portComponent1.port.nativeElement.clientWidth/2)+0.1,(this.portComponent1.port.nativeElement.offsetTop+this.portComponent1.port.nativeElement.clientHeight/2)+0.1),
 			this.LogicConnection.lineBreaks[this.LogicConnection.lineBreaks.length-1] =
 				new LineBreak((this.portComponent2.port.nativeElement.offsetLeft+this.portComponent2.port.nativeElement.clientWidth/2),(this.portComponent2.port.nativeElement.offsetTop+this.portComponent2.port.nativeElement.clientHeight/2))
 			this.line = createRoundedPath(this.LogicConnection.lineBreaks, 10, false);

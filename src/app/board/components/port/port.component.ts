@@ -8,13 +8,14 @@ import { ConnectionComponent } from '../connection/connection.component';
 @Component({
 	selector: 'port',
 	templateUrl: './port.component.html',
-	styleUrls: ['./port.component.scss']
+	styleUrls: ['./port.component.scss'],
 })
 export class PortComponent implements OnInit {
 	@Input() LogicParent : IDataOperator;
 	@Input() IsOutput : boolean;
 	public LogicPort : Port;
 	@ViewChild('port') public port : ElementRef<HTMLDivElement>;
+	@ViewChild('portImage') public portImage : ElementRef;
 	connectionComponents: ConnectionComponent[] = [];
 	board : HTMLElement;
 	line : SVGPathElement;
@@ -95,7 +96,7 @@ export class PortComponent implements OnInit {
 			this.lineStartY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
 
 			this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
-			this.line.style.stroke = "#DF9300";
+			this.line.style.stroke = "#6059DF";
 			this.line.style.strokeWidth = "2";
 			this.line.style.strokeLinecap = "round";
 			this.line.style.strokeDasharray = "3";
@@ -127,6 +128,10 @@ export class PortComponent implements OnInit {
 						this.placingService.componentChanged.emit();
 				}
 			}
+	}
+
+	ngAfterViewInit(){
+		this.portImage.nativeElement.style.borderColor = this.LogicParent.color;
 	}
 
 	destroySelf = () => {}

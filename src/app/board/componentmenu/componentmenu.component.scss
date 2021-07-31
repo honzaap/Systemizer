@@ -7,13 +7,12 @@
     min-height: 400px;
     padding-bottom: 2em;
     overflow-y: scroll;
-    background-color: var(--bg-main-light);
-    /*backdrop-filter: blur(6px);*/
-    border-radius: 0.5em;
+    background-color: var(--background-light);
     overflow-x: hidden;
     overflow-y: scroll;
-    color: #C5C5C5;
-    box-shadow: 4px -7px 20px 7px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 28%), 0px 1px 10px 0px rgb(0 0 0 / 24%);
+    color: var(--text);
+    border: 0.15rem solid var(--border);
+    border-left: 0;
     & .top{
         display: flex;
         flex-flow: row nowrap;
@@ -22,19 +21,16 @@
         padding: 0.3em;
         & .search{
             outline: none;
-            background-color: var(--bg-main-light);
-            border: 0.15em solid rgba(0,0,0,0.2);
-            color:#fff;
+            background-color: var(--background-dark);
+            border: 0.15rem solid var(--border);
+            color:var(--text);
             padding: 0.2em 0 0.2em 0.5em;
             font-size: 1rem;
             max-width: 70%;
-            transition: background-color 0.1s linear;
             &::placeholder{
-                color: #a1a1a1;
                 transition: transform 0.1s ease-out;
             }
             &:hover{
-                background-color: var(--bg-main-dark);
                 &::placeholder{
                     transform: translateX(10px);
                 }
@@ -56,7 +52,8 @@
         width: 100%;
         font-size: 1.1rem;
         padding: 0.2em 0.3em;
-        background-color: var(--bg-main-dark);
+        background-color: var(--background);
+        filter: brightness(0.95);
         display: flex;
         justify-content: space-between;
         &:hover{
@@ -74,16 +71,16 @@
         margin-top: 0.4em;
         position: relative;
         & .section-item{
-            background-color: var(--bg-main-dark);
-            border-radius: 0.4em;
-            padding: 0.625em;
-            flex-basis: 21%;
+            background-color: var(--main);
+            border-radius: 0.3em;
+            padding: 0.7em;
+            flex-basis: 22%;
             margin-bottom: 0.3em;
             position: relative;
-            transition: background-color 0.1s ease-out, transform 0.1s ease-out;
+            transition: filter 0.15s ease-out, box-shadow 0.15s ease-in-out;
             &:hover{
-                background-color: var(--main-darker);
-                transform: scale(1.05);
+                filter: brightness(1.15);
+                box-shadow: 0 0 10px 0 #696969;
                 cursor: pointer;
             }
             & img{
@@ -91,9 +88,9 @@
             }
             & .info{
                 position: absolute;
-                top: 0em;
-                right: 0em;
-                color: var(--main-light);
+                top: 2px;
+                right: 2px;
+                color: #B0F1E1;
                 height: 1em;
                 width: 1em;
                 outline: none;
@@ -106,10 +103,11 @@
                 }
             }
             & .caption{
-                font-size: 0.575em;
+                color: #fff;
+                font-size: 0.5em;
                 position: absolute;
-                top: 1px;
-                left: 1px;
+                top: 3px;
+                left: 3px;
             }
         }
         & .section-item.fill{
@@ -149,13 +147,13 @@
     font-size: 1.7rem;
     width: 1.4em;
     height: 1.4em;
-    color: #fff;
+    color: var(--text);
     background-color: transparent;
     border-radius: 50%;
     transition: background-color 0.2s ease-out, color 0.2s ease-out, left 0.2s ease-out;
     &:hover{
-        color: #C5C5C5;
-        background-color: var(--main-dark);    
+        color: var(--text);
+        background-color: var(--main);    
         left: 10px;
         cursor: pointer;
     }
@@ -166,11 +164,12 @@
     bottom: 50%;
     left: 16rem;
     width: 9rem;
-    height: 5rem;
+    height: 5.75rem;
     font-size: 0.7rem;
     padding: 0.4em 0;
     color: #fff;
-    background-color: var(--bg-main-light);
+    border: 0.2rem solid var(--border);
+    background-color: var(--main);
     text-align: center;
     & span{
         margin: 0.1em;
@@ -188,7 +187,7 @@
     position: absolute;
     pointer-events: none;
     &.section-item{
-        background-color: var(--bg-main-darker);
+        background-color: var(--background-dark);
         border-radius: 0.4em;
         padding: 0.3em;
         & img{
@@ -197,15 +196,14 @@
     }
 }
 .component-info-window{
-    color: #fff;
+    color: var(--text);
     position: absolute;
     top: 15%;
     bottom: 30%;
     right: 25%;
     left: 25%;
-    backdrop-filter: blur(4px);
-    border: 0.1em solid var(--bg-main-light);
-    box-shadow: 0px 0px 25px 2px #000;
+    background-color: var(--background);
+    border: 0.1em solid var(--border);
     padding: 2em;
     overflow-y: scroll;
     & .component-info-title{
@@ -219,8 +217,8 @@
         height: 4em;
         width: 4em;
         padding: 1em;
-        background-color: var(--bg-main-darker);
-        border-radius: 0.8em;
+        background-color: var(--main);
+        border-radius: 0.4em;
         margin-bottom: 2em;
     }
     & p{
@@ -232,7 +230,7 @@
         font-size: 0.8em;
     }
     & .highlight{
-        color: var(--main-dark);
+        color: var(--main);
         font-weight: 400;
     }
     & .underline{
@@ -246,13 +244,13 @@
         top: 0.25em;
         right: 0.25em;
         font-size: 1em;
-        color: #fff;
+        color: var(--text);
         background-color: transparent;
         width: 1.5em;
         height: 1.5em;
         transition: color 0.1s linear;
         &:hover{
-            color: var(--main-light);
+            color: var(--main);
         }
     }
     &::-webkit-scrollbar {

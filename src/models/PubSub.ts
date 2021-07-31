@@ -15,6 +15,7 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     connectionTable: {[id:string]:Connection} = {};
     options: PubSubOptions;
     isSubscribable: boolean = true;
+    color = "#FF7D35";
 
     constructor() {
         super();

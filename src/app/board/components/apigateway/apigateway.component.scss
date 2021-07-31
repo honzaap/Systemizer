@@ -10,26 +10,8 @@
     margin-top: 0.55em;
     background-color: rgba(0,0,0,0.15);
 }
-.options-endpoints{
-    background-color: rgba(0,0,0,0.1);
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 0.3em;
-    padding-left: 0.15em;
-}
 .property-name{
     font-size: 1em !important;
-}
-
-.options-endpoint{
-    position: relative;
-    & > .button-icon{
-        position: absolute;
-        right: -1.5em;
-        top: 15%;
-        bottom: 15%;
-        text-align: center;
-    }
 }
 .options-endpoint-inputs{
     display: flex;
@@ -63,20 +45,6 @@
         align-self: center;
     }
 }
-.options-endpoint-menu-top{
-    display: flex;
-    flex-flow: row nowrap;
-    & mat-form-field{
-        flex-shrink: 1;
-        &.endpoint-protocol{
-            flex-basis: 32%;
-        }
-        &.endpoint-grpcmode{
-            flex-shrink: 0;
-            flex-basis: 66%;
-        }
-    }
-}
 .options-endpoint-actions-container{
     padding-top: 1em;
     & .property-name{
@@ -91,21 +59,5 @@
         display: flex;
         flex-flow: row nowrap;
         gap: 0.5em;
-    }
-}
-mat-expansion-panel{
-    background-color: transparent;
-    border-radius: 0;
-    padding: 0;
-    &:not([class*=mat-elevation-z]){
-        box-shadow: none;
-    }
-    & mat-expansion-panel-header{
-        padding: 0;
-        height: auto;
-
-    }
-    .mat-expansion-panel-body{
-        padding: 0 0.15em;
     }
 }

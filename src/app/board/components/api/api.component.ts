@@ -167,4 +167,9 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	}
 
 	ngOnInit(){}
+
+	static getColor(): string{
+		let c = new API();
+		return c.color;
+	}
 }

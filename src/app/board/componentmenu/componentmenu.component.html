@@ -19,7 +19,7 @@
                 </ng-template>
             </div>
             <div class="content">
-                <div class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
+                <div [style.backgroundColor]="item.color" class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
                     <span class="caption">{{ item.mark }}</span>
                     <img src="{{ item.imageUrl }}">
                     <button *ngIf="!viewingService.isHelpersDisabled()" class="info" (click)="showInfo(item)"><i class="far fa-question-circle"></i></button>
@@ -34,12 +34,12 @@
         </div>
     </div>
 </div>
-<div class="item-description" *ngIf="currentItem != null">
+<div class="item-description" *ngIf="currentItem != null" [style.backgroundColor]="currentItem.color">
     <span>{{ currentItem.caption }}</span>
     <hr>
     <img src="{{ currentItem.imageUrl }}">
 </div>
-<div #placingItemRef class="section-item placing-item" *ngIf="placingItem != null">
+<div #placingItemRef class="section-item placing-item" *ngIf="placingItem != null" [style.backgroundColor]="placingItem.color">
     <img src="{{ placingItem.imageUrl }}">
 </div>
 <ng-template #closedWindow>

@@ -1,6 +1,7 @@
 .container{
     width: 1000px;
     margin: 2em auto;
+    color: var(--text);
 }
 .container-inner{
     width: 70%;
@@ -13,7 +14,7 @@ h1{
 }
 h2{
     text-align: center;
-    color: var(--text-main-light);
+    color: var(--text);
     margin-bottom: 0.7em;
     font-size: 1.25em;
 }
@@ -28,7 +29,7 @@ img{
     }
 }
 .highlight{
-    color: var(--orange-light);
+    color: var(--main);
 }
 .text-center{
     text-align: center;
@@ -37,7 +38,7 @@ section{
     margin: 1em auto 2em;
 }
 a{
-    color: var(--main-dark);
+    color: var(--main);
     cursor: pointer;
     &:hover{
         text-decoration: underline;
@@ -45,13 +46,13 @@ a{
 }
 .small{
     font-size: 0.8em;
-    color: #c7c7c7;
+    color: var(--text-light);
 }
 .ico-info{
     position: absolute;
     top: -0.1em;
     right: -0.1em;
-    color: var(--main-dark);
+    color: var(--main);
     font-size: 0.8em;
 }
 .info-section{
@@ -76,7 +77,7 @@ a{
         }
     }
     & .component-body{
-        background-color: var(--bg-main-darker);
+        background-color: var(--background-dark);
         padding: 0.5em;
         width: 3rem;
         border-radius: 0.3em;
@@ -90,8 +91,8 @@ a{
             width: 1rem;
             height: 1rem;
             border-radius: 50%;
-            border: 0.2rem solid var(--orange-light);
-            background-color: var(--bg-main-darker);
+            border: 2px solid;
+            background-color: var(--background-light);
             position: absolute;
             top: 1rem;
             &.left{

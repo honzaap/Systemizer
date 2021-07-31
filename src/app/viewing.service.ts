@@ -14,10 +14,14 @@ export class ViewingService {
 	private TECHNOLOGIES_KEY = "technologies";
 	private technologiesHidden: boolean;
 
+	private DARKMODE_KEY = "darkmode"
+	private darkModeEnabled: boolean;
+
 	constructor() { 
 		this.helpersDisabled = localStorage.getItem(this.HELPERS_KEY) == "true" ? true : false;
 		this.titlesHidden = localStorage.getItem(this.TITLES_KEY) == "true" ? true : false;
 		this.technologiesHidden = localStorage.getItem(this.TECHNOLOGIES_KEY) == "true" ? true : false;
+		this.darkModeEnabled = localStorage.getItem(this.DARKMODE_KEY) == "true" ? true : false;
 	}
 
 	isHelpersDisabled(){
@@ -47,5 +51,19 @@ export class ViewingService {
 		if(saveToLocalStorage)
 			localStorage.setItem(this.TECHNOLOGIES_KEY, hidden.toString());
 		this.technologiesHidden = hidden;
+	}
+
+	isDarkMode(){
+		return this.darkModeEnabled;
+	}
+
+	setDarkMode(enabled: boolean = true, saveToLocalStorage: boolean = true){
+		if(saveToLocalStorage)
+			localStorage.setItem(this.DARKMODE_KEY, enabled.toString());
+		if(enabled)
+			document.documentElement.classList.add("dark-mode");
+		else 
+			document.documentElement.classList.remove("dark-mode");
+		this.darkModeEnabled = enabled;
 	}
 }

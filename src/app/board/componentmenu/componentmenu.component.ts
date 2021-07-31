@@ -26,6 +26,7 @@ class MenuItem<T>{
 	imageUrl: string;
 	presetOptions: Object;
 	info: string;
+	color: string;
 
 	constructor(component: T, caption: string, mark: string, imageUrl: string,info: string, presetOptions: Object = null) {
 		this.component = component;
@@ -34,6 +35,7 @@ class MenuItem<T>{
 		this.imageUrl = imageUrl;
 		this.presetOptions = presetOptions;
 		this.info = info;
+		this.color = (component as any).getColor() || "#6059DF";
 	}
 }
 

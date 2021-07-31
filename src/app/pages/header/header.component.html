@@ -6,6 +6,12 @@
         </a>
     </div>
     <div class="nav-right">
+        <div class="mode-switch" [class.dark]="viewingService.isDarkMode()" (click)="viewingService.setDarkMode(!this.viewingService.isDarkMode())">
+            <span *ngIf="viewingService.isDarkMode(); else lightMode" class="light"><i class="fas fa-moon"></i></span>
+            <ng-template #lightMode>
+                <span class="dark"><i class="fas fa-sun"></i></span>
+            </ng-template>
+        </div>
         <a href="https://github.com/honzaap/Systemizer" target="_blank" class="btn-github-slide">
             <span class="text">
                 Fork&nbsp;us!
