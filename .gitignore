@@ -45,3 +45,5 @@ testem.log
 .DS_Store
 Thumbs.db
 /.vs
+/docs/.vscode/settings.json
+/.vscode/settings.json

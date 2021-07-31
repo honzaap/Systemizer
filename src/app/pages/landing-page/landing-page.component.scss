@@ -83,8 +83,8 @@ a.highlight{
             display: block;
         }
         & .bg-webserver{
-            mask: url("/assets/webserver.svg") no-repeat center;
-            -webkit-mask: url("/assets/webserver.svg") no-repeat center;
+            mask: url("../../../assets/webserver.svg") no-repeat center;
+            -webkit-mask: url("../../../assets/webserver.svg") no-repeat center;
         }
         &.long{
             width: 6em;
