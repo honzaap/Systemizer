@@ -93,60 +93,6 @@ html{
     & .img{
         width: 100%;
         height: 100%;
-        &.bg{
-            &-api{
-                mask: url("./assets/api.svg") no-repeat center;
-                -webkit-mask: url("./assets/api.svg") no-repeat center;
-            }
-            &-api-gw{
-                mask: url("./assets/apigateway.svg") no-repeat center;
-                -webkit-mask: url("./assets/apigateway.svg") no-repeat center;
-            }
-            &-cache{
-                mask: url("./assets/cache.svg") no-repeat center;
-                -webkit-mask: url("./assets/cache.svg") no-repeat center;
-            }
-            &-cdn{
-                mask: url("./assets/cdn.svg") no-repeat center;
-                -webkit-mask: url("./assets/cdn.svg") no-repeat center;
-            }
-            &-client{
-                mask: url("./assets/client.svg") no-repeat center;
-                -webkit-mask: url("./assets/client.svg") no-repeat center;
-            }
-            &-clientcluster{
-                mask: url("./assets/clientcluster.svg") no-repeat center;
-                -webkit-mask: url("./assets/clientcluster.svg") no-repeat center;
-            }
-            &-cloudstorage{
-                mask: url("./assets/cloudstorage.svg") no-repeat center;
-                -webkit-mask: url("./assets/cloudstorage.svg") no-repeat center;
-            }
-            &-cdn{
-                mask: url("./assets/cdn.svg") no-repeat center;
-                -webkit-mask: url("./assets/cdn.svg") no-repeat center;
-            }
-            &-database{
-                mask: url("./assets/database.svg") no-repeat center;
-                -webkit-mask: url("./assets/database.svg") no-repeat center;
-            }
-            &-loadbalancer{
-                mask: url("./assets/loadbalancer.svg") no-repeat center;
-                -webkit-mask: url("./assets/loadbalancer.svg") no-repeat center;
-            }
-            &-proxy{
-                mask: url("./assets/proxy.svg") no-repeat center;
-                -webkit-mask: url("./assets/proxy.svg") no-repeat center;
-            }
-            &-pubsub{
-                mask: url("./assets/pubsub.svg") no-repeat center;
-                -webkit-mask: url("./assets/pubsub.svg") no-repeat center;
-            }
-            &-webserver{
-                mask: url("./assets/webserver.svg") no-repeat center;
-                -webkit-mask: url("./assets/webserver.svg") no-repeat center;
-            }
-        }
     }
     &.anim{
         & .img-container{
@@ -162,6 +108,20 @@ html{
             outline-style: dashed !important;
             outline-offset: 2px !important;
         }
+    }
+}
+.bg{
+    &-cloudstorage{
+        mask: url("./assets/cloudstorage.svg") no-repeat center;
+        -webkit-mask: url("./assets/cloudstorage.svg") no-repeat center;
+    }
+    &-proxy{
+        mask: url("./assets/proxy.svg") no-repeat center;
+        -webkit-mask: url("./assets/proxy.svg") no-repeat center;
+    }
+    &-webserver{
+        mask: url("./assets/webserver.svg") no-repeat center;
+        -webkit-mask: url("./assets/webserver.svg") no-repeat center;
     }
 }
 .status-code-side{
