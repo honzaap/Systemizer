@@ -5,7 +5,6 @@
 <p align="center">
   <img alt="Scrutinizer build (GitHub/Bitbucket)" src="https://img.shields.io/scrutinizer/build/g/honzaap/Systemizer/main?style=flat-square">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/honzaap/Systemizer?style=flat-square">
-  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/honzaap/Systemizer?color=DC6851&style=flat-square">
   <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/honzaap/Systemizer?style=flat-square">
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/honzaap/Systemizer?color=2411ed&style=flat-square">
   <img alt="GitHub" src="https://img.shields.io/github/license/honzaap/Systemizer?style=flat-square">
