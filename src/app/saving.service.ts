@@ -108,7 +108,6 @@ export class SavingService {
 	getBoardSave(allLogicComponents: IDataOperator[], systemName: string, id: string){
 		let jsonReadyComponents = [];
 		for(let component of allLogicComponents){
-			// If one component fails, dont fail the whole operation, tell the user there were errors instead
 			try{ 
 				let jsonReadyComponent: any = {};
 				jsonReadyComponent.type = this.getComponentType(component);
@@ -123,7 +122,8 @@ export class SavingService {
 						let connectedCompoent = connection.getOtherPort(inputPort).parent;
 						jsonReadyConnection.to = connectedCompoent.originID.slice(0, 6);
 						jsonReadyComponent.connections.push(jsonReadyConnection);
-						jsonReadyConnection.lineBreaks = connection.lineBreaks;
+						if(connection.lineBreaks != null && connection.lineBreaks.length != 2)
+							jsonReadyConnection.lineBreaks = connection.lineBreaks;
 					}
 				}
 				jsonReadyComponents.push(jsonReadyComponent);
@@ -214,13 +214,10 @@ export class SavingService {
 			delete component.type;
 			let optimizedConnections = []
 			for(let connection of component.connections){ 
-				optimizedConnections.push(
-					[ 
-						connection.from.slice(0, 5),
-						connection.to.slice(0, 5),
-						connection.lineBreaks
-					]
-				)
+				let con = [connection.from.slice(0, 5), connection.to.slice(0, 5),]
+				if(connection.lineBreaks)
+					con.push(connection.lineBreaks);
+				optimizedConnections.push(con);
 			}
 			if(optimizedConnections.length == 0)
 				delete component.connections
