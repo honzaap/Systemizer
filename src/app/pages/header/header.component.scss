@@ -23,6 +23,16 @@ header{
         align-items: center;
     }
 }
+@media (max-width: 360px){
+    header{
+        & > div{
+            flex-basis: 100%;
+        }
+        & .nav-title{
+            justify-content: center;
+        }
+    }
+}
 .btn-github-slide{
     font-size: 1.25rem;
     outline: none;

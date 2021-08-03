@@ -54,6 +54,55 @@
             </div>
         </div>
     </div>
+    <div class="animation-board-container">
+        <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" class="animation-board" >
+            <g class="menu">
+                <rect x="0" y="0" width="200" height="300" class="main"></rect>
+                <g class="client">
+                    <rect x="2" y="2" width="197" height="30" class="section"></rect>
+                    <text x="10" y="20">Client-side</text>
+                    <g class="content">
+                        <rect x="0" y="0" rx="5" ry="5" width="40" height="40" fill="#0EC35B"></rect>
+                        <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/client.svg" x="7" y="7" visibility="visible"></image>
+                    </g>
+                </g>
+                <g class="server">
+                    <rect x="2" y="0" width="197" height="30" class="section"></rect>
+                    <text x="10" y="20">Server-side</text>
+                    <g class="content">
+                        <rect x="0" y="0" rx="5" ry="5" width="40" height="40" fill="#009FFF"></rect>
+                        <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/webserver.svg" x="7" y="7" visibility="visible"></image>
+                        <rect x="45" y="0" rx="5" ry="5" width="40" height="40" fill="#2C5364"></rect>
+                        <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/apigateway.svg" x="52" y="7" visibility="visible"></image>
+                        <rect x="90" y="0" rx="5" ry="5" width="40" height="40" fill="#4CA1AF"></rect>
+                        <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/api.svg" x="97" y="7" visibility="visible"></image>
+                    </g>
+                </g>
+            </g>
+            <line class="connection drag" x1="316" y1="105" x2="369" y2="105"></line>
+            <line class="connection full" x1="316.1" y1="105.1" x2="369" y2="105" stroke="url(#linear-grad-anim)"></line>
+            <g class="comp-client" style="transform: translate(200px, 200px)">
+                <rect x="0" y="0" rx="5" ry="5" width="40" height="40" fill="#0EC35B"></rect>
+                <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/client.svg" x="7" y="7" visibility="visible"></image>
+                <circle r="6.5" class="port" cx="50" cy="20" stroke="#0EC35B"></circle>
+            </g>
+            <g class="comp-api" style="transform: translate(250px, 250px)">
+                <rect x="0" y="0" rx="5" ry="5" width="40" height="40" fill="#4CA1AF"></rect>
+                <image height="26" width="26" xlink:href="https://honzaap.github.io/Systemizer/assets/api.svg" x="7" y="7" visibility="visible"></image>
+                <circle r="6.5" class="port" cx="-10" cy="20" stroke="#4CA1AF"></circle>
+            </g>
+            <g class="cursor normal">
+                <foreignObject height="30" width="30"><i class="fas fa-mouse-pointer"></i></foreignObject>
+            </g>
+            <g class="cursor pointer">
+                <foreignObject height="30" width="30"><i class="fas fa-hand-pointer"></i></foreignObject>
+            </g>
+            <linearGradient id="linear-grad-anim" x1="0" y1="0" x2="100%" y2="0">
+                <stop offset="0%"   stop-color="#0EC35B"/>
+                <stop offset="100%" stop-color="#4CA1AF"/>
+            </linearGradient>
+        </svg>
+    </div>
     <div class="components">
         <div class="components-showcase">
             <div class="component-container">

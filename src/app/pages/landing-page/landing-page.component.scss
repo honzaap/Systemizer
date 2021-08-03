@@ -171,6 +171,293 @@ a.highlight{
     margin-top: 0.5em;
 }
 
+.animation-board-container{
+    margin-top: 2em;
+    max-width: 800px;
+    & .animation-board{
+        font-size: 16px;
+        & .menu{
+            & .main{
+                fill: transparent;
+                stroke: var(--border);
+                stroke-width: 2;
+            }
+            & .section{
+                fill: var(--background);
+            }
+            & text{
+                fill: var(--text);
+            }
+            & .content{
+                transform: translate(5px, 35px);
+            }
+            & .client{
+                & .content{
+                    animation: menu-client 12s infinite;
+                    -moz-animation: menu-client 12s infinite;
+                    }
+            }
+            & .server{
+                animation: menu-server-section 12s infinite;
+                -moz-animation: menu-server-section 12s infinite;
+                    & .content{
+                        animation: menu-server 12s infinite;
+                        -moz-animation: menu-server 12s infinite;
+                    }
+            }
+        }
+        & .cursor{
+            font-size: 20px;
+            color: var(--main);
+            animation: cursor 12s infinite;
+            -moz-animation: cursor 12s infinite;
+            &.pointer{
+                opacity: 0;
+                animation: cursor-hand 12s infinite;
+                -moz-animation: cursor-hand 12s infinite;
+            }
+        }
+        & .comp-client{
+            animation: comp-client 12s infinite;
+            -moz-animation: comp-client 12s infinite;
+            & .port{
+                animation: port-client 12s infinite;
+                -moz-animation: port-client 12s infinite;
+            }
+        }
+        & .comp-api{
+            animation: comp-api 12s infinite;
+            -moz-animation: comp-api 12s infinite;
+            & .port{
+                animation: port-api 12s infinite;
+                -moz-animation: port-api 12s infinite;
+            }
+        }
+        & .port{
+            stroke-width: 2;
+            fill: var(--background-light);
+        }
+        & .connection.drag{
+            stroke: var(--main);
+            stroke-width: 2;
+            stroke-dasharray: 60;
+            stroke-dashoffset: 60;
+            animation: connection 12s infinite;
+            -moz-animation: connection 12s infinite;
+    }
+        & .connection.full{
+            animation: connection-full 12s infinite;
+            -moz-animation: connection-full 12s infinite;
+            stroke-width: 2;
+        }
+    }
+}
+
+@keyframes cursor {
+    0%{
+        transform: translate(100px, 100px);
+        opacity: 1;
+    }
+    16%{
+        transform: translate(30px, 10px);
+    }
+    18.9%, 37%, 52.9%, 69%, 74.9%, 90%, 100%{
+        opacity: 1;
+    }
+    19%, 36.9%, 53%, 68.9%, 75%, 89.9%{
+        opacity: 0;
+    }
+    24%{
+        transform: translate(25px, 55px);
+    }
+    36%, 39%{
+        transform: translate(275px, 100px);
+    }
+    48%, 50%{
+        transform: translate(25px, 100px);
+    }
+    56%, 58%{
+        transform: translate(105px, 140px);
+    }
+    68%, 72%{
+        transform: translate(400px, 100px);
+    }
+    76%, 80%{
+        transform: translate(308px, 102px);
+    }
+    88%, 90%{
+        transform: translate(370px, 102px);
+    }
+    96%, 100%{
+        transform: translate(320px, 140px);
+    }
+}
+
+@keyframes cursor-hand {
+    0%{
+        transform: translate(100px, 100px);
+        opacity: 0;
+    }
+    16%{
+        transform: translate(30px, 10px);
+    }
+    18.9%, 37%, 52.9%, 69%, 74.9%, 90%, 100%{
+        opacity: 0;
+    }
+    19%, 36.9%, 53%, 68.9%, 75%, 89.9%{
+        opacity: 1;
+    }
+    24%{
+        transform: translate(25px, 55px);
+    }
+    36%, 39%{
+        transform: translate(275px, 100px);
+    }
+    48%, 50%{
+        transform: translate(25px, 100px);
+    }
+    56%, 58%{
+        transform: translate(105px, 140px);
+    }
+    68%, 72%{
+        transform: translate(400px, 100px);
+    }
+    76%, 80%{
+        transform: translate(308px, 102px);
+    }
+    88%, 100%{
+        transform: translate(370px, 102px);
+    }
+}
+
+@keyframes comp-client{
+    0%, 23.9%{
+        opacity: 0;
+    }
+    24%{
+        opacity: 1;
+        transform: translate(10px, 40px);
+    }
+    36%, 100%{
+        transform: translate(260px, 85px);
+    }
+}
+
+@keyframes comp-api{
+    0%, 55.9%{
+        opacity: 0;
+    }
+    56%, 58%{
+        opacity: 1;
+        transform: translate(90px, 125px);
+    }
+    68%, 100%{
+        transform: translate(385px, 85px);
+    }
+}
+
+@keyframes port-client{
+    0%, 36.9%{
+        opacity: 0;
+    }
+    37%, 100%{
+        opacity: 1;
+    }
+}
+
+@keyframes port-api{
+    0%, 69.9%{
+        opacity: 0;
+    }
+    70%, 100%{
+        opacity: 1;
+    }
+}
+
+@keyframes menu-client{
+    0%, 15.9%{
+        opacity: 0;
+    }
+    16%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes menu-server{
+    0%, 49.9%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes menu-server-section{
+    0%, 15.9%{
+        transform: translateY(35px);
+    }
+    16%{
+        transform: translateY(85px);
+    }
+    100%{
+        transform: translateY(85px);
+    }
+}
+
+@keyframes connection {
+    0%, 80%{
+        stroke-dashoffset: 60;
+    }
+    88%, 100%{
+      stroke-dashoffset: 0;
+    }
+    89.9%{
+        opacity: 1;
+    }
+    90%, 100%{
+        opacity: 0;
+    }
+}
+
+@keyframes connection-full {
+    0%, 89.9%{
+        opacity: 0;
+    }
+    90%, 100%{
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes connection {
+    0%, 80%{
+        stroke-dashoffset: 60;
+    }
+    88%, 100%{
+      stroke-dashoffset: 0;
+    }
+    89.9%{
+        opacity: 1;
+    }
+    90%, 100%{
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes connection-full {
+    0%, 89.9%{
+        opacity: 0;
+    }
+    90%, 100%{
+        opacity: 1;
+    }
+}
+
 
 @keyframes data-anim {
     0%, 20.001%, 30%, 50.001%, 60%, 80.001%, 100%{
