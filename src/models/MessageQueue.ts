@@ -64,7 +64,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
 
         let message = this.messages.pop();
         let epRef = new EndpointRef();
-        epRef.endpoint = new Endpoint(this.options.title, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]);
+        epRef.endpoint = new Endpoint(this.options.endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]);
         epRef.method = HTTPMethod.POST;
         message.header.endpoint = epRef;
 
