@@ -27,6 +27,7 @@ export class BoardUIComponent implements OnInit {
 	// Edit section events
 	@Output() copyComponent = new EventEmitter();
 	@Output() pasteComponent = new EventEmitter();
+	@Output() selectAllComponents = new EventEmitter();
 	@Output() cutComponent = new EventEmitter();
 	@Output() delComponent = new EventEmitter();
 	@Output() undo = new EventEmitter();
@@ -92,6 +93,10 @@ export class BoardUIComponent implements OnInit {
 		},
 		"v": (e: Event) => {
 			this.pasteComponent.emit();
+		},
+		"a": (e: Event) => {
+			e.preventDefault();
+			this.selectAllComponents.emit();
 		},
 		"x": (e: Event) => {
 			this.cutComponent.emit();

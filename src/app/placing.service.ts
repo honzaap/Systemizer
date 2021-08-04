@@ -20,6 +20,7 @@ class CopiedItem {
 export class PlacingService{
 
 	@Output() componentChanged = new EventEmitter();
+	@Output() showComponentConextMenu = new EventEmitter<any>();
 	@Output() pushComponent = new EventEmitter<OperatorComponent>();
 
 	isPlacing = false;
@@ -93,18 +94,36 @@ export class PlacingService{
 		this.copiedItems = items;
 	}
 
-	pasteItem(){
+	pasteItem(x: number = -1, y: number = -1){
 		let components = [];
 		let connectionsList = [];
 		for(let item of this.copiedItems){
 			connectionsList = connectionsList.concat(item.outputConnectionsList);
 		}
-			
+
+		let minX = Number.MAX_VALUE;
+		let minY = Number.MAX_VALUE;
+		let maxX = -1;
+		let maxY = -1;
+
+		this.copiedItems.forEach(item => {
+			minX = Math.min(item.options.X, minX);
+			minY = Math.min(item.options.Y, minY);
+			maxX = Math.max(item.options.X + 80, maxX);
+			maxY = Math.max(item.options.Y + 80, maxY);
+		})
+
+		let width = maxX - minX;
+		let height = maxY - minY;
+
+		let pasteOriginX = Math.min(x < 0 ? maxX + 40 : x + width, this.boardWidth);
+		let pasteOriginY = Math.min(y < 0 ? maxY + 40 : y + height, this.boardHeight);
+
 		for(let item of this.copiedItems){
 			let options = item.options;
 
-			let pasteX = Math.min(options.X + 40, this.boardWidth - 40);
-			let pasteY = Math.min(options.Y + 40, this.boardHeight - 40);
+			let pasteX = pasteOriginX - width + (options.X - minX)
+			let pasteY = pasteOriginY - height + (options.Y - minY)
 	
 			let component = this.createComponent(item.component, pasteX, pasteY, options);
 			connectionsList = connectionsList.map(conn => {
@@ -138,14 +157,14 @@ export class PlacingService{
 					comp1Initiated = true;
 					if(comp2Initiated){
 						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
-						false, connection.lineBreaks.map(br => {return {x: Math.min(br.x+40, this.boardWidth),y: Math.min(br.y+40, this.boardHeight) }}));
+						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}));
 					}
 				})
 				comp2.onViewInit.push(()=> {
 					comp2Initiated = true;
 					if(comp1Initiated){
 						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
-						false, connection.lineBreaks.map(br => {return {x: Math.min(br.x+40, this.boardWidth),y: Math.min(br.y+40, this.boardHeight) }}));
+						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}));
 					}
 				})
 			}
@@ -196,6 +215,12 @@ export class PlacingService{
 		
 		c.instance.hasChanged.subscribe(()=>{
 			this.componentChanged.emit();
+		})
+		c.instance.showContextMenu.subscribe((e)=>{
+			this.showComponentConextMenu.emit({
+				x: c.instance.getLogicComponent().options.X + e.offsetX,
+				y: c.instance.getLogicComponent().options.Y + e.offsetY,
+			});
 		})
 
 		comp.options.X = left;

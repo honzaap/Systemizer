@@ -170,7 +170,7 @@
     }
 }
 .saved-boards-popup{
-    position: absolute;
+    position: fixed;
     top: 100px;
     background-color: var(--background-light);
     font-size: 0.8em;
@@ -273,6 +273,36 @@
     font-size: 12px;
     cursor: pointer;
 }
+.context-menu{
+    position: absolute;
+    z-index: 140;
+    background-color: var(--background);
+    border: 0.15rem solid var(--border);
+    color: var(--text);
+    font-size: 0.9rem;
+    transform-origin: top left;
+    white-space: nowrap;
+    & .menu{
+        display: flex;
+        flex-direction: column;
+        & .item{
+            padding: 0.75em 1em;
+            flex-grow: 1;
+            cursor: pointer;
+            &:hover{
+                background-color: var(--background-dark);
+            }
+        }
+        & .line{
+            margin: 0 auto;
+            width: 80%;
+            background-color: var(--text);
+            border-color: var(--text);
+            opacity: 0.1;
+        }
+    }
+}
+
 
 @keyframes loadingAnim {
     0%{

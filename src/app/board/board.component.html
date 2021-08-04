@@ -2,6 +2,30 @@
     <template #conn></template>
     <svg class="svg-canvas" id="svg-canvas" >
     </svg>
+    <div [style.transform]="'scale(' + 1/placingService.boardScale + ')'" oncontextmenu="return false;" class="context-menu" *ngIf="showContextMenu" [style.top.px]="contextMenuY" [style.left.px]="contextMenuX">
+        <div class="menu">
+            <div class="item" (click)="pasteItem(contextMenuX, contextMenuY); showContextMenu = false">Paste here</div>
+            <hr class="line">
+            <div class="item" (click)="selectAll(); showContextMenu = false">Select all</div>
+            <hr class="line">
+            <div class="item" (click)="zoomIn(); showContextMenu = false">Zoom in</div>
+            <div class="item" (click)="zoomOut(); showContextMenu = false">Zoom out</div>
+            <hr class="line">
+            <div class="item" (click)="undo(); showContextMenu = false">Undo</div>
+            <div class="item" (click)="redo(); showContextMenu = false">Redo</div>
+            <div class="item" (click)="save(true); showContextMenu = false">Save</div>
+            <hr class="line">
+            <div class="item" (click)="resetView(); showContextMenu = false">Reset view</div>
+        </div>
+    </div>
+    <div [style.transform]="'scale(' + 1/placingService.boardScale + ')'" oncontextmenu="return false;" class="context-menu" *ngIf="showComponentContextMenu" [style.top.px]="contextMenuY" [style.left.px]="contextMenuX">
+        <div class="menu">
+            <div class="item" (click)="delete(); showComponentContextMenu = false">Delete</div>
+            <hr class="line">
+            <div class="item" (click)="copyItem(); showComponentContextMenu = false">Copy</div>
+            <div class="item" (click)="cutItem(); showComponentContextMenu = false">Cut</div>
+        </div>
+    </div>
 </div>
 <div class="backdrop-centralized loading" *ngIf="isLoading">
     Loading...

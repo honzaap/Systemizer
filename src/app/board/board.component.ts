@@ -46,6 +46,7 @@ export class BoardComponent implements AfterViewChecked  {
 	board : HTMLElement;
 	posX = 0;
 	posY = 0;
+	boardMoved: boolean = false;
 
 	isLoading = false;
 	isAutosaving = false;
@@ -96,7 +97,12 @@ export class BoardComponent implements AfterViewChecked  {
 	savedBoards: SavedBoard[] = [];
 	selectedSavedBoard: SavedBoard;
 
-	constructor(private placingService : PlacingService,
+	showContextMenu: boolean = false;
+	showComponentContextMenu: boolean = false;
+	contextMenuX: number;
+	contextMenuY: number;
+
+	constructor(public placingService : PlacingService,
 	private selectionService: SelectionService, 
 	private snackBar: MatSnackBar,
 	private savingService: SavingService,
@@ -156,6 +162,13 @@ export class BoardComponent implements AfterViewChecked  {
 				// A component was created somewhere else and needs to be added to the state of the board
 				this.pushComponent(component);
 			})
+			this.placingService.showComponentConextMenu.subscribe((e)=>{
+				// Display a context menu on component
+				this.showComponentContextMenu = true;
+				this.showContextMenu = false;
+				this.contextMenuX = e.x;
+				this.contextMenuY = e.y;
+			})
 			setInterval(()=>{
 				if(this.allLogicComponents.length != 0){
 					this.save();
@@ -191,10 +204,10 @@ export class BoardComponent implements AfterViewChecked  {
 		this.placingService.copyItems(selections);
 	}
 
-	pasteItem(){
+	pasteItem(x: number = -1, y: number = -1){
 		this.selectionService.clearSelection();
 		this.selectionService.clearCurrentConnectionSelections();
-		for(let component of this.placingService.pasteItem()){
+		for(let component of this.placingService.pasteItem(x,y)){
 			this.pushComponent(component);
 			component.onViewInit.push(()=>{
 				this.selectionService.addSelection(component, true);
@@ -206,6 +219,12 @@ export class BoardComponent implements AfterViewChecked  {
 	cutItem(){
 		this.copyItem();
 		this.delete();
+	}
+
+	selectAll(){
+		for(let component of this.allComponents){
+			this.selectionService.addSelection(component, true);
+		}
 	}
 
 	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
@@ -336,6 +355,8 @@ export class BoardComponent implements AfterViewChecked  {
 		let e = event as MouseEvent;
 		if(e.button == 0 && !this.isReadOnly){
 			// Start selecting
+			this.showContextMenu = false;
+			this.showComponentContextMenu = false;
 			this.selectionService.startSelecting(e, this.placingService.boardScale)
 		}
 		else if(this.isReadOnly || e.button == 1 || e.button == 2){
@@ -349,6 +370,9 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	public handleMousemove = ( event: MouseEvent ): void => {
+		this.boardMoved = true;
+		this.showContextMenu = false;
+		this.showComponentContextMenu = false;
 		this.posX += event.movementX;
 		this.posY += event.movementY;
 
@@ -356,6 +380,13 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	public handleMouseup = (e) : void => {
+		if(e.button === 2 && !this.boardMoved && !this.isReadOnly){
+			this.showContextMenu = true;
+			this.showComponentContextMenu = false;
+			this.contextMenuX = e.offsetX;
+			this.contextMenuY = e.offsetY;
+		}
+		this.boardMoved = false;
 		this.board.classList.remove("moving")
 		this.board.removeEventListener( "mousemove", this.handleMousemove );
 		window.removeEventListener( "mouseup", this.handleMouseup );
@@ -432,7 +463,6 @@ export class BoardComponent implements AfterViewChecked  {
 				this.posX -= xFromCenter / 10;
 				this.posY -= yFromCenter / 10;
 			}
-
 		}
 		this.updateBoardTransform();
 	}

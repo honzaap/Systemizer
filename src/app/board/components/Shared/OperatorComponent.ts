@@ -26,6 +26,7 @@ interface Position{
 export class OperatorComponent {
 
 	hasChanged = new EventEmitter();
+	showContextMenu = new EventEmitter();
 
     board: HTMLElement;
 	comp: HTMLElement
@@ -86,6 +87,10 @@ export class OperatorComponent {
 			return;
 		if(event.button != 0){
 			event.preventDefault();
+			if(event.button == 2){
+				this.selectionService.addSelection(this, false);
+				this.showContextMenu.emit(event);
+			}
 			return;
 		}
 		this.handleClick(event);

@@ -141,6 +141,10 @@ export class CreateComponent implements OnInit {
 		this.board.pasteItem();
 	}
 
+	selectAll(){
+		this.board.selectAll();
+	}
+
 	cut(){
 		this.board.cutItem();
 	}
