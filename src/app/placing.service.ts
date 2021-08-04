@@ -131,14 +131,16 @@ export class PlacingService{
 					return {
 						from: component.getLogicComponent().originID,
 						to: conn.to,
-						lineBreaks: conn.lineBreaks
+						lineBreaks: conn.lineBreaks,
+						title: conn.title
 					}
 				}
 				else if(conn.to === item.logicComponent.originID){
 					return {
 						from: conn.from,
 						to: component.getLogicComponent().originID,
-						lineBreaks: conn.lineBreaks
+						lineBreaks: conn.lineBreaks,
+						title: conn.title
 					}
 				}
 				return conn;
@@ -157,14 +159,14 @@ export class PlacingService{
 					comp1Initiated = true;
 					if(comp2Initiated){
 						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
-						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}));
+						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}), connection.title);
 					}
 				})
 				comp2.onViewInit.push(()=> {
 					comp2Initiated = true;
 					if(comp1Initiated){
 						this.connectPorts(comp1.getPortComponent(true), comp2.getPortComponent(false), 
-						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}));
+						false, connection.lineBreaks.map(br => {return {x: pasteOriginX - width + (br.x - minX),y: pasteOriginY - height + (br.y - minY) }}), connection.title);
 					}
 				})
 			}
@@ -172,7 +174,7 @@ export class PlacingService{
 		return components;
 	}
 
-	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false, lineBreaks: LineBreak[] = []){
+	connectPorts(portComponent1: PortComponent, portComponent2: PortComponent, isReadOnly: boolean = false, lineBreaks: LineBreak[] = [], title: string = ""){
 		let factory : ComponentFactory<ConnectionComponent> = this.resolver.resolveComponentFactory(ConnectionComponent);
 		let c : ComponentRef<ConnectionComponent>  = this.connectionRef.createComponent(factory);
 
@@ -182,6 +184,7 @@ export class PlacingService{
 			return false;
 		}
 		logicConn.lineBreaks = lineBreaks;
+		logicConn.title = title;
 		c.instance.LogicConnection = logicConn;
 		c.instance.isReadOnly = isReadOnly;
 

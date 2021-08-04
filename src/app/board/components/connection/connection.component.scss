@@ -49,4 +49,33 @@ svg{
             }
         }
     }
+    & .title{
+        pointer-events: none;
+        fill: var(--text);
+        font-size: 12px;
+        & > textPath{
+            dominant-baseline: text-after-edge;
+        }
+    }
+}
+.title-popup{
+    display: flex;
+    position: absolute;
+    font-size: 1em;
+    padding: 0.25em 0.3em;
+    z-index: 130;
+    background-color: var(--background);
+    border: 0.15rem solid var(--border);
+    color: var(--text);
+    gap: 0.5em;
+    & input{
+        width: 6.5em;
+        background-color: transparent;
+        font-size: 0.9em;
+        color: var(--text);
+        border: 0;
+        outline: 0;
+        border-bottom: 0.1em solid var(--text);
+        text-align: center;
+    }
 }

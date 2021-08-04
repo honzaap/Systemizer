@@ -124,6 +124,8 @@ export class SavingService {
 						jsonReadyComponent.connections.push(jsonReadyConnection);
 						if(connection.lineBreaks != null && connection.lineBreaks.length != 2)
 							jsonReadyConnection.lineBreaks = connection.lineBreaks;
+						if(connection.title)
+							jsonReadyConnection.title = connection.title;
 					}
 				}
 				jsonReadyComponents.push(jsonReadyComponent);
@@ -179,6 +181,7 @@ export class SavingService {
 				if(outputsTable[con.to]){
 					let logicConnection = connection.component.connectTo(outputsTable[con.to], false, true);
 					logicConnection.lineBreaks = con.lineBreaks;
+					logicConnection.title = con.title;
 				}
 			});
 		}
@@ -215,8 +218,10 @@ export class SavingService {
 			let optimizedConnections = []
 			for(let connection of component.connections){ 
 				let con = [connection.from.slice(0, 5), connection.to.slice(0, 5),]
-				if(connection.lineBreaks)
-					con.push(connection.lineBreaks);
+				if(connection.lineBreaks || connection.title)
+					con.push(connection.lineBreaks || []);
+				if(connection.title)
+					con.push(connection.title);
 				optimizedConnections.push(con);
 			}
 			if(optimizedConnections.length == 0)
@@ -249,7 +254,9 @@ export class SavingService {
 							to: connection[1],
 						}
 					if(connection.length > 2)
-						normalConnection.lineBreaks = connection[2]
+						normalConnection.lineBreaks = connection[2];
+					if(connection.length > 3)
+						normalConnection.title = connection[3];
 					normalConnections.push(normalConnection);
 				}
 			}

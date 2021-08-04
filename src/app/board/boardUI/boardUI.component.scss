@@ -189,6 +189,7 @@ input[type="file"] {
     z-index: 1400;
 }
 .preview{
+    overflow: hidden;
     display: flex;
     justify-content: center;
     flex-basis: 80%;

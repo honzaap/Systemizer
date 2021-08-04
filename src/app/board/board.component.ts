@@ -189,7 +189,8 @@ export class BoardComponent implements AfterViewChecked  {
 						return {
 							from: outputPort.LogicParent.originID,
 							to: conn.getOtherPort(outputPort.LogicPort).parent.originID,
-							lineBreaks: conn.lineBreaks
+							lineBreaks: conn.lineBreaks,
+							title: conn.title
 						};
 					})
 				);
@@ -446,19 +447,21 @@ export class BoardComponent implements AfterViewChecked  {
 				maxX = Math.max(component.options.X + width, maxX);
 				maxY = Math.max(component.options.Y + height, maxY);
 			}
-			
+			// Size of components
 			let width = maxX - minX + 80;
 			let height = maxY - minY + 30;
 
+			// Adjust scale to fit size
 			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerWidth / width) / 0.1) * 0.1, 2), 0.3);
 			this.placingService.boardScale = Math.max(Math.min(Math.round((window.innerHeight / height) / 0.1) * 0.1, this.placingService.boardScale), 0.3);
 
 			let xFromCenter = (this.placingService.boardWidth / 2) - minX;
 			let yFromCenter = (this.placingService.boardHeight / 2) - minY;
-
+			
 			this.posX = - minX + xFromCenter + (window.innerWidth - width * this.placingService.boardScale) / 2 + 20;
 			this.posY = - minY + yFromCenter + (window.innerHeight - height * this.placingService.boardScale) / 2 + 15;
-
+			
+			// Get the board in view
 			for(let i = 2; i > this.placingService.boardScale; i -= 0.1){
 				this.posX -= xFromCenter / 10;
 				this.posY -= yFromCenter / 10;
@@ -678,7 +681,7 @@ export class BoardComponent implements AfterViewChecked  {
 	connectLoadedComponents(connectionTable: any[], outputPortsTable: any){
 		for(let connection of connectionTable){
 			connection.to.filter(con => con.isFromOutput == null || !con.isFromOutput).forEach(con => {
-				this.placingService.connectPorts(outputPortsTable[con.to], connection.port, this.isReadOnly, con.lineBreaks);
+				this.placingService.connectPorts(outputPortsTable[con.to], connection.port, this.isReadOnly, con.lineBreaks, con.title);
 			});
 		}
 		setTimeout(()=>{

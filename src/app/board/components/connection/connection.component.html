@@ -3,7 +3,12 @@
 		<stop offset="0%"   [attr.stop-color]="portComponent1.LogicPort.parent.color"/>
 		<stop offset="100%" [attr.stop-color]="portComponent2.LogicPort.parent.color"/>
 	</linearGradient>
-	<path #mainPath class="main" [attr.d]="line" [attr.stroke]="'url(#linear-' + connectionID + ')'"/>
+	<path id="conn-{{connectionID}}" #mainPath class="main" [attr.d]="line" [attr.stroke]="'url(#linear-' + connectionID + ')'"/>
+	<text text-anchor="middle" class="title">
+		<textPath startOffset="50%" [attr.href]="'#conn-' + connectionID">
+			{{LogicConnection.title}}
+		</textPath>
+	</text>
 	<g class="line-breaks-container" [class.active]="LogicConnection.lineBreaks.includes(selectionService.currentLineBreakSelection)">
 		<path #secondPath class="interactive"(click)="handleClick()" [attr.d]="line"/>
 		<ng-container *ngFor="let break of LogicConnection.lineBreaks; index as i">
@@ -20,3 +25,7 @@
 		</ng-container>
 	</g>
 </svg>
+<div *ngIf="selectionService.currentConnectionSelection === this" [style.top.px]="titlePopupY" [style.left.px]="titlePopupX"class="title-popup">
+	<span>Title: </span>
+	<input type="text" [(ngModel)]="LogicConnection.title"/>
+</div>

@@ -76,11 +76,10 @@ export class ExportService {
 					this.renderComponentTitleToCanvas(ctx, component, options.transparentBackground ? options.lightTitles : !options.lightMode, offsetX, offsetY);
 			}
 			ctx.fillStyle = options.lightMode ? "#fff" : "#282A37"
-			//ctx.strokeStyle = "#df9300";
 			ctx.lineWidth = 2;
 			if(component["inputPort"]){ 
 				// Render connections
-				this.renderConnectionsToCanvas(ctx, component, offsetX, offsetY);
+				this.renderConnectionsToCanvas(ctx, options.transparentBackground ? options.lightTitles : !options.lightMode, component, offsetX, offsetY);
 			}
 		}
 		for(let component of components){
@@ -139,7 +138,7 @@ export class ExportService {
 		}
 	}
 
-	private renderConnectionsToCanvas(ctx: CanvasRenderingContext2D, component: IDataOperator, offsetX: number, offsetY: number){
+	private renderConnectionsToCanvas(ctx: CanvasRenderingContext2D, lightMode: boolean, component: IDataOperator, offsetX: number, offsetY: number){
 		for(let connection of (component["inputPort"] as Port).connections){
 			let {width, height} = this.getComponentSize(component);
 			let component2 = connection.getOtherPort(component["inputPort"]).parent;
@@ -162,12 +161,23 @@ export class ExportService {
 			}
 			else{
 				ctx.beginPath();
-				ctx.moveTo(connection.lineBreaks[0].x, connection.lineBreaks[0].y);
+				ctx.moveTo(connection.lineBreaks[0].x - offsetX, connection.lineBreaks[0].y - offsetY);
 				ctx.closePath() 
 				for(let lineBreak of connection.lineBreaks){
-					ctx.lineTo(lineBreak.x, lineBreak.y);
+					ctx.lineTo(lineBreak.x - offsetX, lineBreak.y - offsetY);
 					ctx.stroke()
 				}
+			}
+		
+			if(connection.lineBreaks && connection.title){
+				// Draw text along the path
+				ctx.font="12px Arial";
+				ctx.textBaseline = "bottom";
+				ctx.strokeStyle = "transparent";
+				ctx.fillStyle = lightMode ? "#dadada" : "#454545";
+				let lineBreaks = [];
+				connection.lineBreaks.forEach(br => {lineBreaks.push(...[br.x - offsetX, br.y - offsetY]);});
+				(ctx as any).textPath(connection.title || "", lineBreaks);
 			}
 		}
 	}
@@ -320,7 +330,7 @@ export class ExportService {
 			}
 
 			if(component["inputPort"]){ 
-				this.renderConnectionsToSvg(svg, component, offsetX, offsetY);
+				this.renderConnectionsToSvg(svg, component, options.lightTitles, offsetX, offsetY);
 			}
 		}
 		for(let component of components){
@@ -337,11 +347,11 @@ export class ExportService {
 				svg.appendChild(img);
 			}
 		}
-		this.renderPortsToSvg(svg, components, offsetX, offsetY);
+		this.renderPortsToSvg(svg, components, options.lightTitles, offsetX, offsetY);
 		return svg;
 	}
 
-	private renderPortsToSvg(svg: SVGElement, components: IDataOperator[], offsetX: number, offsetY: number){
+	private renderPortsToSvg(svg: SVGElement, components: IDataOperator[], lightMode: boolean, offsetX: number, offsetY: number){
 		for(let component of components){ // Render ports (render then over connections)
 			let {width, height} = this.getComponentSize(component);
 			if(component["inputPort"] && component["inputPort"].connections.length > 0){ // Render input port
@@ -349,7 +359,7 @@ export class ExportService {
 				port.setAttribute("cx", (component.options.X - offsetX - 12).toString());
 				port.setAttribute("cy", (component.options.Y - offsetY + height/2).toString());
 				port.setAttribute("r", "7.5");
-				port.setAttribute("fill", "#282A37");
+				port.setAttribute("fill", lightMode ? "#fff" : "#282A37");
 				port.setAttribute("stroke", component.color);
 				port.setAttribute("stroke-width", "2");
 				svg.appendChild(port);
@@ -359,7 +369,7 @@ export class ExportService {
 				port.setAttribute("cx", (component.options.X - offsetX + width + 12).toString());
 				port.setAttribute("cy", (component.options.Y - offsetY + height/2).toString());
 				port.setAttribute("r", "7.5");
-				port.setAttribute("fill", "#282A37");
+				port.setAttribute("fill", lightMode ? "#fff" : "#282A37");
 				port.setAttribute("stroke", component.color);
 				port.setAttribute("stroke-width", "2");
 				svg.appendChild(port);
@@ -367,7 +377,7 @@ export class ExportService {
 		}
 	}
 
-	private renderConnectionsToSvg(svg: SVGElement, component: IDataOperator, offsetX: number, offsetY: number){
+	private renderConnectionsToSvg(svg: SVGElement, component: IDataOperator, lightMode: boolean, offsetX: number, offsetY: number){
 		// Render connections
 		for(let connection of (component["inputPort"] as Port).connections){
 			var newLine = document.createElementNS(this.svgns,'path');
@@ -376,6 +386,7 @@ export class ExportService {
 			let stop2 = document.createElementNS(this.svgns, "stop");
 			let id = UUID().slice(0, 6);
 			grad.id = id;
+			newLine.id = `con-${id}`;
 			grad.setAttribute("x1", "0");
 			grad.setAttribute("y1", "0");
 			grad.setAttribute("x2", "100%");
@@ -393,6 +404,21 @@ export class ExportService {
 			grad.appendChild(stop2);
 			svg.appendChild(grad);
 			svg.appendChild(newLine);
+
+			if(connection.lineBreaks && connection.title){
+				let text = document.createElementNS(this.svgns, "text");
+				let textPath = document.createElementNS(this.svgns, "textPath");
+				text.setAttribute("text-anchor", "middle");
+				text.setAttribute("fill", lightMode ? "#dadada" : "454545");
+				text.setAttribute("font-size", "12px");
+				text.setAttribute("font-family", "Arial");
+				textPath.setAttribute("startOffset", "50%");
+				textPath.setAttribute("href", `#con-${id}`);
+				textPath.setAttribute("dominant-baseline", "text-after-edge");
+				textPath.textContent = connection.title;
+				text.appendChild(textPath);
+				svg.appendChild(text);
+			}
 		}
 	}
 

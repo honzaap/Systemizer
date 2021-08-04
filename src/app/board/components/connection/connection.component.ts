@@ -32,6 +32,9 @@ export class ConnectionComponent implements OnInit {
 	linePrevX: number = 0;
 	linePrevY: number = 0;
 
+	titlePopupX: number = 0;
+	titlePopupY: number = 0;
+
 	constructor(private cdRef: ChangeDetectorRef, public selectionService: SelectionService){
 	}
 
@@ -93,6 +96,12 @@ export class ConnectionComponent implements OnInit {
 
 	handleClick(){
 		this.selectionService.setConnectionSelection(this);
+		let startX = this.LogicConnection.lineBreaks[0].x;
+		let startY = this.LogicConnection.lineBreaks[0].y;
+		let endX = this.LogicConnection.lineBreaks[this.LogicConnection.lineBreaks.length-1].x;
+		let endY = this.LogicConnection.lineBreaks[this.LogicConnection.lineBreaks.length-1].y;
+		this.titlePopupX = startX + (endX - startX) / 2 - 60;
+		this.titlePopupY = startY + (endY - startY) / 2 - 55;
 	}
 
 	ngAfterViewInit(){

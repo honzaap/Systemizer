@@ -17,6 +17,7 @@ export class Connection{
     port1: Port;
     port2: Port;
     lineBreaks: LineBreak[];
+    title: string = "";
 
     constructor(port1: Port, port2: Port) {
         this.port1 = port1;
