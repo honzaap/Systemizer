@@ -36,6 +36,8 @@ export class TutorialControlsComponent implements OnInit {
 		this.slides.push(new TutorialSlide("gifs/tutorial5.gif", "Remove components", 'Removing components can be done by selecting component and pressing the [del] button, or by using top menu remove button.'));
 		this.slides.push(new TutorialSlide("gifs/tutorial8.gif", "Select multiple components", 'To select multiple components, use the left mouse button and select some components. You can then do any action you would do with a single component.'));
 		this.slides.push(new TutorialSlide("gifs/tutorial6.gif", "Connecting components", 'To connect components together, click and hold on a port of component, then drag the connection to the second component port and release.'));
+		this.slides.push(new TutorialSlide("gifs/tutorial9.gif", "Connection line breaking", 'You can change the shape of connection by hovering over it, and then clicking and dragging the dots.'));
+		this.slides.push(new TutorialSlide("gifs/tutorial10.gif", "Connection titles", 'You can add captions to connection that are displayed in the center of the connection.'));
 		this.slides.push(new TutorialSlide("gifs/tutorial7.gif", "Changing properties", 'Properties of component can be altered by selecting the component, and accessing the "Properties" section in the options side menu.'));
 		this.currentSlide = this.slides[0];
 	}	
