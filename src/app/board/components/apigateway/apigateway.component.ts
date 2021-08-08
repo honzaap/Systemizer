@@ -19,7 +19,6 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 export class ApiGatewayComponent  extends OperatorComponent implements OnInit{
 
 	public LogicApiGateway : APIGateway = new APIGateway();
-	
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	connectableEndpoints: Endpoint[];

@@ -51,8 +51,28 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	addEndpoint(){
 		if(this.LogicApi.options.isConsumer)
 			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH]));
-		else
-			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET]));
+		else{
+			let type = this.LogicApi.options.type;
+			let endpoint: Endpoint;
+			if(type == APIType.REST){
+				endpoint = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
+			}
+			else if(type == APIType.GraphQL){
+				endpoint = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
+			}
+			else if(type == APIType.RPC){
+				endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
+			}
+			else if(type == APIType.gRPC){
+				endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
+				endpoint.grpcMode = gRPCMode.Unary;
+			}
+			else if(type == APIType.WebSockets){
+				endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
+				endpoint.protocol = Protocol.WebSockets;
+			}
+			this.LogicApi.options.endpoints.push(endpoint);
+		}
 		this.afterChange();
 	}
 

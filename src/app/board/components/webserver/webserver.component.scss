@@ -1,3 +1,45 @@
 :host{
     position: relative;
 }
+
+.options-endpoint-inputs{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    height: 2em;
+    & .endpoint-url{
+        height: 100%;
+        flex-grow: 1;
+        padding: 0;
+    }
+}
+.options-endpoint-actions{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.1em;
+}
+.options-endpoint-action{
+    display: flex;
+    flex-flow: row nowrap;
+    & .action-endpoint{
+        flex-grow: 1;
+    }
+    & .action-method{
+        flex-basis: 35%;
+        flex-shrink: 0;
+    }
+    & .button-icon{
+        flex-basis: 10%;
+        flex-shrink: 0;
+        align-self: center;
+    }
+}
+.options-endpoint-actions-container{
+    padding-top: 1em;
+    & .property-name{
+        font-size: 1.2em;
+    }
+}
+.options-type-container{
+    margin-bottom: 1em;
+}

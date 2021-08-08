@@ -3,7 +3,6 @@ import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { Endpoint, EndpointRef } from "./Endpoint";
-import { APIType } from "./enums/APIType";
 import { gRPCMode } from "./enums/gRPCMode";
 import { EndpointActionHTTPMethod, HTTPMethod } from "./enums/HTTPMethod";
 import { Protocol } from "./enums/Protocol";
@@ -135,7 +134,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
             }
-            if(sendResponse){
+            if(sendResponse || targetEndpoint.actions.length == 0){
                 // Send response back
                 this.connectionTable[data.requestId] = data.origin;
                 await this.sendData(this.getResponse(data));

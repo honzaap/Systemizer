@@ -279,7 +279,6 @@ export class ExportService {
 	async getSvg(components: IDataOperator[], options: ExportSvgOptions){
 		if(components.length == 0)
 			return null;
-		
 		let svg = document.createElementNS(this.svgns, "svg") as SVGElement;
 		document.getElementsByTagName("body")[0].appendChild(svg);
 		let offsetX = 0;
