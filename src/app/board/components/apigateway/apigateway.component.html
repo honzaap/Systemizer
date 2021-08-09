@@ -4,7 +4,7 @@
 [style.top.px]="LogicApiGateway.options.Y"
 >
     <template #conn></template>
-    <div class="img-container"(mousedown)="handleMousedown( $event )"
+    <div class="img-container"(mousedown)="handleMousedown( $event )" (touchstart)="handleMousedown($event)"
     (click)="handleClick($event)">
         <img src="./assets/apigateway.svg">
     </div>

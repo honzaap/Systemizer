@@ -82,35 +82,43 @@ export class OperatorComponent {
 		this.resolver = resolver
 	}
 
-  	public handleMousedown(event: MouseEvent): void {
+  	public handleMousedown(event: Event): void {
 		if(this.placingService.isConnecting) 
 			return;
-		if(event.button != 0){
-			event.preventDefault();
-			if(event.button == 2){
-				this.selectionService.addSelection(this, false);
-				this.showContextMenu.emit(event);
-			}
-			return;
-		}
+		event.preventDefault();
 		this.handleClick(event);
 		this.placingService.startPlacing();
-
-		event.preventDefault();
 
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
 		this.maxX = this.placingService.boardWidth;
 		this.maxY = this.placingService.boardHeight;
+		if(event instanceof MouseEvent){
+			if(event.button != 0){
+				event.preventDefault();
+				if(event.button == 2){
+					this.selectionService.addSelection(this, false);
+					this.showContextMenu.emit(event);
+				}
+				return;
+			}
+	
+			this.selectionService.prevX = event.clientX;
+			this.selectionService.prevY = event.clientY;
+	
+			this.board.addEventListener( "mousemove", this.handleMousemove );
+			window.addEventListener( "mouseup", this.handleMouseup );
+		}
+		else if(event instanceof TouchEvent){
 
-		this.selectionService.prevX = event.clientX;
-		this.selectionService.prevY = event.clientY;
-
-		this.board.addEventListener( "mousemove", this.handleMousemove );
-		this.selectionService.moveSelectedConnections(event, this.placingService.boardScale); // Move connections
-		window.addEventListener( "mouseup", this.handleMouseup );
+			this.selectionService.prevX = event.touches[0].clientX;
+			this.selectionService.prevY = event.touches[0].clientY;
+	
+			this.board.addEventListener( "touchmove", this.handleMousemove );
+			window.addEventListener( "touchend", this.handleMouseup );
+		}
 	}
 
-  	public handleMousemove = (event: MouseEvent): void => {
+  	public handleMousemove = (event: Event): void => {
 		this.selectionService.moveComponents(event, this.placingService.boardScale);
 	}
 
@@ -134,8 +142,9 @@ export class OperatorComponent {
 		}		
 	}
 
-	public handleClick(event: MouseEvent){
-		this.selectionService.addSelection(this, event.ctrlKey);
+	public handleClick(event: Event){
+		if(event instanceof MouseEvent || event instanceof TouchEvent)
+			this.selectionService.addSelection(this, event.ctrlKey);
 	}
 
 	public getLogicComponent(): IDataOperator{

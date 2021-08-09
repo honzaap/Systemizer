@@ -1,4 +1,6 @@
-<div #board class="board infocus" id="board" oncontextmenu="return false;" (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick($event)" (click)="handleClick($event)">
+<div #board class="board infocus" id="board" oncontextmenu="return false;"
+ (mousedown.self)="handleMousedown( $event )" (click.self)="handleSelfClick()" (click)="handleClick()"
+ (touchstart.self)="handleMousedown($event); handleSelfClick()" (pinchout)="zoomIn(8)" (pinchin)="zoomOut(8)">
     <template #conn></template>
     <svg class="svg-canvas" id="svg-canvas" >
     </svg>

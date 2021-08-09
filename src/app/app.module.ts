@@ -9,7 +9,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from "@angular/material/slider"
 
-import { BrowserModule, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+import { BrowserModule, EVENT_MANAGER_PLUGINS, HAMMER_LOADER } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DelayedHoverDirective } from "../shared/DelayedHoverDirective";
 import { ResizableTextAreaDirective } from "../shared/resizable-textarea";
@@ -50,6 +50,13 @@ import { PagesHeaderComponent } from './pages/header/header.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { PagesComponent } from './pages/pages.component';
 import { CDNComponent } from './board/components/cdn/cdn.component';
+
+import * as Hammer from 'hammerjs';
+import {
+HammerModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG} 
+from '@angular/platform-browser';
+
+  
 
 @NgModule({
   declarations: [
@@ -99,7 +106,8 @@ import { CDNComponent } from './board/components/cdn/cdn.component';
     MatSnackBarModule,
     MatTooltipModule,
     MatSliderModule,
-    ColorPickerModule
+    ColorPickerModule,
+    HammerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	providers: [
@@ -107,7 +115,15 @@ import { CDNComponent } from './board/components/cdn/cdn.component';
 			provide: EVENT_MANAGER_PLUGINS,
 			useClass: VueEventModifiersPlugin,
 			multi: true
-		}
+		},
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerGestureConfig,
+    },
+    {
+      provide: HAMMER_LOADER,
+      useValue: () => new Promise(() => {})
+    }
 	],
   bootstrap: [AppComponent]
 })

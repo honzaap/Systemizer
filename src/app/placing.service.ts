@@ -77,6 +77,7 @@ export class PlacingService{
 		let board = document.getElementById("board");
 		board.classList.add("infocus");
 		board.onmousemove = null;
+		board.ontouchmove = null;
 		this.isConnecting = false;
 		this.connectingPort = null;
 	}

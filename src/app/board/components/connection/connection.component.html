@@ -15,12 +15,13 @@
 			<circle class="break" [class.is-current-selection]="selectionService.currentLineBreakSelection != null && selectionService.currentLineBreakSelection.x === break.x && selectionService.currentLineBreakSelection.y === break.y" 
 				r="6" *ngIf="i > 0 && i < LogicConnection.lineBreaks.length - 1"
 				[attr.cx]="break.x" [attr.cy]="break.y"
-				(mousedown)="moveLine(break, $event)">
+				(mousedown)="moveLine(break, $event)" (touchstart)="moveLine(break, $event)">
 			</circle>
 			<circle *ngIf="i < LogicConnection.lineBreaks.length - 1" class="break-available" r="4"
 				[attr.cx]="(break.x + LogicConnection.lineBreaks[i+1].x)/2"
 				[attr.cy]="(break.y + LogicConnection.lineBreaks[i+1].y)/2"
-				(mousedown)="breakLine(break, LogicConnection.lineBreaks[i+1], $event)">
+				(mousedown)="breakLine(break, LogicConnection.lineBreaks[i+1], $event)"
+				(touchstart)="breakLine(break, LogicConnection.lineBreaks[i+1], $event)">
 			</circle>		
 		</ng-container>
 	</g>

@@ -30,7 +30,6 @@ export class PortComponent implements OnInit {
 
 	constructor(public placingService : PlacingService) {
 	}
-
 	ngOnInit(): void {
     	this.LogicPort = this.LogicParent.getPort(this.IsOutput);
 		this.board = document.getElementById("board");
@@ -75,50 +74,91 @@ export class PortComponent implements OnInit {
 		return this;
 	}
 
-	public handleClick( event: MouseEvent ) : void {
-		event.preventDefault();
-		if(event.button != 0)
-			return;
-		if(this.placingService.isConnecting)
-			this.placingService.stopConnecting();
-		else{
-			this.placingService.startConnecting(this)
-			this.line = document.createElementNS('http://www.w3.org/2000/svg','path');
-			this.svgCanvas.appendChild(this.line);
-			this.lineCurrX = event.clientX;
-			this.lineCurrY = event.clientY;
-			this.linePrevX = event.clientX;
-			this.linePrevY = event.clientY;
+	public handleClick( event: Event ) : void {
+		if(event instanceof MouseEvent){
+			if(this.placingService.isConnecting)
+				this.placingService.stopConnecting();
+			else{
+				this.placingService.startConnecting(this)
+				this.line = document.createElementNS('http://www.w3.org/2000/svg','path');
+				this.svgCanvas.appendChild(this.line);
+				this.lineCurrX = event.clientX;
+				this.lineCurrY = event.clientY;
+				this.linePrevX = event.clientX;
+				this.linePrevY = event.clientY;
 
-			this.lineCurrX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
-			this.lineCurrY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
-			this.lineStartX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
-			this.lineStartY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
+				this.lineCurrX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
+				this.lineCurrY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
+				this.lineStartX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
+				this.lineStartY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
 
-			this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
-			this.line.style.stroke = "#6059DF";
-			this.line.style.strokeWidth = "2";
-			this.line.style.strokeLinecap = "round";
-			this.line.style.strokeDasharray = "3";
-			this.line.style.fill = "none";
+				this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
+				this.line.style.stroke = "#6059DF";
+				this.line.style.strokeWidth = "2";
+				this.line.style.strokeLinecap = "round";
+				this.line.style.strokeDasharray = "3";
+				this.line.style.fill = "none";
 
-			this.board.onmousemove = (event) => {
-				if(this.placingService.canMoveConnection){
-					if(!this.placingService.isConnecting) 
-						this.placingService.startConnecting(this);
-					this.lineCurrX = this.lineCurrX - (this.linePrevX - event.clientX) / this.placingService.boardScale;
-					this.lineCurrY = this.lineCurrY - (this.linePrevY - event.clientY) / this.placingService.boardScale;
-					this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
-					this.linePrevX = event.clientX;
-					this.linePrevY = event.clientY;
+				this.board.onmousemove = (event) => {
+					if(this.placingService.canMoveConnection){
+						if(!this.placingService.isConnecting) 
+							this.placingService.startConnecting(this);
+						this.lineCurrX = this.lineCurrX - (this.linePrevX - event.clientX) / this.placingService.boardScale;
+						this.lineCurrY = this.lineCurrY - (this.linePrevY - event.clientY) / this.placingService.boardScale;
+						this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
+						this.linePrevX = event.clientX;
+						this.linePrevY = event.clientY;
+					}
+				}
+			}
+		}
+		else if(event instanceof TouchEvent){
+			if(this.placingService.isConnecting)
+				this.placingService.stopConnecting();
+			else{
+				this.placingService.startConnecting(this)
+				this.line = document.createElementNS('http://www.w3.org/2000/svg','path');
+				this.svgCanvas.appendChild(this.line);
+				this.lineCurrX = event.touches[0].clientX;
+				this.lineCurrY = event.touches[0].clientY;
+				this.linePrevX = event.touches[0].clientX;
+				this.linePrevY = event.touches[0].clientY;
+
+				this.lineCurrX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
+				this.lineCurrY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
+				this.lineStartX = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth/2;
+				this.lineStartY = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight/2;
+
+				this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
+				this.line.style.stroke = "#6059DF";
+				this.line.style.strokeWidth = "2";
+				this.line.style.strokeLinecap = "round";
+				this.line.style.strokeDasharray = "3";
+				this.line.style.fill = "none";
+				this.board.ontouchmove = (event) => {
+					if(this.placingService.canMoveConnection){
+						if(!this.placingService.isConnecting) 
+							this.placingService.startConnecting(this);
+						this.lineCurrX = this.lineCurrX - (this.linePrevX - event.touches[0].clientX) / this.placingService.boardScale;
+						this.lineCurrY = this.lineCurrY - (this.linePrevY - event.touches[0].clientY) / this.placingService.boardScale;
+						this.line.setAttribute('d',`M${this.lineStartX} ${this.lineStartY} L${this.lineCurrX} ${this.lineCurrY}`);
+						this.linePrevX = event.touches[0].clientX;
+						this.linePrevY = event.touches[0].clientY;
+					}
+				}
+				this.board.ontouchend = () =>{
+					this.board.ontouchmove = null;
+					this.board.ontouchend = null;
+					this.svgCanvas.innerHTML = "";
+					this.placingService.stopConnecting();
 				}
 			}
 		}
 	}
 	
-	public handleMouseUp(event: MouseEvent){
+	public handleMouseUp(e){
 		if(this.placingService.isConnecting){
-			if(this !== this.placingService.connectingPort)
+			if(this !== this.placingService.connectingPort){
 				if(this.IsOutput){
 					if(this.placingService.connectPorts(this,this.placingService.connectingPort))
 						this.placingService.componentChanged.emit();
@@ -127,7 +167,8 @@ export class PortComponent implements OnInit {
 					if(this.placingService.connectPorts(this.placingService.connectingPort, this))
 						this.placingService.componentChanged.emit();
 				}
-			}
+			}	
+		}
 	}
 
 	ngAfterViewInit(){

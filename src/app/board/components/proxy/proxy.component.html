@@ -4,7 +4,7 @@
 [style.top.px]="LogicProxy.options.Y"
 >
     <template #conn></template>
-    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    <div class="img-container" (mousedown)="handleMousedown( $event )" (touchstart)="handleMousedown($event)"
     (click)="handleClick($event)">
         <span class="img bg-proxy"></span>
     </div>  

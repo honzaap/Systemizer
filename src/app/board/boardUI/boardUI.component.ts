@@ -75,6 +75,7 @@ export class BoardUIComponent implements OnInit {
 	exportPngPreview: HTMLCanvasElement;
 	exportSvgPreview: SVGElement;
 
+	isMobile: boolean = false;
 
 	scaleControl: FormControl = new FormControl();
 	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
@@ -179,6 +180,9 @@ export class BoardUIComponent implements OnInit {
 			}
 			if(e.key === 'Delete')
 				this.delComponent.emit();
+		}
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+			this.isMobile = true;
 		}
 	}
 

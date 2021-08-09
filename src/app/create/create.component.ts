@@ -71,11 +71,7 @@ export class CreateComponent implements OnInit {
 				this.showOnboardIntro = params["showOnboardTutorial"] == "true";
 			}
 		);
-		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && !this.showReadOnlyViewer && !this.showReadOnlyViewerError){
-			this.showMobileDisclaimer = true;
-			this.showBoard = false;
-			return;
-		}
+
 		if(seenIntroTutorial != "true" || this.showOnboardIntro){
 			this.openTutorialMenu();
 			localStorage.setItem("seenIntroTutorial", "true");

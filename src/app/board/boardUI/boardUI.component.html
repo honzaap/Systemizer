@@ -142,6 +142,11 @@
                 </mat-menu>
             </li>
         </ul>
+        <div class="mobile-fullscreen" *ngIf="isMobile">
+            <button (click)="fullscreen.emit()">
+                <span>Go fullscreen</span>
+            </button>        
+        </div>
     </nav>
     <nav class="nav-second">
         <ul class="nav-list">

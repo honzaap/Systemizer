@@ -259,11 +259,21 @@ export class SelectionService {
 		this.selectionPrevY = e.clientY;
 	}
 
-	public moveComponents = (event: MouseEvent, scale: number): void => {
+	public moveComponents = (event: Event, scale: number): void => {
+		let cX = 0;
+		let cY = 0;
+		if(event instanceof MouseEvent){
+			cX = event.clientX;
+			cY = event.clientY;
+		}
+		else if(event instanceof TouchEvent){
+			cX = event.touches[0].clientX;
+			cY = event.touches[0].clientY;
+		}
 		for(let selection of this.currentSelections){
 			selection.setPosition(
-				selection.getLogicComponent().options.X - (this.prevX - event.clientX) / scale, 
-				selection.getLogicComponent().options.Y - (this.prevY - event.clientY) / scale
+				selection.getLogicComponent().options.X - (this.prevX - cX) / scale, 
+				selection.getLogicComponent().options.Y - (this.prevY - cY) / scale
 			);
 			
 		}
@@ -273,19 +283,15 @@ export class SelectionService {
 					return i!==0 && i < connection.LogicConnection.lineBreaks.length-1;
 				}).forEach(br => {
 					let lineBreak = this.convertLineBreak(
-						{x: br.x - (this.prevX - event.clientX) / scale,
-						y: br.y - (this.prevY - event.clientY) / scale})
+						{x: br.x - (this.prevX - cX) / scale,
+						y: br.y - (this.prevY - cY) / scale})
 					br.x = lineBreak.x;
 					br.y = lineBreak.y;
 				})
 			}
 		}
-		this.prevX = this.convertScaledPosition(event.clientX, scale);
-		this.prevY = this.convertScaledPosition(event.clientY, scale);
-	}
-
-	moveSelectedConnections(event: MouseEvent, boardScale: number) {
-		
+		this.prevX = this.convertScaledPosition(cX, scale);
+		this.prevY = this.convertScaledPosition(cY, scale);
 	}
 
 	private convertLineBreak(lineBreak: LineBreak){

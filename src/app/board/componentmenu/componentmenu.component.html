@@ -19,7 +19,9 @@
                 </ng-template>
             </div>
             <div class="content">
-                <div [style.backgroundColor]="item.color" class="section-item" *ngFor="let item of category.items" (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()">
+                <div [style.backgroundColor]="item.color" class="section-item" *ngFor="let item of category.items"
+                (mousedown)="dragItem(item)" (delayed-hover)="hoverItem(item)" delay="300" (mouseout)="leaveItem()"
+                (touchstart)="dragItem(item)">
                     <span class="caption">{{ item.mark }}</span>
                     <img src="{{ item.imageUrl }}">
                     <button *ngIf="!viewingService.isHelpersDisabled()" class="info" (click)="showInfo(item)"><i class="far fa-question-circle"></i></button>

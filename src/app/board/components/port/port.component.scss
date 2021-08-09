@@ -13,7 +13,7 @@
     z-index: 2;
     position: fixed;
     &:hover{
-        cursor: pointer;
+        cursor: pointer !important;
     }
     & .port-image{
         width: 15px;

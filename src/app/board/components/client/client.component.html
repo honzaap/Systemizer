@@ -5,7 +5,7 @@
 [style.top.px]="LogicClient.options.Y"
 >
     <template #conn></template>
-    <div class="img-container" (mousedown)="handleMousedown( $event )"
+    <div class="img-container" (mousedown)="handleMousedown( $event )" (touchstart)="handleMousedown($event)"
     (click)="handleClick($event)">
         <img src="./assets/client.svg">
     </div>    

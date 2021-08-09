@@ -1,6 +1,7 @@
 <div
 #anchorRef
 (mousedown)="handleMousedown( $event )"
+(touchstart)="handleMousedown($event)"
 (click)="handleClick($event)"
 [style.left.px]="LogicTextField.options.X "
 [style.top.px]="LogicTextField.options.Y" 

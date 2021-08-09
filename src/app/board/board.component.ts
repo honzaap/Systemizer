@@ -53,6 +53,7 @@ export class BoardComponent implements AfterViewChecked  {
 	currentBoardId: string = UUID();
 	isAllClientsSendingData = false;
 	canToggleClientsSendingData = true;
+	lastTouch: Touch;
 
 	@Input() isReadOnly = false;
 	@Input() loadedSave: any;
@@ -119,7 +120,7 @@ export class BoardComponent implements AfterViewChecked  {
 		else
 			this.zoomOut();
 	}
-
+	
 	ngOnInit(): void {
 		this.board = document.getElementById("board");
 		this.board.style.width = `${this.placingService.boardWidth}px`;
@@ -128,8 +129,8 @@ export class BoardComponent implements AfterViewChecked  {
 
 		this.updateBoardTransform();
 
-		window.addEventListener("resize", event => {
-			event.preventDefault();
+		this.board.addEventListener("resize", e => {
+			e.preventDefault();
 		});
 
 		if(!this.isReadOnly){ // These events will not be used in readonly board
@@ -153,7 +154,23 @@ export class BoardComponent implements AfterViewChecked  {
 					this.placingService.stopCreating();
 					this.componentChanged();
 				}
-			})
+			});
+			window.addEventListener("touchstart",(e) => {this.lastTouch = e.touches[0];});
+			window.addEventListener("touchmove", (e) => {this.lastTouch = e.touches[0];});
+		
+			window.addEventListener("touchend",(e: any)=>{
+				if(this.placingService.isCreating){
+					let posX = (this.posX - this.placingService.boardWidth * (this.placingService.boardScale - 1) / 2);
+					let posY = (this.posY - this.placingService.boardHeight * (this.placingService.boardScale - 1) / 2);
+					var x = Math.max(Math.min((this.lastTouch.pageX - posX) / this.placingService.boardScale - 20, this.placingService.boardWidth), 0);
+					var y =  Math.max(Math.min((this.lastTouch.pageY - posY) / this.placingService.boardScale - 80 / this.placingService.boardScale, this.placingService.boardWidth), 0);
+					let component = this.placingService.createComponent(this.placingService.creatingItem, x, y, this.placingService.creatingItemOptions);
+					this.pushComponent(component);
+					this.placingService.stopCreating();
+					this.componentChanged();
+				}
+				return true;
+			});
 			this.placingService.componentChanged.subscribe(()=>{
 				// Some component just got changed, change will be added for undo
 				this.componentChanged();
@@ -352,52 +369,87 @@ export class BoardComponent implements AfterViewChecked  {
 		}, 1000);
 	}
 
-	public handleMousedown(event: Event) {
-		let e = event as MouseEvent;
-		if(e.button == 0 && !this.isReadOnly){
-			// Start selecting
-			this.showContextMenu = false;
-			this.showComponentContextMenu = false;
-			this.selectionService.startSelecting(e, this.placingService.boardScale)
+	public handleMousedown(e: Event) {
+		if(e instanceof MouseEvent){
+			if(e.button == 0 && !this.isReadOnly){
+				// Start selecting
+				this.showContextMenu = false;
+				this.showComponentContextMenu = false;
+				this.selectionService.startSelecting(e, this.placingService.boardScale)
+			}
+			else if(this.isReadOnly || e.button == 1 || e.button == 2){
+				e.preventDefault();
+				if(!this.placingService.canDrag()) 
+					return;
+				this.board.classList.add("moving")
+				this.board.addEventListener( "mousemove", this.handleMousemove );
+				window.addEventListener( "mouseup", this.handleMouseup );
+			}
 		}
-		else if(this.isReadOnly || e.button == 1 || e.button == 2){
+		else if(e instanceof TouchEvent){
 			e.preventDefault();
 			if(!this.placingService.canDrag()) 
 				return;
+			this.lastTouchMoveX = e.touches[0].clientX;
+			this.lastTouchMoveY = e.touches[0].clientY;
 			this.board.classList.add("moving")
-			this.board.addEventListener( "mousemove", this.handleMousemove );
-			window.addEventListener( "mouseup", this.handleMouseup );
+			this.board.addEventListener( "touchmove", this.handleMousemove );
+			window.addEventListener( "touchend", this.handleMouseup );
 		}
+		
 	}
 
-	public handleMousemove = ( event: MouseEvent ): void => {
-		this.boardMoved = true;
-		this.showContextMenu = false;
-		this.showComponentContextMenu = false;
-		this.posX += event.movementX;
-		this.posY += event.movementY;
+	lastTouchMoveX: number = 0;
+	lastTouchMoveY: number = 0;
+
+	public handleMousemove = ( e: Event ): void => {
+		if(e instanceof MouseEvent){
+			this.boardMoved = true;
+			this.showContextMenu = false;
+			this.showComponentContextMenu = false;
+			this.posX += e.movementX;
+			this.posY += e.movementY;
+		}
+		else if(e instanceof TouchEvent){
+			this.boardMoved = true;
+			this.showContextMenu = false;
+			this.showComponentContextMenu = false;
+			this.posX += e.touches[0].clientX - this.lastTouchMoveX;
+			this.posY += e.touches[0].clientY - this.lastTouchMoveY;
+			this.lastTouchMoveX = e.touches[0].clientX;
+			this.lastTouchMoveY = e.touches[0].clientY;
+		}
 
 		this.updateBoardTransform();
 	}
 
-	public handleMouseup = (e) : void => {
-		if(e.button === 2 && !this.boardMoved && !this.isReadOnly){
-			this.showContextMenu = true;
-			this.showComponentContextMenu = false;
-			this.contextMenuX = e.offsetX;
-			this.contextMenuY = e.offsetY;
+	public handleMouseup = (e: Event) : void => {
+		if(e instanceof MouseEvent){
+			if(e.button === 2 && !this.boardMoved && !this.isReadOnly){
+				this.showContextMenu = true;
+				this.showComponentContextMenu = false;
+				this.contextMenuX = e.offsetX;
+				this.contextMenuY = e.offsetY;
+			}
+			this.boardMoved = false;
+			this.board.classList.remove("moving")
+			this.board.removeEventListener( "mousemove", this.handleMousemove );
+			window.removeEventListener( "mouseup", this.handleMouseup );
 		}
-		this.boardMoved = false;
-		this.board.classList.remove("moving")
-		this.board.removeEventListener( "mousemove", this.handleMousemove );
-		window.removeEventListener( "mouseup", this.handleMouseup );
+		else if(e instanceof TouchEvent){
+			this.boardMoved = false;
+			this.board.classList.remove("moving")
+			this.board.removeEventListener( "touchmove", this.handleMousemove );
+			window.removeEventListener( "touchend", this.handleMouseup );
+		}
+	
 	}
 
 	public updateBoardTransform(){
 		this.board.style.transform = `translateX(${this.posX}px) translateY(${this.posY}px) scale(${this.placingService.boardScale})`;
 	}
 
-	public handleClick = (event: MouseEvent) : void => {
+	public handleClick = () : void => {
 		if(this.placingService.isConnecting){
 			this.placingService.stopConnecting();
 			this.board.onmousemove = null;
@@ -405,20 +457,20 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 	}
 
-	public handleSelfClick(event: Event){
+	public handleSelfClick(){
 		this.selectionService.clearSelection();
 		this.selectionService.clearConnectionSelection();
 		this.selectionService.clearCurrentConnectionSelections();
 		this.selectionService.clearLineBreakSelection();
 	}
 
-	zoomOut(){
-		this.placingService.boardScale = Math.max(this.placingService.boardScale - 0.1,0.1) ;
+	zoomOut(modifier: number = 1){
+		this.placingService.boardScale = Math.max(this.placingService.boardScale - (0.1 / modifier),0.1) ;
 		this.updateBoardTransform();
 	}
 
-	zoomIn(){
-		this.placingService.boardScale = Math.min(this.placingService.boardScale + 0.1,2);
+	zoomIn(modifier: number = 1){
+		this.placingService.boardScale = Math.min(this.placingService.boardScale + (0.1 / modifier),2);
 		this.updateBoardTransform();
 	}
 

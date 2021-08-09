@@ -141,6 +141,9 @@ export class ComponentmenuComponent implements OnInit {
 
 		window.addEventListener("mousemove", this.mouseMove);
 		window.addEventListener("mouseup", this.mouseUp);
+
+		window.addEventListener("touchmove", this.mouseMove);
+		window.addEventListener("touchend", this.mouseUp);
 		return false;
 	}
 
@@ -148,15 +151,28 @@ export class ComponentmenuComponent implements OnInit {
 		this.placingItem = null;
 		window.removeEventListener("mouseup",this.mouseUp);
 		window.removeEventListener("mousemove",this.mouseMove);
+
+		window.removeEventListener("touchend",this.mouseUp);
+		window.removeEventListener("touchmove",this.mouseMove);
+		
 		this.placingService.creatingItem = null;
 		this.placingService.stopCreating();
+		return true;
 	}
 
-	mouseMove = (e) =>{
-		this.placingItemRef.nativeElement.style.width = `${40*Math.max(1,this.placingService.boardScale)}px`;
-		this.placingItemRef.nativeElement.style.height = `${40*Math.max(1,this.placingService.boardScale)}px`;
-		this.placingItemRef.nativeElement.style.left = `${e.clientX-(20*Math.max(1,this.placingService.boardScale))}px`;
-		this.placingItemRef.nativeElement.style.top = `${e.clientY-(20*Math.max(1,this.placingService.boardScale))}px`;
+	mouseMove = (e: Event) =>{
+		if(e instanceof MouseEvent){
+			this.placingItemRef.nativeElement.style.width = `${40*Math.max(1,this.placingService.boardScale)}px`;
+			this.placingItemRef.nativeElement.style.height = `${40*Math.max(1,this.placingService.boardScale)}px`;
+			this.placingItemRef.nativeElement.style.left = `${e.clientX-(20*Math.max(1,this.placingService.boardScale))}px`;
+			this.placingItemRef.nativeElement.style.top = `${e.clientY-(20*Math.max(1,this.placingService.boardScale))}px`;
+		}
+		else if(e instanceof TouchEvent){
+			this.placingItemRef.nativeElement.style.width = `${40*Math.max(1,this.placingService.boardScale)}px`;
+			this.placingItemRef.nativeElement.style.height = `${40*Math.max(1,this.placingService.boardScale)}px`;
+			this.placingItemRef.nativeElement.style.left = `${e.touches[0].clientX-(20*Math.max(1,this.placingService.boardScale))}px`;
+			this.placingItemRef.nativeElement.style.top = `${e.touches[0].clientY-(20*Math.max(1,this.placingService.boardScale))}px`;
+		}
 	}
 
 	showInfo(item: MenuItem<any>){

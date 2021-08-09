@@ -350,3 +350,19 @@ input[type="file"] {
         font-size: 1em;
     }
 }
+.mobile-fullscreen{
+    margin-left: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    & button{
+        background-color: var(--main);
+        padding: 0.2em 0.4em;
+        color: #fff;
+        border-radius: 0.4em;
+        &:hover{
+            color: #fff;
+        }
+    }
+}
