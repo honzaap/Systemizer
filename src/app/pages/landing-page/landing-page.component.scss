@@ -135,6 +135,80 @@ a.highlight{
         margin: 1em auto;
     }
 }
+.showcase-container{
+    & h3{
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    & .support{
+        color: var(--main);
+        text-decoration: underline;
+        font-size: 0.8rem;
+        display: block;
+        width: max-content;
+        &.right{
+            margin-left: auto;
+        }
+    }
+}
+.showcase{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 1.5em;
+    & .showcase-item{
+        flex-basis: 15%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        & a{
+            display: block;
+        }
+        & img{
+            border-radius: 50%;
+            width: 100%;
+            object-fit: cover;
+            padding-inline: 20%;
+        }
+        & h5{
+            font-size: 1.15em;
+            margin-block: 0.5em;
+            font-weight: normal;
+            text-align: center;
+            color: var(--main);
+        }
+        & .note{
+            font-size: 0.85em;
+            font-weight: 100;
+        }
+        &.small{
+            flex-basis: 15%;
+            font-size: 0.9rem;
+        }
+        &.medium{
+            padding-block: 0.5em;
+            flex-basis: 20%;
+            font-size: 1.1rem;
+        }
+        &.big{
+            padding-block: 1em;
+            flex-basis: 25%;
+            font-size: 1.25rem;
+        }
+    }
+    &.contributors .showcase-item{
+        width: 15%;
+        & a{
+            width: 100%;
+        }
+        & h5{
+            color: var(--text);
+        }
+    }
+}
+
 .animation{
     position: relative;
     margin-left: 5em;
@@ -169,6 +243,9 @@ a.highlight{
 }
 .mt-1{
     margin-top: 0.5em;
+}
+.mt-2{
+    margin-top: 1em;
 }
 
 .animation-board-container{
@@ -483,6 +560,23 @@ a.highlight{
 
 
 @media (max-width: 1024px){
+    .showcase.contributors{
+        & .showcase-item{
+            width: 25%;
+            flex-basis: 25%;
+        }
+    }
+    .showcase{
+        & .showcase-item.small{
+            flex-basis: 20%;
+        }
+        & .showcase-item.medium{
+            flex-basis: 27%;
+        }
+        & .showcase-item.big{
+            flex-basis: 35%;
+        }
+    }
     .container{
         width: 95%;
     }
@@ -521,6 +615,23 @@ a.highlight{
     .components{
         & .component-container{
             flex-basis: 40% !important;
+        }
+    }
+    .showcase.contributors{
+        & .showcase-item{
+            width: 40%;
+            flex-basis: 40%;
+        }
+    }
+    .showcase{
+        & .showcase-item.small{
+            flex-basis: 27%;
+        }
+        & .showcase-item.medium{
+            flex-basis: 35%;
+        }
+        & .showcase-item.big{
+            flex-basis: 45%;
         }
     }
 }

@@ -212,4 +212,27 @@
             </a>
         </div>
     </div>
+    <div class="showcase-container mt-2">
+        <h3>Supporters</h3>
+        <div class="showcase">
+            <div class="showcase-item {{supporter.amount <=5 ? 'small' : supporter.amount <= 10 ? 'medium' : 'big'}}" *ngFor="let supporter of supporters">
+                <img [src]="supporter.imgUrl" alt="{{supporter.name}}">
+                <h5>{{supporter.name}}</h5>
+                <p class="note" *ngIf="supporter.note">{{supporter.note}}</p>
+            </div>
+        </div>
+        <a class="support" href="https://www.buymeacoffee.com/honzaap">I want to support!</a>
+    </div>
+    <div class="showcase-container mt-2" *ngIf="contributors.length > 0">
+        <h3>Contributors</h3>
+        <div class="showcase contributors">
+            <div class="showcase-item" *ngFor="let contributor of contributors">
+                <a [href]="contributor.link">
+                    <img [src]="contributor.imgUrl" alt="{{contributor.name}}">
+                    <h5 [style.fontSize]="scaleFontSize(contributor.name)">{{contributor.name}}</h5>
+                </a>
+            </div>
+        </div>
+        <a class="support right" href="https://github.com/honzaap/Systemizer/wiki/How-to-contribute">I want to contribute!</a>
+    </div>
 </main>
