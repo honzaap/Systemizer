@@ -254,6 +254,21 @@ li{
         flex-flow: column nowrap;
         gap: 0.3em;
     }
+    & .async-check{
+        color: rgb(133, 133, 133);
+        padding-inline: 0.25em;
+        cursor: pointer;
+        &.checked{
+            opacity: 1;
+            color: var(--main);
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+        &.disabled{
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+    }
     & .section{
         & .header{
             width: 100%;

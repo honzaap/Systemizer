@@ -59,6 +59,11 @@
                                             </mat-select>
                                         </ng-template>
                                     </mat-form-field>
+                                    <span (click)="action.asynchronous = !(action.asynchronous || false)" 
+                                        [class.checked]="action.asynchronous === true" class="async-check"
+                                        matTooltip="{{ 'Make action asynchronous' }}">
+                                            A
+                                    </span>
                                     <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
                                 </div>
                             </div>
@@ -119,6 +124,11 @@
                                             </mat-select>
                                         </ng-template>
                                     </mat-form-field>
+                                    <span (click)="action.asynchronous = !(action.asynchronous || false)" 
+                                        [class.checked]="action.asynchronous === true" class="async-check"
+                                        matTooltip="{{ 'Make action asynchronous' }}">
+                                            A
+                                    </span>
                                     <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
                                 </div>
                             </div>
@@ -185,6 +195,11 @@
                                             </mat-select>
                                         </ng-template>
                                     </mat-form-field>
+                                    <span (click)="action.asynchronous = !(action.asynchronous || false)" 
+                                        [class.checked]="action.asynchronous === true" class="async-check"
+                                        matTooltip="{{ 'Make action asynchronous' }}">
+                                            A
+                                    </span>
                                     <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
                                 </div>
                             </div>
@@ -246,6 +261,11 @@
                                             </mat-select>
                                         </ng-template>
                                     </mat-form-field>
+                                    <span (click)="action.asynchronous = !(action.asynchronous || false)" 
+                                        [class.checked]="action.asynchronous === true" class="async-check"
+                                        matTooltip="{{ 'Make action asynchronous' }}">
+                                            A
+                                    </span>
                                     <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
                                 </div>
                             </div>
@@ -306,6 +326,11 @@
                                             </mat-select>
                                         </ng-template>
                                     </mat-form-field>
+                                    <span [class.disabled]="action.endpoint == null || action.endpoint.protocol === Protocol.WebSockets || action.endpoint.grpcMode !== gRPCMode.Unary" (click)="action.asynchronous = !(action.asynchronous || false)" 
+                                        [class.checked]="action.asynchronous === true" class="async-check"
+                                        matTooltip="{{ 'Make action asynchronous' }}">
+                                            A
+                                    </span>
                                     <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
                                 </div>
                             </div>

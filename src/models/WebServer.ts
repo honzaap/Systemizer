@@ -107,9 +107,7 @@ export class WebServer extends EndpointOperator implements IDataOperator{
                 && !dontSendRequestResponse || dontSendRequestResponse && !isStream) {
                     continue;
                 }
-
                 let requestId = (isStream && !data.header.stream && !isLastStreamRequest) ? UUID() : data.requestId;
-                this.connectionTable[requestId] = data.origin;
                 let request = new RequestData();
                 let epRef = new EndpointRef();
                 epRef.endpoint = action.endpoint;
@@ -126,7 +124,13 @@ export class WebServer extends EndpointOperator implements IDataOperator{
                 else{
                     if(!data.header.stream) 
                         sendResponse = true;
-                    await this.outputPort.sendData(request, targetConnection);
+                    if(action.asynchronous){
+                        this.outputPort.sendData(request, targetConnection);
+                    }
+                    else{
+                        await this.outputPort.sendData(request, targetConnection);
+                        this.connectionTable[requestId] = data.origin;
+                    }
                 }
             }
 

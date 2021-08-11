@@ -23,6 +23,7 @@ export class EndpointRef {
 export class EndpointAction {
     endpoint: Endpoint;
     method: EndpointActionHTTPMethod = EndpointActionHTTPMethod.Inherit;
+    asynchronous: boolean = false;
 }
 
 export class DatabaseEndpoint extends Endpoint{

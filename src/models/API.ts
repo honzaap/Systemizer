@@ -35,7 +35,7 @@ export class API extends EndpointOperator implements IDataOperator{
             // API received data from action 
             let targetConnection = this.connectionTable[data.responseId]
             if(targetConnection == null) 
-                throw new Error("Target connection can not be null")
+                return;
             this.connectionTable[data.responseId] = null; // reset request id
             this.fireReceiveData(data);
         }
@@ -49,26 +49,27 @@ export class API extends EndpointOperator implements IDataOperator{
             let targetEndpoint = this.getTargetEndpoint(data);
             if(targetEndpoint == null)
                 return;
-
             this.fireReceiveData(data);
             if(this.connectionTable[data.requestId] != null){ // Check if the api is already streaming to this connection
                 // Client sent data to stream
-                if(data.header.stream == false) // Client wants to end stream
+                if(data.header.stream == false && targetEndpoint.grpcMode != gRPCMode.Unary || targetEndpoint.protocol == Protocol.WebSockets) {// Client wants to end stream
                     this.connectionTable[data.requestId] = null;
-
-                return;
+                    return;
+                }
             }
             else{
                 this.connectionTable[data.requestId] = data.origin; // Save connection to request package
                 if(data.header.stream){
                     if(targetEndpoint.grpcMode != gRPCMode.Unary || targetEndpoint.protocol == Protocol.WebSockets){
                         // Client wants to start stream
+                        /*
+                        This streaming process feels kinda clunky, it will be commented for now
                         this.stream(this.getResponse(data), targetEndpoint);
+                        */
+                        return;
                     }
-                    return;
                 }
             }
-
             // Send data to every action
             for(let action of targetEndpoint.actions){
                 // Get connection to given action endpoint
@@ -94,9 +95,13 @@ export class API extends EndpointOperator implements IDataOperator{
                 request.originID = this.originID;
                 request.requestId = UUID();
 
-                this.connectionTable[request.requestId] = request.origin;
-
-                await this.outputPort.sendData(request, targetConnection);
+                if(action.asynchronous){
+                    this.outputPort.sendData(request, targetConnection);
+                }
+                else{
+                    await this.outputPort.sendData(request, targetConnection);
+                    this.connectionTable[request.requestId] = request.origin;
+                }
             }
 
             // Send response back to client
@@ -184,7 +189,7 @@ export class API extends EndpointOperator implements IDataOperator{
     }
 
     async sendData(response: RequestData) {
-        let targetConnection = this.connectionTable[response.responseId]
+        let targetConnection = this.connectionTable[response.responseId] || response.origin;
         if(targetConnection == null)
             throw new Error("target connection is null");
         if(response.header.stream != true) // reset request id

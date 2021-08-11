@@ -80,7 +80,8 @@ export class SavingService {
 		iMs: "isMasterShard",
 		iS: "isShard",
 		bg: "backgroundColor",
-		co: "color"
+		co: "color",
+		a: "asynchronous"
 	};
 
 	/**
@@ -288,6 +289,9 @@ export class SavingService {
 					endpoint: {url: options[attribut].endpoint.url, supportedMethods: options[attribut].endpoint.supportedMethods },
 					method: options[attribut].method
 				};
+				if(options[attribut].asynchronous === true){
+					cloneObj[attribut].asynchronous = true;
+				}
 			}
 			else if (typeof options[attribut] === "object" && options[attribut] != null)
 				cloneObj[attribut] = this.cloneOptions(options[attribut]);
