@@ -279,6 +279,7 @@ export class OperatorComponent {
 
 		ref.instance.IsOutput = output;
 		ref.instance.LogicParent = this.LogicComponent;
+		ref.instance.IsReadOnly = this.isReadOnly;
 		ref.instance.LogicPort = this.LogicComponent[output ? "outputPort" : "inputPort"];
 
 		ref.instance.destroySelf = () => {

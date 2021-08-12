@@ -8,17 +8,18 @@ import { ConnectionComponent } from '../connection/connection.component';
 @Component({
 	selector: 'port',
 	templateUrl: './port.component.html',
-	styleUrls: ['./port.component.scss'],
+	styleUrls: ['./port.component.scss']
 })
 export class PortComponent implements OnInit {
-	@Input() LogicParent : IDataOperator;
-	@Input() IsOutput : boolean;
-	public LogicPort : Port;
-	@ViewChild('port') public port : ElementRef<HTMLDivElement>;
-	@ViewChild('portImage') public portImage : ElementRef;
+	@Input() LogicParent: IDataOperator;
+	@Input() IsOutput: boolean;
+	public LogicPort: Port;
+	@Input() IsReadOnly: boolean = false;
+	@ViewChild('port') public port: ElementRef<HTMLDivElement>;
+	@ViewChild('portImage') public portImage: ElementRef;
 	connectionComponents: ConnectionComponent[] = [];
-	board : HTMLElement;
-	line : SVGPathElement;
+	board: HTMLElement;
+	line: SVGPathElement;
 	svgCanvas: HTMLElement;
 
 	lineStartX = 0;
@@ -28,12 +29,14 @@ export class PortComponent implements OnInit {
 	linePrevX = 0;
 	linePrevY = 0;
 
-	constructor(public placingService : PlacingService) {
-	}
+	constructor(public placingService : PlacingService) { }
+
 	ngOnInit(): void {
     	this.LogicPort = this.LogicParent.getPort(this.IsOutput);
 		this.board = document.getElementById("board");
 		this.svgCanvas = document.getElementById("svg-canvas");
+		if(this.IsReadOnly)
+			this.port.nativeElement.style.display = "none";
   	}  
 
 	removeConnection(connection: ConnectionComponent){
@@ -44,6 +47,8 @@ export class PortComponent implements OnInit {
 	}
 	
 	addConnection(connection: ConnectionComponent){
+		if(this.IsReadOnly)
+			this.port.nativeElement.style.display = "block";
 		let index = this.connectionComponents.findIndex(con => con === connection);
 		if(index === -1){
 			this.connectionComponents.push(connection);

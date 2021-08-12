@@ -60,7 +60,15 @@ export class CreateComponent implements OnInit {
 				if(params.edit){
 					try{
 						let json = atob(params.edit);
-						this.viewerSave = this.savingService.getSaveFromOptimizedSave(JSON.parse(json));
+						let save = JSON.parse(json)
+						if(Array.isArray(save)){
+							this.viewerSave = this.savingService.getSaveFromOptimizedSave(save);
+						}
+						else{
+							this.viewingService.setDarkMode(save.darkMode, false);
+							this.viewingService.setTitlesHidden(!save.showTitles, false);
+							this.viewerSave = this.savingService.getSaveFromOptimizedSave(save.comp);
+						}
 						this.showReadOnlyViewer = false;
 						this.showEdit = true;
 					}

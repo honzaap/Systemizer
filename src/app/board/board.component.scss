@@ -248,7 +248,8 @@
     position: absolute;
     left: 1em;
     bottom: 0.5em;
-    color: rgba(#fff, 0.25);
+    color: var(--text);
+    opacity: 0.3;
     font-weight: 100;
     font-size: 12px;
     & a{
