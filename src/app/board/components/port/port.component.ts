@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { Connection } from 'src/models/Connection';
@@ -8,7 +8,8 @@ import { ConnectionComponent } from '../connection/connection.component';
 @Component({
 	selector: 'port',
 	templateUrl: './port.component.html',
-	styleUrls: ['./port.component.scss']
+	styleUrls: ['./port.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortComponent implements OnInit {
 	@Input() LogicParent: IDataOperator;
@@ -29,12 +30,15 @@ export class PortComponent implements OnInit {
 	linePrevX = 0;
 	linePrevY = 0;
 
-	constructor(public placingService : PlacingService) { }
+	constructor(public placingService : PlacingService, private cdRef: ChangeDetectorRef) { 
+		this.cdRef.detach();
+	}
 
 	ngOnInit(): void {
     	this.LogicPort = this.LogicParent.getPort(this.IsOutput);
 		this.board = document.getElementById("board");
 		this.svgCanvas = document.getElementById("svg-canvas");
+		this.cdRef.detectChanges();
   	}  
 
 	removeConnection(connection: ConnectionComponent){
@@ -42,6 +46,7 @@ export class PortComponent implements OnInit {
 		if(index !== -1){
 			this.connectionComponents.splice(index, 1);
 		}
+		this.cdRef.detectChanges();
 	}
 	
 	addConnection(connection: ConnectionComponent){
@@ -51,6 +56,7 @@ export class PortComponent implements OnInit {
 		if(index === -1){
 			this.connectionComponents.push(connection);
 		}
+		this.cdRef.detectChanges();
 	}
 
 	getConnectionComponent(logicConnection: Connection){
@@ -67,10 +73,12 @@ export class PortComponent implements OnInit {
 			style = style.split("L")[0] + `L${this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth / 2} ${this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight / 2}`;
 			line.setAttribute("d",style);
 		}
+		this.cdRef.detectChanges();
 	}
 
 	detach(){
 		this.placingService.canMoveConnection = true;
+		this.cdRef.detectChanges();
 	}
 
 	public getPortComponent(){
@@ -112,6 +120,7 @@ export class PortComponent implements OnInit {
 						this.linePrevX = event.clientX;
 						this.linePrevY = event.clientY;
 					}
+					this.cdRef.detectChanges();
 				}
 			}
 		}
@@ -148,15 +157,18 @@ export class PortComponent implements OnInit {
 						this.linePrevX = event.touches[0].clientX;
 						this.linePrevY = event.touches[0].clientY;
 					}
+					this.cdRef.detectChanges();
 				}
 				this.board.ontouchend = () =>{
 					this.board.ontouchmove = null;
 					this.board.ontouchend = null;
 					this.svgCanvas.innerHTML = "";
 					this.placingService.stopConnecting();
+					this.cdRef.detectChanges();
 				}
 			}
 		}
+		this.cdRef.detectChanges();
 	}
 	
 	public handleMouseUp(e){
@@ -172,12 +184,14 @@ export class PortComponent implements OnInit {
 				}
 			}	
 		}
+		this.cdRef.detectChanges();
 	}
 
 	ngAfterViewInit(){
 		this.portImage.nativeElement.style.borderColor = this.LogicParent.color;
 		if(this.IsReadOnly && this.port != null)
 			this.port.nativeElement.style.display = "none";
+		this.cdRef.detectChanges();
 	}
 
 	destroySelf = () => {}

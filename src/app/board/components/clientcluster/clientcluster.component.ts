@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { ClientCluster } from 'src/models/ClientCluster';
@@ -20,10 +20,11 @@ export class ClientclusterComponent extends OperatorComponent implements OnInit 
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
 	}
 	ngOnInit(): void {
+		this.cdRef.detectChanges();
 	}
 
 	ngAfterViewInit(): void {

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { TextField } from 'src/models/TextField';
@@ -22,8 +22,8 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
   	@ViewChild("field") field: ElementRef;
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef) {
+		super(placingService, selectionService, resolver, cdRef);
     	this.currentSelectionService = selectionService;
 	}
 
@@ -42,9 +42,11 @@ export class TextfieldComponent extends OperatorComponent implements OnInit{
 					this.selectionEnd = start + 1;
 			}
 		});
-  	}
+		this.cdRef.detectChanges();
+	}
 
 	ngOnInit(){
+		this.cdRef.detectChanges();
 	}
 
 	public handleMousedown(event){

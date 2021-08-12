@@ -12,6 +12,5 @@ export class InfoTooltipComponent implements OnInit {
 
   	constructor(public viewingService: ViewingService) { }
 
-	ngOnInit(): void {
-	}
+	ngOnInit(): void { }
 }

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Endpoint } from 'src/models/Endpoint';
@@ -20,8 +20,8 @@ export class MessagequeueComponent extends OperatorComponent implements OnInit {
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 	
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
   	}
 
 	handleEndpointUrlChange(endpoint: Endpoint){
@@ -31,9 +31,23 @@ export class MessagequeueComponent extends OperatorComponent implements OnInit {
 
 	ngAfterViewInit(): void {
 		super.Init(this.conn);
+		this.LogicMessageQueue.onReceiveData((data) => {
+			if(!this.comp.classList.contains("anim")){
+				this.comp.classList.add("anim");
+				setTimeout(()=>{
+					this.comp.classList.remove("anim");
+				},500);
+			}
+			this.cdRef.detectChanges();
+		});
+		this.LogicMessageQueue.onSendData((data) => {
+			this.cdRef.detectChanges();
+		})
   	}
 
-	ngOnInit(){}
+	ngOnInit(){
+		this.cdRef.detectChanges();
+	}
 
 	getActionsElement(){
 		return null;

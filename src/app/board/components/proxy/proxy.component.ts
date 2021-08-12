@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Proxy } from 'src/models/Proxy';
@@ -18,12 +18,13 @@ export class ProxyComponent extends OperatorComponent implements OnInit {
 	public LogicProxy: Proxy = new Proxy();
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) { 
-		super(placingService, selectionService, resolver)
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef) { 
+		super(placingService, selectionService, resolver, cdRef)
 		
 	}
 
 	ngOnInit(): void {
+		this.cdRef.detectChanges();
 	}
 	
 	ngAfterViewInit(): void {

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
@@ -27,8 +27,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	connectableEndpoints: Endpoint[] = [];
 	consumeableEndpoints: Endpoint[] = [];
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
 	}
 
 	addAction(endpoint: Endpoint){
@@ -186,7 +186,9 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		return null;
 	}
 
-	ngOnInit(){}
+	ngOnInit(){
+		this.cdRef.detectChanges();
+	}
 
 	static getColor(): string{
 		let c = new API();

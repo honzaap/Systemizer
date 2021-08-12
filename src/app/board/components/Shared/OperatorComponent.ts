@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ElementRef, EventEmitter, ViewContainerRef } from "@angular/core";
+import { ChangeDetectorRef, ComponentFactoryResolver, ElementRef, EventEmitter, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
@@ -17,11 +17,6 @@ import { Options } from "src/models/Options";
 import { clone, getFormattedMethod } from "src/shared/ExtensionMethods";
 import { PortComponent } from "../port/port.component";
 import { TitleComponent } from "./title/title.component";
-
-interface Position{
-    top: number;
-    left: number;
-}
 
 export class OperatorComponent {
 
@@ -55,10 +50,10 @@ export class OperatorComponent {
     public placingService: PlacingService;
     private selectionService: SelectionService;
 	private resolver: ComponentFactoryResolver;
+	public cdRef: ChangeDetectorRef;
 
 	conn: ViewContainerRef;
 
-    public anchorMouseOffset: Position;
 	public anchorRef!: ElementRef;
 
 	private LogicComponent: IDataOperator;
@@ -76,10 +71,12 @@ export class OperatorComponent {
 
 	public beforeOptions: Options;
 
-    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver) {
+    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef) {
 		this.placingService = placingService;
         this.selectionService = selectionService;
 		this.resolver = resolver
+		this.cdRef = cdRef;
+		cdRef.detach();
 	}
 
   	public handleMousedown(event: Event): void {
@@ -94,6 +91,7 @@ export class OperatorComponent {
 		this.maxY = this.placingService.boardHeight;
 		if(event instanceof MouseEvent){
 			if(event.button != 0){
+				this.placingService.stopPlacing();
 				event.preventDefault();
 				if(event.button == 2){
 					this.selectionService.addSelection(this, false);
@@ -129,6 +127,7 @@ export class OperatorComponent {
 	public setPosition(x: number, y: number){
 		this.LogicComponent.options.X = Math.max(Math.min( this.maxX - this.anchorRect.width  / this.placingService.boardScale, this.convertPosition(x)), 0);
 		this.LogicComponent.options.Y = Math.max(Math.min( this.maxY - this.anchorRect.height / this.placingService.boardScale, this.convertPosition(y)), 0);
+		this.cdRef.detectChanges();
 	}
 
 	public handleMouseup = (): void => {
@@ -181,6 +180,7 @@ export class OperatorComponent {
 
 	changeTitle(title: string){
 		this.LogicComponent.options.title = title;
+		this.cdRef.detectChanges();
 	}
 
 	showStatusCode(code: HTTPStatus){
@@ -209,12 +209,15 @@ export class OperatorComponent {
 		this.anchorRef.nativeElement.appendChild(span);
 		setTimeout(() => {
 			this.anchorRef.nativeElement.removeChild(span);
+			this.cdRef.detectChanges();
 		}, 1500);
+		this.cdRef.detectChanges();
 	}
 
 	destroySelf = () => {
 		this.LogicComponent.destroy();
 		this.destroyComponent();
+		this.cdRef.detectChanges();
 	}
 
 	Init(conn: ViewContainerRef, generateTitle: boolean = true): void {
@@ -260,8 +263,10 @@ export class OperatorComponent {
 		let inputPort = this.LogicComponent["inputPort"];
 		let outputPort = this.LogicComponent["outputPort"];
 
-		if(this.conn == null)
+		if(this.conn == null){
+			this.cdRef.detectChanges();
 			return;
+		}
 		
 		if(generateTitle)
 			setTimeout(()=>{this.generateTitle();}, 100); 
@@ -271,6 +276,7 @@ export class OperatorComponent {
 		if(outputPort != null)
 			this.createPort(true);
 		this.onViewInit.forEach(e => e());
+		this.cdRef.detectChanges();
 	}
 
 	createPort(output = false){
@@ -292,13 +298,15 @@ export class OperatorComponent {
 			this.outputPortRef = ref.instance;
 		else
 			this.inputPortRef = ref.instance;
+		this.cdRef.detectChanges();
 	}
 
 	generateTitle(){
 		let factory  = this.resolver.resolveComponentFactory(TitleComponent);
 		let ref = this.conn.createComponent(factory);
-
+		
 		ref.instance.Model = this.LogicComponent;
+		this.cdRef.detectChanges();
 	}
 
 	formatMethod(method: HTTPMethod, isDatabase: boolean){

@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable({
   	providedIn: 'root'
 })
 export class ViewingService {
+
+	public ViewUpdated = new EventEmitter();
 
 	private HELPERS_KEY = "helpers";
 	private helpersDisabled: boolean;
@@ -31,6 +33,7 @@ export class ViewingService {
 	setHelpersDisabled(disabled: boolean = true){
 		localStorage.setItem(this.HELPERS_KEY, disabled.toString());
 		this.helpersDisabled = disabled;
+		this.ViewUpdated.emit();
 	}
 
 	isTitlesHidden(){
@@ -41,6 +44,7 @@ export class ViewingService {
 		if(saveToLocalStorage)
 			localStorage.setItem(this.TITLES_KEY, hidden.toString());
 		this.titlesHidden = hidden;
+		this.ViewUpdated.emit();
 	}
 
 	isTechnologiesHidden(){
@@ -51,6 +55,7 @@ export class ViewingService {
 		if(saveToLocalStorage)
 			localStorage.setItem(this.TECHNOLOGIES_KEY, hidden.toString());
 		this.technologiesHidden = hidden;
+		this.ViewUpdated.emit();
 	}
 
 	isDarkMode(){
@@ -65,5 +70,6 @@ export class ViewingService {
 		else 
 			document.documentElement.classList.remove("dark-mode");
 		this.darkModeEnabled = enabled;
+		this.ViewUpdated.emit();
 	}
 }

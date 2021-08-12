@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Endpoint, EndpointAction } from 'src/models/Endpoint';
@@ -25,8 +25,8 @@ export class WebserverComponent extends OperatorComponent implements OnInit {
 
 	connectableEndpoints: Endpoint[] = [];
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
   	}
 
 	addAction(endpoint: Endpoint){
@@ -66,7 +66,8 @@ export class WebserverComponent extends OperatorComponent implements OnInit {
 			endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
 			endpoint.protocol = Protocol.WebSockets;
 		}
-		this.LogicWebServer.options.endpoints.push(endpoint);		this.afterChange();
+		this.LogicWebServer.options.endpoints.push(endpoint);		
+		this.afterChange();
 	}
 
 	removeEndpoint(endpoint: Endpoint){
@@ -163,7 +164,9 @@ export class WebserverComponent extends OperatorComponent implements OnInit {
 		super.Init(this.conn);
 	}
 
-	ngOnInit(){}
+	ngOnInit(){
+		this.cdRef.detectChanges();
+	}
 
 	getActionsElement(){
 		return null;

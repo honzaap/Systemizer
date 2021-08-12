@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ExportService } from 'src/app/export.service';
 import { ViewingService } from 'src/app/viewing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
@@ -12,7 +12,13 @@ export class TitleComponent implements OnInit {
 
 	@Input() Model: IDataOperator
 
-	constructor(public viewingService: ViewingService, public exportService: ExportService) { }
+	constructor(public viewingService: ViewingService, public exportService: ExportService, private cdRef: ChangeDetectorRef) { 
+		viewingService.ViewUpdated.subscribe(() => {
+			this.cdRef.detectChanges();
+		})
+	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void { 
+		this.cdRef.detectChanges();
+	}
 }

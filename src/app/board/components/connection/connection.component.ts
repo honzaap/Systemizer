@@ -36,9 +36,11 @@ export class ConnectionComponent implements OnInit {
 	titlePopupY: number = 0;
 
 	constructor(private cdRef: ChangeDetectorRef, public selectionService: SelectionService){
+		cdRef.detach();
 	}
 
 	ngOnInit(): void {
+		this.cdRef.detectChanges();
 		this.portComponent1.LogicPort.onRemoveConnection((conn) => {
 			if(conn === this.LogicConnection){
 				this.destroyComponent();

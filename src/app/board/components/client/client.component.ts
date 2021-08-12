@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Client } from 'src/models/Client';
@@ -39,15 +39,17 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 	isAutomaticSending = false;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
 	}
 
 	ngAfterViewInit(): void {
 		super.Init(this.conn);
   	}
 
-	ngOnInit(){}
+	ngOnInit(){
+		this.cdRef.detectChanges();
+	}
 
 	handleEndpointChange(){
 		this.LogicClient.options.endpointRef.method = this.LogicClient.options.endpointRef.endpoint.supportedMethods[0];
@@ -96,6 +98,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.updateCanSendData();
 		this.updateCanEstabilishStream();
 		this.updateCanEndStream();
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	public handleClick(event: MouseEvent){
@@ -115,6 +119,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 				this.canAutoSend = await this.stream();
 			}
 		}
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	updateCanSendData(){
@@ -125,6 +131,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.canSend = this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode['Server Streaming'] && 
 			this.LogicClient.isConnectedToEndpoint || 
 			this.LogicClient.options.endpointRef.endpoint.grpcMode == gRPCMode.Unary && this.LogicClient.options.endpointRef.endpoint.protocol != Protocol.WebSockets;
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	updateCanEstabilishStream(){
@@ -132,6 +140,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
 		!this.LogicClient.isConnectedToEndpoint
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	updateCanEndStream(){
@@ -139,6 +149,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
 		this.LogicClient.isConnectedToEndpoint
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	async stream(){
@@ -147,6 +159,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		if(!this.isAutomaticSending || !this.canSend) 
 			return true;
 		await this.sendData();
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 		return await this.stream();
 	}
 
@@ -163,10 +177,14 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		else
 			request.requestId = UUID();
 		let res = this.LogicClient.sendData(request);
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 		this.updateSelection();
 		if(! (await res)){
 			this.isAutomaticSending = false;
 			this.canAutoSend = true;
+			if(this.isReadOnly)
+				this.cdRef.detectChanges();
 		}
 	}
 
@@ -185,6 +203,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.LogicClient.sendData(request);
 
 		this.updateSelection();
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	async endConnection(){
@@ -206,6 +226,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		this.LogicClient.isConnectedToEndpoint = false;
 
 		this.updateSelection();
+		if(this.isReadOnly)
+			this.cdRef.detectChanges();
 	}
 
 	static getColor(): string{

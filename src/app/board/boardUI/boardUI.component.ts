@@ -127,6 +127,7 @@ export class BoardUIComponent implements OnInit {
 	constructor(private placingService: PlacingService, private savingService: SavingService, public viewingService: ViewingService, private exportService: ExportService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
 		this.isTitlesHidden = viewingService.isTitlesHidden();
+		this.isTechnologiesHidden = viewingService.isTechnologiesHidden();
 	}
 
 	load(file){

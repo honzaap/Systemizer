@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { Endpoint } from 'src/models/Endpoint';
@@ -21,15 +21,17 @@ export class PubsubComponent extends OperatorComponent implements OnInit {
 
 	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver){
-		super(placingService, selectionService, resolver);
+	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
+		super(placingService, selectionService, resolver, cdRef);
   	}
 
 	ngAfterViewInit(): void {
 		super.Init(this.conn);
   	}
 
-	ngOnInit(){}
+	ngOnInit(){
+		this.cdRef.detectChanges();
+	}
 
 	addEndpoint(){
 		this.LogicPubSub.options.endpoints.push(new Endpoint("topic.topicCreated", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]));

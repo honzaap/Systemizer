@@ -1,4 +1,4 @@
-import { IDataOperator } from "src/interfaces/IDataOperator";
+import { IDataOperator, ReceiveDataEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Port } from "./Port";
@@ -7,6 +7,7 @@ import { sleep, UUID } from "src/shared/ExtensionMethods";
 import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
+import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 
 export class MessageQueue extends EndpointOperator implements IDataOperator{
 
@@ -38,13 +39,14 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         if(data.requestId == "" || data.requestId == null )
             throw new Error("requestId can not be null. Please specify property requestId of RequestData");
 
-        this.fireReceiveData(data);
 
         // Put data to queue 
         data.header.stream = false;
         this.messages.push(data);
         if(!this.isSendingData)
             this.sendToConsumer();
+
+        this.fireReceiveData(data);
 
         // Return response to publisher
         let response = new RequestData();
@@ -69,6 +71,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         message.header.endpoint = epRef;
 
         this.sendData(message);
+        this.fireSendData({});
     
         if(this.messages.length == 0)
             this.isSendingData = false;
@@ -124,6 +127,14 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
 
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;
+    }
+
+    private sendDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
+    public onSendData(handler: Handler<ReceiveDataEvent>) {
+        this.sendDataDispatcher.register(handler);
+    }
+    private fireSendData(event: ReceiveDataEvent) { 
+        this.sendDataDispatcher.fire(event);
     }
 }
 

@@ -48,6 +48,7 @@ export class SelectionService {
 		if(this.currentSelections.indexOf(selection) == -1){ // Add to current selections
 			if(multiple){ // Add to current multiple selections
 				selection.anchorRef.nativeElement.classList.add("is-current-selection")
+				selection.cdRef.reattach();
 				this.currentSelections.push(selection);
 				// Look if the component is connected to already selected component
 				let selectionOutputPort = selection.getLogicComponent().getPort(true);
@@ -100,7 +101,9 @@ export class SelectionService {
 			else{ // Set as currently selected
 				for(let oldSelection of this.currentSelections){
 					oldSelection.anchorRef.nativeElement.classList.remove("is-current-selection")
+					oldSelection.cdRef.detach();
 				}
+				selection.cdRef.reattach();
 				selection.anchorRef.nativeElement.classList.add("is-current-selection")
 				this.currentSelections = [selection];
 				this.clearCurrentConnectionSelections();
@@ -115,6 +118,7 @@ export class SelectionService {
 	clearSelection(){
 		for(let selection of this.currentSelections){
 			selection.anchorRef.nativeElement.classList.remove("is-current-selection")
+			selection.cdRef.detach();
 		}  
 		this.currentSelections = [];
 		this.fireChangeSelection({});

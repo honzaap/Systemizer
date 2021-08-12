@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { clone, sleep, UUID } from 'src/shared/ExtensionMethods';
@@ -39,7 +39,8 @@ class SavedBoard{
 @Component({
 	selector: 'app-board',
 	templateUrl: './board.component.html',
-	styleUrls: ['./board.component.scss']
+	styleUrls: ['./board.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardComponent implements AfterViewChecked  {
 
@@ -245,7 +246,7 @@ export class BoardComponent implements AfterViewChecked  {
 		}
 	}
 
-	ngAfterViewChecked(): void { this.changeRef.detectChanges(); }
+	ngAfterViewChecked(): void { this.changeRef.detectChanges();}
 	
 	async ngAfterViewInit(){
 		this.placingService.connectionRef = this.conn;
@@ -339,6 +340,7 @@ export class BoardComponent implements AfterViewChecked  {
 	}
 
 	loadSelectedSavedBoard(){
+		this.changesService.reset();
 		if(this.allLogicComponents.length != 0)
 			this.saveCurrentBoardToAllBoards();
 		this.closeSavedBoards();
