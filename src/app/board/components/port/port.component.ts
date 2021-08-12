@@ -35,8 +35,6 @@ export class PortComponent implements OnInit {
     	this.LogicPort = this.LogicParent.getPort(this.IsOutput);
 		this.board = document.getElementById("board");
 		this.svgCanvas = document.getElementById("svg-canvas");
-		if(this.IsReadOnly)
-			this.port.nativeElement.style.display = "none";
   	}  
 
 	removeConnection(connection: ConnectionComponent){
@@ -47,7 +45,7 @@ export class PortComponent implements OnInit {
 	}
 	
 	addConnection(connection: ConnectionComponent){
-		if(this.IsReadOnly)
+		if(this.IsReadOnly && this.port != null)
 			this.port.nativeElement.style.display = "block";
 		let index = this.connectionComponents.findIndex(con => con === connection);
 		if(index === -1){
@@ -178,6 +176,8 @@ export class PortComponent implements OnInit {
 
 	ngAfterViewInit(){
 		this.portImage.nativeElement.style.borderColor = this.LogicParent.color;
+		if(this.IsReadOnly && this.port != null)
+			this.port.nativeElement.style.display = "none";
 	}
 
 	destroySelf = () => {}
