@@ -4,7 +4,6 @@ import { RequestData } from "./RequestData";
 import { Port } from "./Port";
 import { Endpoint } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
-import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
 
@@ -14,7 +13,6 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     outputPort: Port;
     connectionTable: {[id:string]:Connection} = {};
     options: PubSubOptions;
-    isSubscribable: boolean = true;
     color = "#FF7D35";
 
     constructor() {
@@ -46,57 +44,32 @@ export class PubSub extends EndpointOperator implements IDataOperator{
         response.header = data.header;
         response.origin = data.origin;
         response.originID = this.originID;
-        await this.inputPort.sendData(response, data.origin);
+
+        // Send response back
+        if(data.sendResponse)
+            await this.inputPort.sendData(response, data.origin);
     }
 
     async sendToConsumers(message: RequestData){
         await sleep(200);
-        message.header.endpoint.method = HTTPMethod.POST;
+        
         this.sendData(message);
     }
 
     async sendData(data: RequestData){
         data.originID = this.originID;
+        data.sendResponse = false;
         let targetEndpoint = data.header.endpoint.endpoint.url;
-        let connections = this.outputPort.connections.filter(connection => {
-            return (connection.getOtherPort(this.outputPort).parent.options as EndpointOptions).endpoints
-                .find(ep => ep.url == targetEndpoint) != null;
-        });
+        let connections = this.outputPort.connections
+        .filter(connection => connection.getOtherPort(this.outputPort).parent.getAvailableEndpoints()
+        .find(ep => ep.url == targetEndpoint) != null);
         for(let connection of connections){
             data.origin = connection;
             this.outputPort.sendData(data,data.origin);
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){
-    }
-
-    connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean) : Connection{
-        let otherPort = operator.getPort(connectingToOutput);
-        if(!this.canConnectTo(otherPort, connectingWithOutput)) 
-            return null;
-        if(!operator.canConnectTo(this.getPort(connectingWithOutput), connectingToOutput)) 
-            return null; 
-        if(connectingWithOutput){
-            let conn = this.outputPort.connectTo(otherPort);
-            if(conn != null && operator instanceof API)
-                (operator as API).initiateConsumer(conn, true);
-            return conn;
-        }
-        return this.inputPort.connectTo(otherPort);
-    }
-
-    canConnectTo(port: Port, connectingWithOutput: boolean){
-        if(!super.canConnectTo(port, connectingWithOutput))
-            return false;
-        // Output of PubSun can connect only to API  
-        if(!connectingWithOutput)
-            return true;
-        if(port.parent instanceof API)
-            return true;
-        this.fireFailedConnect({message: "Output of a PubSub can only be connected to an API."});            
-        return false;
-    }
+    onConnectionUpdate(wasOutput: boolean = false){ }
 
     getAvailableEndpoints(): Endpoint[]{
         return this.options.endpoints;

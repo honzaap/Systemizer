@@ -38,7 +38,7 @@ export class Cache extends LogicComponent implements IDataOperator{
             this.fireReceiveData(request);
             if(request.header.endpoint == null) return;
             this.connectionTable[request.requestId] = request.origin;
-            if(request.header.endpoint.method == HTTPMethod.GET){ // Client wants to write
+            if(request.header.endpoint.method == HTTPMethod.GET && request.sendResponse){ // Client wants to write
                 let cacheHit = Math.random() > 0.43 ? true : false; // Random chance of cache hit
                 if(cacheHit){
                     let response = new RequestData();
@@ -95,7 +95,8 @@ export class Cache extends LogicComponent implements IDataOperator{
             this.outputPort.sendData(data);
             data.responseId = data.requestId;
             data.requestId = UUID();
-            await this.sendData(data);
+            if(data.sendResponse)
+                await this.sendData(data);
         }
     }
 

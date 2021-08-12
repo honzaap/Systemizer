@@ -71,10 +71,10 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(data.header.endpoint == null) throw new Error("Endpoint can not be null")
 
             let targetEndpoint = this.getTargetEndpoint(data);
+            this.fireReceiveData(data);
             if(targetEndpoint == null)
                 return;
 
-            this.fireReceiveData(data);
             let sendResponse = false;
             let isFirstStreamRequest = this.connectionTable[data.requestId] == null && data.header.stream;
             let isLastStreamRequest = this.connectionTable[data.requestId] != null && !data.header.stream;
@@ -124,7 +124,8 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                     }
                     else{
                         await this.outputPort.sendData(request, targetConnection);
-                        this.connectionTable[requestId] = data.origin;
+                        if(data.sendResponse)
+                            this.connectionTable[requestId] = data.origin;
                     }
                 }
             }
@@ -139,7 +140,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
             }
-            if(sendResponse || targetEndpoint.actions.length == 0){
+            if(sendResponse || targetEndpoint.actions.length == 0 && data.sendResponse){
                 // Send response back
                 this.connectionTable[data.requestId] = data.origin;
                 await this.sendData(this.getResponse(data));

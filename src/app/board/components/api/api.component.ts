@@ -49,30 +49,26 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	}
 
 	addEndpoint(){
-		if(this.LogicApi.options.isConsumer)
-			this.LogicApi.options.endpoints.push(new Endpoint(null, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH]));
-		else{
-			let type = this.LogicApi.options.type;
-			let endpoint: Endpoint;
-			if(type == APIType.REST){
-				endpoint = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
-			}
-			else if(type == APIType.GraphQL){
-				endpoint = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
-			}
-			else if(type == APIType.RPC){
-				endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-			}
-			else if(type == APIType.gRPC){
-				endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-				endpoint.grpcMode = gRPCMode.Unary;
-			}
-			else if(type == APIType.WebSockets){
-				endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
-				endpoint.protocol = Protocol.WebSockets;
-			}
-			this.LogicApi.options.endpoints.push(endpoint);
+		let type = this.LogicApi.options.type;
+		let endpoint: Endpoint;
+		if(type == APIType.REST){
+			endpoint = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
 		}
+		else if(type == APIType.GraphQL){
+			endpoint = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
+		}
+		else if(type == APIType.RPC){
+			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
+		}
+		else if(type == APIType.gRPC){
+			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
+			endpoint.grpcMode = gRPCMode.Unary;
+		}
+		else if(type == APIType.WebSockets){
+			endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
+			endpoint.protocol = Protocol.WebSockets;
+		}
+		this.LogicApi.options.endpoints.push(endpoint);
 		this.afterChange();
 	}
 
@@ -131,18 +127,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 				else
 					endpoint.actions.splice(i,1);
 			}
-		}
-		if(this.LogicApi.options.isConsumer){ // Remove consumed endpoints that are no longer available
-			this.consumeableEndpoints = this.LogicApi.getConsumableEndpoints();
-			let idx_arr = [];
-			for(let i = 0; i < this.LogicApi.options.endpoints.length; i++){
-				let endpoint = this.LogicApi.options.endpoints[i];
-				let ep = this.consumeableEndpoints.find(x => x.url == endpoint.url);
-				if(ep == null) 
-					idx_arr.push(i);
-			}
-			for(let i = idx_arr.length-1; i>=0 ;i--)
-				this.LogicApi.options.endpoints.splice(idx_arr[i], 1);
 		}
 	}
 

@@ -68,11 +68,11 @@
                                     <mat-form-field appearance="fill" class="action-endpoint">
                                         <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action); afterChange()" [(ngModel)]="action.endpoint">
                                             <mat-option 
-                                            [disabled]="((isMQEndpoint(connendpoint) && endpoint.grpcMode == gRPCMode['Server Streaming']) || ((endpoint.grpcMode == gRPCMode.Unary || endpoint.grpcMode == gRPCMode['Client Streaming']) && (connendpoint.protocol == Protocol.WebSockets || connendpoint.grpcMode == gRPCMode['Server Streaming'] || connendpoint.grpcMode == gRPCMode['Bidirectional Streaming'])) || (endpoint.grpcMode == gRPCMode['Server Streaming'] && connendpoint.grpcMode == gRPCMode['Client Streaming'])) && !(LogicWebServer.options.type == APIType.WebSockets && connendpoint.protocol == Protocol.WebSockets)"
+                                            [disabled]="(((endpoint.grpcMode == gRPCMode.Unary || endpoint.grpcMode == gRPCMode['Client Streaming']) && (connendpoint.protocol == Protocol.WebSockets || connendpoint.grpcMode == gRPCMode['Server Streaming'] || connendpoint.grpcMode == gRPCMode['Bidirectional Streaming'])) || (endpoint.grpcMode == gRPCMode['Server Streaming'] && connendpoint.grpcMode == gRPCMode['Client Streaming'])) && !(LogicWebServer.options.type == APIType.WebSockets && connendpoint.protocol == Protocol.WebSockets)"
                                             *ngFor="let connendpoint of connectableEndpoints" [value]="connendpoint">{{connendpoint.url}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field *ngIf="!isMQEndpoint(action.endpoint);" appearance="fill" class="action-method">
+                                    <mat-form-field appearance="fill" class="action-method">
                                         <mat-select (selectionChange)="afterChange()" [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
                                             <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
                                             <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>

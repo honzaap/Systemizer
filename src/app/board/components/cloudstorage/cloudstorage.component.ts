@@ -30,6 +30,11 @@ export class CloudStorageComponent extends OperatorComponent implements OnInit {
 		this.cdRef.detectChanges();
 	}
 
+	handleEndpointUrlChange(endpoint){
+		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
+			endpoint.url = "/cloud";
+	}
+
 	getActionsElement(){
 		return null;
 	}

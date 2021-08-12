@@ -61,7 +61,9 @@ export class Database extends EndpointOperator implements IDataOperator{
             }
         }
         this.connectionTable[request.requestId] = request.origin;
-        await this.sendData(this.getResponse(request));
+        // Send response back
+        if(request.sendResponse)
+            await this.sendData(this.getResponse(request));
     }
 
     onConnectionUpdate(wasOutput: boolean = false){

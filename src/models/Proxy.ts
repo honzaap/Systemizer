@@ -66,7 +66,7 @@ export class Proxy extends LogicComponent implements IDataOperator{
             let targetConnection = null;
             for(let connection of this.outputPort.connections){
                 targetEndpoint = connection.getOtherPort(this.outputPort).parent
-                    .getAvailableEndpoints().find(ep => ep === data.header.endpoint.endpoint);
+                    .getAvailableEndpoints().find(ep => ep.url === data.header.endpoint.endpoint.url);
                 if(targetEndpoint){
                     targetConnection = connection;
                     break;

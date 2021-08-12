@@ -33,7 +33,9 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
         this.connectionTable[data.requestId] = data.origin;
         this.fireReceiveData(data);
 
-        await this.sendData(this.getResponse(data));
+        // Send response back
+        if(data.sendResponse)
+            await this.sendData(this.getResponse(data));
     }
 
     onConnectionUpdate(wasOutput: boolean = false){}

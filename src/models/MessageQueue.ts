@@ -2,9 +2,8 @@ import { IDataOperator, ReceiveDataEvent } from "src/interfaces/IDataOperator";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
 import { Port } from "./Port";
-import { Endpoint, EndpointRef, MQEndpoint } from "./Endpoint";
+import { Endpoint, EndpointRef } from "./Endpoint";
 import { sleep, UUID } from "src/shared/ExtensionMethods";
-import { API } from "./API";
 import { EndpointOperator, EndpointOptions } from "./EndpointOperator";
 import { HTTPMethod } from "./enums/HTTPMethod";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
@@ -21,7 +20,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     color = "#F2994A";
 
     messages: RequestData[] = []
-    isConsumable: boolean = true;
 
     constructor() {
         super();
@@ -31,7 +29,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         this.options.title = "Message Queue";
 
         this.options.endpoints = [
-            new MQEndpoint()
+            new Endpoint("Message Queue", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH])
         ];
     }
 
@@ -55,7 +53,9 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         response.header = data.header;
         response.origin = data.origin;
         response.originID = this.originID;
-        await this.inputPort.sendData(response, data.origin);
+        // Send response back
+        if(data.sendResponse)
+            await this.inputPort.sendData(response, data.origin);
     }
 
     async sendToConsumer(){
@@ -69,6 +69,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         epRef.endpoint = new Endpoint(this.options.endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]);
         epRef.method = HTTPMethod.POST;
         message.header.endpoint = epRef;
+        message.sendResponse = false;
 
         this.sendData(message);
         this.fireSendData({});
@@ -85,44 +86,24 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     }
 
     async roundRobin(data: RequestData){
-        let nodesLength = this.outputPort.connections.length;
+        let connections = this.outputPort.connections
+        .filter(conn => conn.getOtherPort(this.outputPort).parent.getAvailableEndpoints()
+        .find(ep => ep.url === this.options.endpoints[0].url) != null);
+        let nodesLength = connections.length;
+        if(nodesLength === 0){
+            this.messages.push(data);
+            return;
+        }
+        this.fireSendData({});
         this.roundRobinIndex++;
         if(this.roundRobinIndex >= nodesLength)
             this.roundRobinIndex = 0;
-
         data.origin = this.outputPort.connections[this.roundRobinIndex];
         await this.outputPort.sendData(data,data.origin);
     }
 
     onConnectionUpdate(wasOutput: boolean = false){
         this.sendToConsumer();
-    }
-
-    connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean) : Connection{
-        let otherPort = operator.getPort(connectingToOutput);
-        if(!this.canConnectTo(otherPort, connectingWithOutput)) 
-            return null;
-        if(!operator.canConnectTo(this.getPort(connectingWithOutput), connectingToOutput)) 
-            return null; 
-        if(connectingWithOutput){
-            let conn = this.outputPort.connectTo(otherPort);
-            if(conn != null && operator instanceof API)
-                (operator as API).initiateConsumer(conn);
-            return conn;
-        }
-        return this.inputPort.connectTo(otherPort);
-    }
-
-    canConnectTo(port: Port, connectingWithOutput: boolean){
-        if(!super.canConnectTo(port, connectingWithOutput))
-            return false;
-        // Output of MQ can connect only to API  
-        if(!connectingWithOutput)
-            return true;
-        if(port.parent instanceof API)
-            return true;
-        this.fireFailedConnect({message: "Output of a Message Queue can only be conencted to an API"});
-        return false;
     }
 
     getAvailableEndpoints(): Endpoint[]{

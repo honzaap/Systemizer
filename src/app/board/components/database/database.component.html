@@ -33,7 +33,7 @@
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <input disabled class="endpoint-url" [(ngModel)]="endpoint.url" >
+                                <input (blur)="handleEndpointUrlChange(endpoint)" (change)="afterChange()" class="endpoint-url" [(ngModel)]="endpoint.url" >
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <div class="options-endpoint-menu-top">

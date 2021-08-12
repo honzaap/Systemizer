@@ -8,6 +8,7 @@ export class RequestData{
     originID: string;
     requestId: string;
     responseId: string;
+    sendResponse: boolean = true;
 }
 
 export class RequestDataHeader {

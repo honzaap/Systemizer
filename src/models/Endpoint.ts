@@ -34,9 +34,3 @@ export class DatabaseEndpoint extends Endpoint{
         this.protocol = Protocol.Database
     }
 }
-
-export class MQEndpoint extends Endpoint{
-    constructor(url = "Message Queue"){
-        super(url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH])
-    }
-}
