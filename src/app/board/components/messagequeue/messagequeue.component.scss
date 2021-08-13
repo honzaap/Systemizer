@@ -26,7 +26,8 @@
             height: 100%;
         }
         &.empty{
-            background-color: rgba(255,255,255,0.4);
+            background-color: var(--text);
+            opacity: 0.4;
         }
     }
 }
