@@ -55,6 +55,20 @@
                 </mat-form-field>
             </div>
         </div>
+        <div class="frequency">
+            <span class="property-name endpoint-title">Requests per minute: <info-tooltip [Message]="'Changes the speed at which data is sent.'"></info-tooltip></span>
+            <div>
+                <mat-slider
+                    thumbLabel
+                    [(ngModel)]="LogicClient.options.requestsPerMinute"
+                    tickInterval="10"
+                    step="10"
+                    min="10"
+                    max="200"
+                    (change)="afterChange()"
+                    aria-label="units"></mat-slider>
+            </div>
+        </div>
     </div>
     <div #actions>
         <div class="options-actions">

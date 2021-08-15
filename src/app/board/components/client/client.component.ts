@@ -154,11 +154,11 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	}
 
 	async stream(){
-		await sleep(700);
+		await sleep(36000 / this.LogicClient.options.requestsPerMinute)
 		this.updateCanSendData()
 		if(!this.isAutomaticSending || !this.canSend) 
 			return true;
-		await this.sendData();
+		this.sendData();
 		if(this.isReadOnly)
 			this.cdRef.detectChanges();
 		return await this.stream();
