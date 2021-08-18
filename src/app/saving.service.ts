@@ -81,7 +81,9 @@ export class SavingService {
 		iS: "isShard",
 		bg: "backgroundColor",
 		co: "color",
-		a: "asynchronous"
+		a: "asynchronous",
+		pf: "performance",
+		oR: "outputRate"
 	};
 
 	/**

@@ -21,6 +21,14 @@
                 </mat-form-field>
             </div>
         </div>
+        <endpoint-select
+        [Model]="LogicWebServer"
+        [Type]="LogicWebServer.options.type"
+        [HasStreamActions]="true"
+        [ConnectableEndpoints]="connectableEndpoints"
+        [AfterChange]="afterChange"
+        ></endpoint-select>
+        <!--
         <div class="options-endpoints-container">
             <div class="options-endpoints-top">
                 <span class="property-name">Endpoints: <info-tooltip [Message]="'List of endpoints the Web Server has available. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
@@ -97,5 +105,7 @@
                 </div>
             </div>
         </div>
+        -->
+
     </div>
 </div>

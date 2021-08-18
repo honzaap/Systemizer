@@ -312,7 +312,7 @@ export class OperatorComponent {
 		return getFormattedMethod(method, isDatabase);
 	}
 
-	afterChange(){
+	afterChange = () => {
 		this.hasChanged.emit();
 		this.beforeOptions = clone(this.LogicComponent.options);
 	}

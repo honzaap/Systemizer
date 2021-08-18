@@ -213,8 +213,8 @@ li{
 }
 .options-menu-window{
     position: absolute;
-    top: 30%;
-    bottom: 30%;
+    top: 28%;
+    bottom: 24%;
     right: 0;
     min-height: 350px;
     width: 18.5rem;
@@ -377,6 +377,14 @@ li{
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
+        & .property-name{
+            font-size: 1em !important;
+        }
+        & > div{
+            display: flex;
+            flex-flow: row nowrap;
+            gap: .5em;
+        }
     }
     & mat-form-field{
         font-weight: normal;
@@ -597,6 +605,32 @@ mat-tooltip-component .mat-tooltip{
 }
 .mat-slider-horizontal .mat-slider-track-wrapper{
     filter: brightness(0.5) !important;
+}
+.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label{
+    background-color: var(--text);
+}
+.mat-slider-description{
+    width: 80%;
+    padding-inline: 0.5em;
+    margin-top: -0.9em;
+    display: flex;
+    font-size: 0.75em;
+    justify-content: space-between;
+    &.low{
+        & > *:nth-child(1){
+            color: var(--main);
+        }
+    }
+    &.medium{
+        & > *:nth-child(2){
+            color: var(--main);
+        }
+    }
+    &.high{
+        & > *:nth-child(3){
+            color: var(--main);
+        }
+    }
 }
 
 .fs-1{

@@ -51,11 +51,6 @@ export class DatabaseComponent extends OperatorComponent implements OnInit {
 		return this.LogicDatabase;
 	}
 
-	handleEndpointUrlChange(endpoint){
-		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
-			endpoint.url = "/database";
-	}
-
 	changeDatabaseType(){
 		if(this.LogicDatabase.outputPort == null)	
 			return;

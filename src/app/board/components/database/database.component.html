@@ -21,32 +21,15 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="options-endpoints-container">
-            <div class="options-endpoints-top">
-                <span *ngIf="LogicDatabase.options.isShard; else defaultEpInfo" class="property-name">Endpoints: <info-tooltip [Message]="'Database endpoint that data will be sent to (Set by default to /shard). '"></info-tooltip></span>
-                <ng-template #defaultEpInfo>
-                    <span class="property-name">Endpoints: <info-tooltip [Message]="'Database endpoint that data will be sent to (Set by default to /database). '"></info-tooltip></span>
-                </ng-template>
-            </div>
-            <div class="options-endpoints">
-                <div class="options-endpoint" *ngFor="let endpoint of this.LogicDatabase.options.endpoints">
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <input (blur)="handleEndpointUrlChange(endpoint)" (change)="afterChange()" class="endpoint-url" [(ngModel)]="endpoint.url" >
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="options-endpoint-menu-top">
-                            <mat-form-field class="endpoint-method" appearance="fill">
-                                <mat-select disabled [(ngModel)]="endpoint.supportedMethods" multiple>
-                                    <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ formatMethod(HTTPMethod[method], true) }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </mat-expansion-panel>
-                </div>
-            </div>
-        </div>
+        <endpoint-select
+        [Model]="LogicDatabase"
+        [Type]="APIType.REST"
+        [DatabaseEndpoints]="true"
+        [Multiple]="false"
+        [HasActions]="false"
+        [ModifiableMethods]="false"
+        [AfterChange]="afterChange"
+        ></endpoint-select>
     </div>
     <div #actions>
         <div class="options-actions">

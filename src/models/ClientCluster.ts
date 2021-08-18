@@ -1,5 +1,5 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
-import { arrayEquals, sleep, UUID } from "src/shared/ExtensionMethods";
+import { arrayEquals, getRateFromPerformance, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { gRPCMode } from "./enums/gRPCMode";
@@ -54,7 +54,7 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
     }
 
     async sendNewRequest(){
-        await sleep(36000 / this.options.requestsPerMinute) // SET FOR DYNAMIC PROP
+        await sleep( (1 / getRateFromPerformance(this.options.outputRate)) * 1000 )
         if(!this.isSendingData)
             return;
         this.sendNewRequest();
@@ -138,7 +138,7 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
 }
 
 export class ClientClusterOptions extends Options{
-    requestsPerMinute: number = 80;
+    outputRate: number = 5;
 }
 
 class StreamingConnection {

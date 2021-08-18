@@ -30,11 +30,6 @@ export class CDNComponent extends OperatorComponent implements OnInit {
 		this.cdRef.detectChanges();
 	}
 
-	handleEndpointUrlChange(endpoint){
-		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
-			endpoint.url = "/CDN";
-	}
-
 	getActionsElement(){
 		return null;
 	}

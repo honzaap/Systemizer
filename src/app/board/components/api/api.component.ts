@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChi
 import { PlacingService } from 'src/app/placing.service';
 import { SelectionService } from 'src/app/selection.service';
 import { API } from 'src/models/API';
-import { Endpoint, EndpointAction } from 'src/models/Endpoint';
+import { Endpoint } from 'src/models/Endpoint';
 import { APIType } from 'src/models/enums/APIType';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
-import { EndpointActionHTTPMethod, HTTPMethod } from 'src/models/enums/HTTPMethod';
+import { HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
@@ -29,73 +29,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 
 	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
 		super(placingService, selectionService, resolver, cdRef);
-	}
-
-	addAction(endpoint: Endpoint){
-		endpoint.actions.push(new EndpointAction());
-		this.afterChange();
-	}
-
-	removeAction(endpoint: Endpoint, action: EndpointAction){
-		let idx = 0;
-		for(let act of endpoint.actions){
-			if(act === action) {
-				endpoint.actions.splice(idx,1);
-				this.afterChange();
-				return;
-			}
-			idx++;
-		}
-	}
-
-	addEndpoint(){
-		let type = this.LogicApi.options.type;
-		let endpoint: Endpoint;
-		if(type == APIType.REST){
-			endpoint = new Endpoint("api/posts",[HTTPMethod.GET,HTTPMethod.POST,HTTPMethod.PUT,HTTPMethod.DELETE]);
-		}
-		else if(type == APIType.GraphQL){
-			endpoint = new Endpoint("/graphql",[HTTPMethod.GET,HTTPMethod.POST]);
-		}
-		else if(type == APIType.RPC){
-			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-		}
-		else if(type == APIType.gRPC){
-			endpoint = new Endpoint("api/getPosts",[HTTPMethod.GET]);
-			endpoint.grpcMode = gRPCMode.Unary;
-		}
-		else if(type == APIType.WebSockets){
-			endpoint = new Endpoint("api/sendMessage", [HTTPMethod.GET]);
-			endpoint.protocol = Protocol.WebSockets;
-		}
-		this.LogicApi.options.endpoints.push(endpoint);
-		this.afterChange();
-	}
-
-	removeEndpoint(endpoint: Endpoint){
-		let idx = 0;
-		for(let ep of this.LogicApi.options.endpoints){
-			if(ep === endpoint) {
-				this.LogicApi.options.endpoints.splice(idx,1);
-				this.afterChange();
-				return;
-			}
-			idx++;
-		}	
-	}
-
-	handleActionEndpointChange(endpoint: Endpoint, action: EndpointAction){
-		action.method = endpoint.protocol != Protocol.WebSockets && action.endpoint.protocol != Protocol.WebSockets ? EndpointActionHTTPMethod.Inherit : EndpointActionHTTPMethod[HTTPMethod[action.endpoint.supportedMethods[0]]];
-	}
-
-	handleEndpointMethodChange(endpoint: Endpoint){
-		if(endpoint.supportedMethods.length == 0)
-			endpoint.supportedMethods = [HTTPMethod.GET];
-	}
-
-	handleEndpointUrlChange(endpoint){
-		if(endpoint.url == null || endpoint.url.replace(/\s/g,"") == "")
-			endpoint.url = `api/v${Math.floor(10*Math.random())}`;
 	}
 
 	public handleClick(event: MouseEvent){
@@ -128,11 +61,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 					endpoint.actions.splice(i,1);
 			}
 		}
-	}
-
-	public handleProtocolChange(endpoint: Endpoint){
-		if(endpoint.protocol == Protocol.WebSockets)
-			endpoint.supportedMethods = [HTTPMethod.GET];
 	}
 
 	public handleTypeChange(){

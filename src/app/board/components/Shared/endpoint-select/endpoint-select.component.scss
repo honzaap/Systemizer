@@ -1,18 +1,3 @@
-:host{
-    position: relative;
-}
-.component{
-    height: 80px;
-}
-
-.endpoint-select-container{
-    padding: 0.15em;
-    margin-top: 0.55em;
-    background-color: rgba(0,0,0,0.15);
-}
-.property-name{
-    font-size: 1em !important;
-}
 .options-endpoint-inputs{
     display: flex;
     flex-flow: row nowrap;
@@ -49,15 +34,5 @@
     padding-top: 1em;
     & .property-name{
         font-size: 1.2em;
-    }
-}
-.options-endpoints-top{
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    & > div{
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 0.5em;
     }
 }

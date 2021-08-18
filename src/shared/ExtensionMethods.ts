@@ -278,3 +278,11 @@ CanvasRenderingContext2D.prototype.restore = function()
 };
 
 })();
+
+export function getRateFromPerformance(performance){
+	let minRate = 0.75;
+	let maxRate = 2.5;
+	let maxPerformance = 10;
+	let diff = maxRate - minRate;
+	return minRate + (performance / maxPerformance) * diff;
+}

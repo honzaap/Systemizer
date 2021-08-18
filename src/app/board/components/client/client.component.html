@@ -56,17 +56,25 @@
             </div>
         </div>
         <div class="frequency">
-            <span class="property-name endpoint-title">Requests per minute: <info-tooltip [Message]="'Changes the speed at which data is sent.'"></info-tooltip></span>
+            <span class="property-name endpoint-title">Output rate: <info-tooltip [Message]="'Changes the speed at which data is sent.'"></info-tooltip></span>
             <div>
                 <mat-slider
                     thumbLabel
-                    [(ngModel)]="LogicClient.options.requestsPerMinute"
-                    tickInterval="10"
-                    step="10"
-                    min="10"
-                    max="200"
+                    [(ngModel)]="LogicClient.options.outputRate"
+                    tickInterval="1"
+                    step="1"
+                    min="1"
+                    max="10"
                     (change)="afterChange()"
                     aria-label="units"></mat-slider>
+                <div class="mat-slider-description" 
+                [class.low]="LogicClient.options.outputRate < 4" 
+                [class.medium]="LogicClient.options.outputRate < 8 && LogicClient.options.outputRate >= 4" 
+                [class.high]="LogicClient.options.outputRate >= 8">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
+                </div>
             </div>
         </div>
     </div>

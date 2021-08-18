@@ -38,6 +38,7 @@ import { TextfieldComponent } from './board/components/textfield/textfield.compo
 import { WebserverComponent } from './board/components/webserver/webserver.component';
 import { ProxyComponent } from './board/components/proxy/proxy.component';
 import { ClientclusterComponent } from './board/components/clientcluster/clientcluster.component';
+import { CDNComponent } from './board/components/cdn/cdn.component';
 
 import { BoardUIComponent } from './board/boardUI/boardUI.component';
 import { OptionsmenuComponent } from './board/optionsmenu/optionsmenu.component';
@@ -49,14 +50,12 @@ import { GettingStartedComponent } from './pages/getting-started/getting-started
 import { PagesHeaderComponent } from './pages/header/header.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { PagesComponent } from './pages/pages.component';
-import { CDNComponent } from './board/components/cdn/cdn.component';
+import { EndpointSelectComponent } from './board/components/shared/endpoint-select/endpoint-select.component';
 
 import * as Hammer from 'hammerjs';
 import {
 HammerModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG} 
-from '@angular/platform-browser';
-
-  
+from '@angular/platform-browser';  
 
 @NgModule({
   declarations: [
@@ -92,6 +91,7 @@ from '@angular/platform-browser';
     ProxyComponent,
     ClientclusterComponent,
     CDNComponent,
+    EndpointSelectComponent
   ],
   imports: [
     BrowserModule,

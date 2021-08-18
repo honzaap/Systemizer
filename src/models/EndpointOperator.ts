@@ -79,4 +79,5 @@ export class EndpointOperator extends LogicComponent{
 
 export class EndpointOptions extends Options{
     endpoints: Endpoint[] = [];
+    //performance: number = 5; Will be used for simulation in the future
 }
