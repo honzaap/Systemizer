@@ -153,8 +153,6 @@ export class WebServer extends EndpointOperator implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
         if(targetConnection == null)
@@ -220,10 +218,6 @@ export class WebServer extends EndpointOperator implements IDataOperator{
 
         await this.sendData(data);
         await this.serverStream(data, streamingEndpoint);
-    }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
     }
 }
 

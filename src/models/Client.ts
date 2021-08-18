@@ -38,8 +38,6 @@ export class Client extends LogicComponent implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     async sendData(data: RequestData) {
         this.updateEndpoint();
         return await this.outputPort.sendData(data);

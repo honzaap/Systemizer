@@ -110,8 +110,6 @@ export class API extends EndpointOperator implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){ }
-
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId] || response.origin;
         if(targetConnection == null)
@@ -132,10 +130,6 @@ export class API extends EndpointOperator implements IDataOperator{
             this.options.endpoints.indexOf(streamingEndpoint) == -1) return;
         await this.sendData(data);
         await this.stream(data, streamingEndpoint);
-    }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
     }
 }
 

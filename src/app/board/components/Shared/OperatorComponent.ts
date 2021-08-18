@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, ComponentFactoryResolver, ElementRef, EventEmitter, ViewContainerRef } from "@angular/core";
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, EventEmitter, ViewChild, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
@@ -17,7 +17,15 @@ import { clone, getFormattedMethod } from "src/shared/ExtensionMethods";
 import { PortComponent } from "../port/port.component";
 import { TitleComponent } from "./title/title.component";
 
-export class OperatorComponent {
+@Component({
+	template: '',
+	queries: {
+		anchorRef: new ViewChild( "anchorRef" ),
+		optionsRef: new ViewChild( "options" ),
+		actionsRef: new ViewChild("actions")
+	},
+})
+export abstract class OperatorComponent {
 
 	hasChanged = new EventEmitter();
 	showContextMenu = new EventEmitter();
@@ -46,12 +54,7 @@ export class OperatorComponent {
 	public ReplacementPolicy: typeof ReplacementPolicy = ReplacementPolicy;
 	public ReplacementPolicyKeys = Object.values(ReplacementPolicy).filter(k => !isNaN(Number(k)));
 
-    public placingService: PlacingService;
-    private selectionService: SelectionService;
-	private resolver: ComponentFactoryResolver;
-	public cdRef: ChangeDetectorRef;
-
-	conn: ViewContainerRef;
+	@ViewChild("conn", { read: ViewContainerRef }) conn: ViewContainerRef;
 
 	public anchorRef!: ElementRef;
 
@@ -70,12 +73,16 @@ export class OperatorComponent {
 
 	public beforeOptions: Options;
 
-    constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef) {
-		this.placingService = placingService;
-        this.selectionService = selectionService;
-		this.resolver = resolver
-		this.cdRef = cdRef;
-		cdRef.detach();
+    constructor(protected placingService: PlacingService, protected selectionService: SelectionService, protected resolver: ComponentFactoryResolver, public cdRef: ChangeDetectorRef) {
+		this.cdRef.detach();
+	}
+
+	ngAfterViewInit(): void {
+		this.Init();
+  	}
+
+	ngOnInit(){
+		this.cdRef.detectChanges();
 	}
 
   	public handleMousedown(event: Event): void {
@@ -219,8 +226,7 @@ export class OperatorComponent {
 		this.cdRef.detectChanges();
 	}
 
-	Init(conn: ViewContainerRef, generateTitle: boolean = true): void {
-		this.conn = conn;
+	Init(generateTitle: boolean = true): void {
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
 		this.comp = this.anchorRef.nativeElement;
@@ -316,8 +322,8 @@ export class OperatorComponent {
 		this.hasChanged.emit();
 		this.beforeOptions = clone(this.LogicComponent.options);
 	}
-
+	
 	static getColor(): string{
-		return "6059DF";
+		return "#6059DF";
 	}
 }

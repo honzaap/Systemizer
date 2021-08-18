@@ -38,18 +38,12 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
             await this.sendData(this.getResponse(data));
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
         if(targetConnection == null)
             throw new Error("Target connection can not be null");
         this.connectionTable[response.responseId] = null; // reset request id
         await this.inputPort.sendData(response, targetConnection);
-    }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
     }
 }
 

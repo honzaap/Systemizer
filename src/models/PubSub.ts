@@ -68,12 +68,6 @@ export class PubSub extends EndpointOperator implements IDataOperator{
             this.outputPort.sendData(data,data.origin);
         }
     }
-
-    onConnectionUpdate(wasOutput: boolean = false){ }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
-    }
 }
 
 export class PubSubOptions extends EndpointOptions{

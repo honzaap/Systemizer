@@ -1,6 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PlacingService } from 'src/app/placing.service';
-import { SelectionService } from 'src/app/selection.service';
+import { Component, OnInit } from '@angular/core';
 import { API } from 'src/models/API';
 import { Endpoint } from 'src/models/Endpoint';
 import { APIType } from 'src/models/enums/APIType';
@@ -11,10 +9,6 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'api',
-	queries: {
-		anchorRef: new ViewChild( "anchorRef" ),
-		optionsRef: new ViewChild( "options" ),
-	},
 	templateUrl: './api.component.html',
 	styleUrls: ['./api.component.scss']
 })
@@ -22,14 +16,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 
 	public LogicApi: API = new API();
 	
-	@ViewChild("conn", { read: ViewContainerRef }) conn;
-
 	connectableEndpoints: Endpoint[] = [];
 	consumeableEndpoints: Endpoint[] = [];
-
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
-		super(placingService, selectionService, resolver, cdRef);
-	}
 
 	public handleClick(event: MouseEvent){
 		super.handleClick(event);
@@ -86,20 +74,8 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 		this.LogicApi.options.endpoints = [endpoint];
 	}
 
-	ngAfterViewInit(): void {
-		super.Init(this.conn);
-  	}
-
 	public getLogicComponent(){
 		return this.LogicApi;
-	}
-
-	getActionsElement(){
-		return null;
-	}
-
-	ngOnInit(){
-		this.cdRef.detectChanges();
 	}
 
 	static getColor(): string{

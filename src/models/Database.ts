@@ -9,9 +9,7 @@ import { Port } from "./Port";
 import { RequestData, RequestDataHeader } from "./RequestData";
 import { EventDispatcher, Handler } from "./Shared/EventDispatcher";
 
-interface RemoveShardEvent{
-
-}
+interface RemoveShardEvent{ }
 
 export class Database extends EndpointOperator implements IDataOperator{
 
@@ -93,10 +91,6 @@ export class Database extends EndpointOperator implements IDataOperator{
             return true;
         this.fireFailedConnect({message: "Output of a Database can only be connected to database shard of same type."});
         return false;
-    }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
     }
 
     protected removeShardDispatcher = new EventDispatcher<RemoveShardEvent>();

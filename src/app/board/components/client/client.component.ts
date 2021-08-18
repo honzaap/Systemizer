@@ -1,6 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PlacingService } from 'src/app/placing.service';
-import { SelectionService } from 'src/app/selection.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Client } from 'src/models/Client';
 import { Endpoint } from 'src/models/Endpoint';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
@@ -12,11 +10,6 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'client',
-	queries: {
-		anchorRef: new ViewChild( "anchorRef" ),
-		optionsRef: new ViewChild( "options" ),
-		actionsRef: new ViewChild("actions")
-	},
 	templateUrl: './client.component.html',
 	styleUrls: ['./client.component.scss']
 })
@@ -35,21 +28,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 	@ViewChild("endpointSelect") endpointSelect;
 	@ViewChild("methodSelect") methodSelect;
-	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	isAutomaticSending = false;
-
-	constructor(placingService: PlacingService, selectionService: SelectionService ,resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
-		super(placingService, selectionService, resolver, cdRef);
-	}
-
-	ngAfterViewInit(): void {
-		super.Init(this.conn);
-  	}
-
-	ngOnInit(){
-		this.cdRef.detectChanges();
-	}
 
 	handleEndpointChange(){
 		this.LogicClient.options.endpointRef.method = this.LogicClient.options.endpointRef.endpoint.supportedMethods[0];

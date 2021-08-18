@@ -50,6 +50,8 @@ export class LogicComponent {
             this["inputPort"].removeConnections();
     }
 
+    onConnectionUpdate(wasOutput: boolean = false){ }
+
     protected receiveDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
     public onReceiveData(handler: Handler<ReceiveDataEvent>) {
         this.receiveDataDispatcher.register(handler);

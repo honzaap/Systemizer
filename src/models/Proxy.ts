@@ -82,7 +82,6 @@ export class Proxy extends LogicComponent implements IDataOperator{
             await this.outputPort.sendData(data,data.origin);
         }
     }
-    onConnectionUpdate(wasOutput: boolean = false){}
 
     /**
      * 

@@ -75,6 +75,10 @@ export class EndpointOperator extends LogicComponent{
     getEndpoints(){
         return this.options.endpoints;
     }
+
+    getAvailableEndpoints(): Endpoint[]{
+        return this.getEndpoints();
+    }
 }
 
 export class EndpointOptions extends Options{

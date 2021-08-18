@@ -147,8 +147,6 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
         await this.outputPort.sendData(data, this.outputPort.connections[connectionIndex]);
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     /**
      * 
      * This method currently does nothing for LoadBalancer

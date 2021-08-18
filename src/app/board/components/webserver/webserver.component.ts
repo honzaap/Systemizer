@@ -1,6 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PlacingService } from 'src/app/placing.service';
-import { SelectionService } from 'src/app/selection.service';
+import { Component, OnInit } from '@angular/core';
 import { Endpoint } from 'src/models/Endpoint';
 import { APIType } from 'src/models/enums/APIType';
 import { gRPCMode } from 'src/models/enums/gRPCMode';
@@ -11,23 +9,14 @@ import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'webserver',
-	queries: {
-		anchorRef: new ViewChild( "anchorRef" ),
-		optionsRef: new ViewChild( "options" ),
-	},
 	templateUrl: './webserver.component.html',
 	styleUrls: ['./webserver.component.scss']
 })
 export class WebserverComponent extends OperatorComponent implements OnInit {
 
 	public LogicWebServer : WebServer = new WebServer();
-	@ViewChild("conn", { read: ViewContainerRef }) conn;
 
 	connectableEndpoints: Endpoint[] = [];
-
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
-		super(placingService, selectionService, resolver, cdRef);
-  	}
 
 	public handleClick(event: MouseEvent){
 		super.handleClick(event);
@@ -82,18 +71,6 @@ export class WebserverComponent extends OperatorComponent implements OnInit {
 			endpoint.protocol = Protocol.WebSockets;
 		}
 		this.LogicWebServer.options.endpoints = [endpoint];
-	}
-
-	ngAfterViewInit(): void {
-		super.Init(this.conn);
-	}
-
-	ngOnInit(){
-		this.cdRef.detectChanges();
-	}
-
-	getActionsElement(){
-		return null;
 	}
 
 	public getLogicComponent(){

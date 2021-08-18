@@ -1,38 +1,15 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PlacingService } from 'src/app/placing.service';
-import { SelectionService } from 'src/app/selection.service';
+import { Component, OnInit } from '@angular/core';
 import { CDN } from 'src/models/CDN';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
 	selector: 'cdn',
-	queries: {
-		anchorRef: new ViewChild( "anchorRef" ),
-		optionsRef: new ViewChild( "options" ),
-	},
 	templateUrl: './cdn.component.html',
 	styleUrls: ['./cdn.component.scss']
 })
 export class CDNComponent extends OperatorComponent implements OnInit {
 
 	public LogicCDN : CDN = new CDN();
-	@ViewChild("conn", { read: ViewContainerRef }) conn;
-
-	constructor(placingService: PlacingService, selectionService: SelectionService, resolver: ComponentFactoryResolver, cdRef: ChangeDetectorRef){
-		super(placingService, selectionService, resolver, cdRef);
-  	}
-
-	ngAfterViewInit(): void {
-		super.Init(this.conn);
-	}
-
-	ngOnInit(){
-		this.cdRef.detectChanges();
-	}
-
-	getActionsElement(){
-		return null;
-	}
 
 	public getLogicComponent(){
 		return this.LogicCDN;

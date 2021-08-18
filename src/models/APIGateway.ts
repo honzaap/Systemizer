@@ -148,8 +148,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
         if(targetConnection == null)
@@ -204,10 +202,6 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
 
         await this.sendData(data);
         await this.serverStream(data, streamingEndpoint);
-    }
-
-    getAvailableEndpoints(): Endpoint[]{
-        return this.getEndpoints();
     }
 
     getEndpoints() : Endpoint[]{

@@ -106,10 +106,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         this.sendToConsumer();
     }
 
-    getAvailableEndpoints(): Endpoint[]{
-        return this.options.endpoints;
-    }
-
     private sendDataDispatcher = new EventDispatcher<ReceiveDataEvent>();
     public onSendData(handler: Handler<ReceiveDataEvent>) {
         this.sendDataDispatcher.register(handler);

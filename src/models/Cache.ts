@@ -100,8 +100,6 @@ export class Cache extends LogicComponent implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     async sendData(response: RequestData) {
         let targetConnection = this.connectionTable[response.responseId]
         if(targetConnection == null)

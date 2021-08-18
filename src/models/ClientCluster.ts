@@ -35,8 +35,6 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
         }
     }
 
-    onConnectionUpdate(wasOutput: boolean = false){}
-
     /**
      * Starts sending data to random available endpoints
      */
