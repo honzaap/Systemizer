@@ -71,14 +71,21 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(data.header.endpoint == null) throw new Error("Endpoint can not be null")
 
             let targetEndpoint = this.getTargetEndpoint(data);
-            this.fireReceiveData(data);
             if(targetEndpoint == null)
                 return;
+
+            this.fireReceiveData(data);
+            this.requestReceived();
 
             let sendResponse = false;
             let isFirstStreamRequest = this.connectionTable[data.requestId] == null && data.header.stream;
             let isLastStreamRequest = this.connectionTable[data.requestId] != null && !data.header.stream;
             let dontSendRequestResponse = (isFirstStreamRequest || isLastStreamRequest);
+
+            if(!await this.throttleThroughput(targetEndpoint.actions.length > 0, 5000)){
+                this.requestProcessed();
+                return;
+            }
 
             // Send data to every action 
             for(let action of targetEndpoint.actions){
@@ -130,6 +137,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                 }
             }
 
+            this.requestProcessed();
             if(isFirstStreamRequest)
                 this.connectionTable[data.requestId] = data.origin;
             if(targetEndpoint.grpcMode == gRPCMode["Server Streaming"]) {
@@ -140,7 +148,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
             }
-            if(sendResponse || targetEndpoint.actions.length == 0 && data.sendResponse){
+            if(sendResponse || targetEndpoint.actions.length == 0 && data.sendResponse && !data.header.stream){
                 // Send response back
                 this.connectionTable[data.requestId] = data.origin;
                 await this.sendData(this.getResponse(data));
@@ -161,6 +169,9 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             if(res){
                 this.connectionTable[response.responseId] = null;
             }
+        }
+        else{
+            this.connectionTable[response.responseId] = null;
         }
     }
 

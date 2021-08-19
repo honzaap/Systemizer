@@ -29,7 +29,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         this.options.title = "Message Queue";
 
         this.options.endpoints = [
-            new Endpoint("Message Queue", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH])
+            new Endpoint("MessageQueue", [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH])
         ];
     }
 
@@ -45,6 +45,9 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
             this.sendToConsumer();
 
         this.fireReceiveData(data);
+        this.requestReceived();
+
+        
 
         // Return response to publisher
         let response = new RequestData();
@@ -54,6 +57,7 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         response.origin = data.origin;
         response.originID = this.originID;
         // Send response back
+        this.requestProcessed();
         if(data.sendResponse)
             await this.inputPort.sendData(response, data.origin);
     }
@@ -62,8 +66,9 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         if(this.messages.length == 0 || this.outputPort.connections.length == 0)
             return;
         this.isSendingData = true;
+        //await this.throttleThroughput(true, -1);
         await sleep(400);
-
+        
         let message = this.messages.pop();
         let epRef = new EndpointRef();
         epRef.endpoint = new Endpoint(this.options.endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]);

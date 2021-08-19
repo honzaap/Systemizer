@@ -29,10 +29,13 @@ export class CDN extends EndpointOperator implements IDataOperator{
         if(targetEndpoint == null)
             return;
 
-        this.connectionTable[data.requestId] = data.origin;
         this.fireReceiveData(data);
+        this.requestReceived();
+
+        this.connectionTable[data.requestId] = data.origin;
 
         // Send response back
+        this.requestProcessed();
         if(data.sendResponse)
             await this.sendData(this.getResponse(data));
     }

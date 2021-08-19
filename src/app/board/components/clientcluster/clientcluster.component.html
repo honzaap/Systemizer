@@ -22,29 +22,13 @@
 </div>
 <div style="display:none">
     <div #options>
-        <div>
-            <span class="property-name endpoint-title">Output rate: <info-tooltip [Message]="'Changes the speed at which data is sent.'"></info-tooltip></span>
-            <div class="endpoint-protocol">
-                <mat-slider
-                    thumbLabel
-                    [(ngModel)]="LogicClientCluster.options.outputRate"
-                    tickInterval="1"
-                    step="1"
-                    min="1"
-                    max="10"
-                    (change)="afterChange()"
-                    aria-label="units">
-                </mat-slider>
-                <div class="mat-slider-description" 
-                [class.low]="LogicClientCluster.options.outputRate < 4" 
-                [class.medium]="LogicClientCluster.options.outputRate < 8 && LogicClientCluster.options.outputRate >= 4" 
-                [class.high]="LogicClientCluster.options.outputRate >= 8">
-                    <span>Low</span>
-                    <span>Medium</span>
-                    <span>High</span>
-                </div>
-            </div>
-        </div>
+        <slider-described class="mt"
+        [Model]="LogicClientCluster"
+        [Title]="'Output rate'"
+        [Property]="'outputRate'"
+        [AfterChange]="afterChange"
+        [Tooltip]="'Change the speed at which data is sent.'"
+        ></slider-described>
     </div>
     <div #actions>
         <div class="options-actions">

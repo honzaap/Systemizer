@@ -279,9 +279,16 @@ CanvasRenderingContext2D.prototype.restore = function()
 
 })();
 
-export function getRateFromPerformance(performance){
+export function getRateFromOutputRate(outputRate){
 	let minRate = 0.75;
 	let maxRate = 2.5;
+	let maxOutputRate = 10;
+	let diff = maxRate - minRate;
+	return minRate + (outputRate / maxOutputRate) * diff;
+}
+export function getRateFromPerformance(performance){
+	let minRate = 1.25;
+	let maxRate = 3.5;
 	let maxPerformance = 10;
 	let diff = maxRate - minRate;
 	return minRate + (performance / maxPerformance) * diff;

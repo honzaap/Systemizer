@@ -164,6 +164,11 @@ a{
 li{
     list-style: none;
 }
+.mt{
+    > div{
+        margin-top: 1em;
+    }
+}
 .button-icon{
     width: 1em;
     height: 1em;
@@ -175,6 +180,10 @@ li{
     &:hover{
         transform: scale(1.2);
     }
+}
+.dropped-data{
+    transition: transform 0.6s ease-out, opacity 0.8s ease-in;
+    fill: #31B78D;
 }
 .nav-list{
     display:flex;

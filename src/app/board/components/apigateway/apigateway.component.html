@@ -41,7 +41,6 @@
         </div>
         <!-- RPC ENDPOINTS -->
 
-
         <!-- gRPC ENDPOINTS -->
         <div class="endpoint-select-container">
             <endpoint-select
@@ -56,7 +55,6 @@
             ></endpoint-select>
         </div>
         <!-- gRPC ENDPOINTS -->
-
 
         <!-- GraphQL ENDPOINTS -->
         <div class="endpoint-select-container">
@@ -73,7 +71,6 @@
         </div>
         <!-- GraphQL ENDPOINTS -->
 
-
         <!-- WebSockets ENDPOINTS -->
         <div class="endpoint-select-container">
             <endpoint-select
@@ -88,5 +85,11 @@
             ></endpoint-select>
         </div>
         <!-- WebSockets ENDPOINTS -->
+    </div>
+    <div #simulations>
+        <slider-described
+        [Model]="LogicApiGateway"
+        [AfterChange]="afterChange"
+        ></slider-described>
     </div>
 </div>

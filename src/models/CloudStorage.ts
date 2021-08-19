@@ -30,10 +30,15 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
         if(targetEndpoint == null)
             return;
 
-        this.connectionTable[data.requestId] = data.origin;
         this.fireReceiveData(data);
+        this.requestReceived();
+
+        this.connectionTable[data.requestId] = data.origin;
+
+        await this.throttleThroughput(targetEndpoint.actions.length > 0);
 
         // Send response back
+        this.requestProcessed();
         if(data.sendResponse)
             await this.sendData(this.getResponse(data));
     }
@@ -48,4 +53,4 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
 }
 
 export class CloudStorageOptions extends EndpointOptions{
-}
+}    

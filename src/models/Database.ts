@@ -39,6 +39,10 @@ export class Database extends EndpointOperator implements IDataOperator{
             return;
 
         this.fireReceiveData(request);
+        this.requestReceived();
+
+        await this.throttleThroughput(false);
+
         if(this.options.isMasterShard){
             let length = this.outputPort.connections.length;
             if(length == 0)
@@ -60,6 +64,7 @@ export class Database extends EndpointOperator implements IDataOperator{
         }
         this.connectionTable[request.requestId] = request.origin;
         // Send response back
+        this.requestProcessed();
         if(request.sendResponse)
             await this.sendData(this.getResponse(request));
     }

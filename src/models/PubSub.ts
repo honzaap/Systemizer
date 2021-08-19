@@ -32,6 +32,7 @@ export class PubSub extends EndpointOperator implements IDataOperator{
             throw new Error("requestId can not be null. Please specify property requestId of RequestData");
 
         this.fireReceiveData(data);
+        this.requestReceived();
 
         // Put data to queue 
         data.header.stream = false;
@@ -46,12 +47,13 @@ export class PubSub extends EndpointOperator implements IDataOperator{
         response.originID = this.originID;
 
         // Send response back
+        this.requestProcessed();
         if(data.sendResponse)
             await this.inputPort.sendData(response, data.origin);
     }
 
     async sendToConsumers(message: RequestData){
-        await sleep(200);
+        await this.throttleThroughput();
         
         this.sendData(message);
     }

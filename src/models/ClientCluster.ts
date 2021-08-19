@@ -1,5 +1,5 @@
 import { IDataOperator } from "src/interfaces/IDataOperator";
-import { arrayEquals, getRateFromPerformance, sleep, UUID } from "src/shared/ExtensionMethods";
+import { arrayEquals, getRateFromOutputRate, sleep, UUID } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { Endpoint, EndpointRef } from "./Endpoint";
 import { gRPCMode } from "./enums/gRPCMode";
@@ -52,7 +52,7 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
     }
 
     async sendNewRequest(){
-        await sleep( (1 / getRateFromPerformance(this.options.outputRate)) * 1000 )
+        await sleep( (1 / getRateFromOutputRate(this.options.outputRate)) * 1000 )
         if(!this.isSendingData)
             return;
         this.sendNewRequest();

@@ -55,7 +55,8 @@ import { EndpointSelectComponent } from './board/components/shared/endpoint-sele
 import * as Hammer from 'hammerjs';
 import {
 HammerModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG} 
-from '@angular/platform-browser';  
+from '@angular/platform-browser';
+import { SliderDescribedComponent } from './board/components/shared/slider-described/slider-described.component';  
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ from '@angular/platform-browser';
     ProxyComponent,
     ClientclusterComponent,
     CDNComponent,
-    EndpointSelectComponent
+    EndpointSelectComponent,
+    SliderDescribedComponent
   ],
   imports: [
     BrowserModule,

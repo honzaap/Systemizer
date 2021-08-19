@@ -1,5 +1,5 @@
-import { UUID } from "src/shared/ExtensionMethods";
-import { Endpoint } from "./Endpoint"
+import { getRateFromPerformance, sleep, UUID } from "src/shared/ExtensionMethods";
+import { Endpoint } from "./Endpoint";
 import { HTTPStatus } from "./enums/HTTPStatus";
 import { LogicComponent } from "./LogicComponent";
 import { Options } from "./Options";
@@ -12,7 +12,10 @@ export class EndpointOperator extends LogicComponent{
     }
 
     outputPort: Port;
+    inputPort: Port;
     options: EndpointOptions;
+    private lastTimeActionSent: number = 0;
+    requestCount: number = 0;
 
     getConnectableEndpoints() : Endpoint[]{
         let connectableEndpoints :Endpoint[] = [];
@@ -79,9 +82,46 @@ export class EndpointOperator extends LogicComponent{
     getAvailableEndpoints(): Endpoint[]{
         return this.getEndpoints();
     }
+
+    /**
+     * waits until next request can be processed (determined by performance).
+     * If a timeoutLimit is specified, false will be returned after that time of waiting (if it exceedes the actual wait time). 
+    */
+    async throttleThroughput(waitForActions: boolean = true, timeoutLimit: number = -1): Promise<boolean>{
+        if(!this.isFlowSimulationOn)
+            return true;
+        // Simulate throughput (start sending data to actions every X seconds)
+        let rate = 1 / getRateFromPerformance(this.options.performance);
+        if(!waitForActions)
+            rate /= 2;
+        let sleepTime = Math.max((this.lastTimeActionSent + rate * 1000) - performance.now(), 0);
+        if(timeoutLimit > 0 && sleepTime > timeoutLimit){
+            //this.lastTimeActionSent = performance.now() + timeoutLimit;
+            //await sleep(timeoutLimit);
+            this.inputPort.fireDropRequest({});
+            return false;
+        }
+        this.lastTimeActionSent = performance.now() + sleepTime;
+        await sleep(sleepTime);
+        return true;
+    }
+
+    /**
+     * Increments currently processing requests
+     */
+    protected requestReceived(){
+        this.requestCount++;
+    }
+
+    /**
+     * Decrements currently processing requests
+     */
+    protected requestProcessed(){
+        this.requestCount--;
+    }
 }
 
 export class EndpointOptions extends Options{
     endpoints: Endpoint[] = [];
-    //performance: number = 5; Will be used for simulation in the future
+    performance: number = 10;
 }

@@ -25,4 +25,10 @@
             </div>
         </div>
     </div>
+    <div #simulations>
+        <slider-described
+        [Model]="LogicMessageQueue"
+        [AfterChange]="afterChange"
+        ></slider-described>
+    </div>
 </div>

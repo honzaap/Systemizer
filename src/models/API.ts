@@ -49,11 +49,16 @@ export class API extends EndpointOperator implements IDataOperator{
             let targetEndpoint = this.getTargetEndpoint(data);
             if(targetEndpoint == null)
                 return;
+
             this.fireReceiveData(data);
+            this.requestReceived();
+
+
             if(this.connectionTable[data.requestId] != null){ // Check if the api is already streaming to this connection
                 // Client sent data to stream
                 if(data.header.stream == false && targetEndpoint.grpcMode != gRPCMode.Unary || targetEndpoint.protocol == Protocol.WebSockets) {// Client wants to end stream
                     this.connectionTable[data.requestId] = null;
+                    this.requestProcessed();
                     return;
                 }
             }
@@ -66,10 +71,17 @@ export class API extends EndpointOperator implements IDataOperator{
                         This streaming process feels kinda clunky, it will be commented for now
                         this.stream(this.getResponse(data), targetEndpoint);
                         */
+                        this.requestProcessed();
                         return;
                     }
                 }
             }
+          
+            if(!await this.throttleThroughput(targetEndpoint.actions.length > 0, 5000)){
+                this.requestProcessed();
+                return;
+            }
+
             // Send data to every action
             for(let action of targetEndpoint.actions){
                 // Get connection to given action endpoint
@@ -105,6 +117,7 @@ export class API extends EndpointOperator implements IDataOperator{
             }
 
             // Send response back to client
+            this.requestProcessed();
             if(data.sendResponse)
                 await this.sendData(this.getResponse(data));
         }

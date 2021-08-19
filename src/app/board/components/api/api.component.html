@@ -30,4 +30,10 @@
             ></endpoint-select>
         </div>
     </div>
+    <div #simulations>
+        <slider-described
+        [Model]="LogicApi"
+        [AfterChange]="afterChange"
+        ></slider-described>
+    </div>
 </div>

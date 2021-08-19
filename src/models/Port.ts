@@ -1,4 +1,4 @@
-import { IDataOperator } from "src/interfaces/IDataOperator";
+import { IDataOperator, ReceiveDataEvent } from "src/interfaces/IDataOperator";
 import { sleep } from "src/shared/ExtensionMethods";
 import { Connection } from "./Connection";
 import { RequestData } from "./RequestData";
@@ -136,5 +136,13 @@ export class Port{
     }
     private fireRemoveConnection(event: RemoveConnectionEvent) { 
         this.removeConnectionDispatcher.fire(event);
+    }
+
+    protected dropRequestDispatcher = new EventDispatcher<ReceiveDataEvent>();
+    public onDropRequest(handler: Handler<ReceiveDataEvent>) {
+        this.dropRequestDispatcher.register(handler);
+    }
+    public fireDropRequest(event: ReceiveDataEvent) { 
+        this.dropRequestDispatcher.fire(event);
     }
 }

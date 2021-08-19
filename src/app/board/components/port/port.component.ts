@@ -38,6 +38,28 @@ export class PortComponent implements OnInit {
     	this.LogicPort = this.LogicParent.getPort(this.IsOutput);
 		this.board = document.getElementById("board");
 		this.svgCanvas = document.getElementById("svg-canvas");
+		this.LogicPort.onDropRequest(() => {
+			let dirX = -1 - Math.random();
+			let dirY = Math.random();
+			let x = this.port.nativeElement.offsetLeft + this.port.nativeElement.clientWidth / 2;
+			let y = this.port.nativeElement.offsetTop + this.port.nativeElement.clientHeight / 2;
+			if(this.IsOutput)
+				dirX *= -1;
+			if(Math.random() > 0.5)
+				dirY *= -1;
+			let data = document.createElementNS('http://www.w3.org/2000/svg','circle');
+			data.classList.add("dropped-data");
+			data.setAttribute("r","5")
+			this.svgCanvas.appendChild(data);
+			data.style.transform = `translate(${x}px, ${y}px)`;
+			setTimeout(()=>{
+				data.style.transform = `translate(${x + dirX * 30}px, ${y + dirY * 30}px)`;
+				data.style.opacity = "0";
+			}, 50);
+			setTimeout(()=>{
+				data.remove();
+			}, 1000);
+		});
 		this.cdRef.detectChanges();
   	}  
 
@@ -53,9 +75,8 @@ export class PortComponent implements OnInit {
 		if(this.IsReadOnly && this.port != null)
 			this.port.nativeElement.style.display = "block";
 		let index = this.connectionComponents.findIndex(con => con === connection);
-		if(index === -1){
+		if(index === -1)
 			this.connectionComponents.push(connection);
-		}
 		this.cdRef.detectChanges();
 	}
 

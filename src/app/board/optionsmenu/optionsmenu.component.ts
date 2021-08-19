@@ -17,8 +17,10 @@ export class OptionsmenuComponent implements OnInit {
 	openGeneral: boolean = true;
 	openProps: boolean = true;
 	openActions: boolean = true;
+	openSimulations: boolean = true;
 
 	hasActions: boolean = false;
+	hasSimulations: boolean = false;
 
 	multipleSelectionsTitle: string = "Title";
 
@@ -30,6 +32,7 @@ export class OptionsmenuComponent implements OnInit {
 
 	@ViewChild("optionsWrapper") optionsWrapper;
 	@ViewChild("actionsWrapper") actionsWrapper;
+	@ViewChild("simulationsWrapper") simulationsWrapper;
 
 	public Technology: typeof Technology = Technology;
 	public TechnologyKeys = Object.values(Technology).filter(k => !isNaN(Number(k)));
@@ -41,6 +44,7 @@ export class OptionsmenuComponent implements OnInit {
 		selectionService.onChangeSelection( ()=>{
 			this.optionsWrapper.nativeElement.innerHTML = "";
 			this.actionsWrapper.nativeElement.innerHTML = "";
+			this.simulationsWrapper.nativeElement.innerHTML = "";
 			this.multipleSelectionsX = Number.MAX_VALUE;
 			this.multipleSelectionsY = Number.MAX_VALUE;
 			if(this.selectionService.currentSelections.length == 0){
@@ -48,21 +52,27 @@ export class OptionsmenuComponent implements OnInit {
 			}
 			else if(this.selectionService.currentSelections.length == 1){
 				let selection = this.selectionService.currentSelections[0];
-				this.optionsWrapper.nativeElement.innerHTML = "";
-				this.actionsWrapper.nativeElement.innerHTML = "";
 				this.isActive = true;
 
 				let optionsElement = selection.getOptionsElement();
 				if(optionsElement)
 					this.renderer.appendChild(this.optionsWrapper.nativeElement,optionsElement.nativeElement);
-				let actionsElement = selection.getActionsElement();
 
+				let actionsElement = selection.getActionsElement();
 				if(actionsElement){
 					this.hasActions = true;
 					this.renderer.appendChild(this.actionsWrapper.nativeElement,actionsElement.nativeElement);
 				}
 				else
 					this.hasActions = false;
+
+				let simulationsElement = selection.getSimulationsElement();
+				if(simulationsElement){
+					//this.hasSimulations = true;
+					this.renderer.appendChild(this.simulationsWrapper.nativeElement,simulationsElement.nativeElement);
+				}
+				else
+					this.hasSimulations = false;
 			}
 			else{
 				this.isActive = true;

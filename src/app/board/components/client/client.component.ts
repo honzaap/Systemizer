@@ -5,7 +5,7 @@ import { gRPCMode } from 'src/models/enums/gRPCMode';
 import { HTTPMethod } from 'src/models/enums/HTTPMethod';
 import { Protocol } from 'src/models/enums/Protocol';
 import { RequestData, RequestDataHeader } from 'src/models/RequestData';
-import { arrayEquals, getRateFromPerformance, sleep, UUID } from 'src/shared/ExtensionMethods';
+import { arrayEquals, getRateFromOutputRate, sleep, UUID } from 'src/shared/ExtensionMethods';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
@@ -134,7 +134,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	}
 
 	async stream(){
-		await sleep( (1 / getRateFromPerformance(this.LogicClient.options.outputRate)) * 1000);
+		await sleep( (1 / getRateFromOutputRate(this.LogicClient.options.outputRate)) * 1000);
 		this.updateCanSendData();
 		if(!this.isAutomaticSending || !this.canSend) 
 			return true;

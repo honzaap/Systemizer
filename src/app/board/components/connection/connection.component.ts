@@ -87,7 +87,9 @@ export class ConnectionComponent implements OnInit {
 			dataSvg.appendChild(anim);
 
 			(anim as any).beginElement();
-			dataSvg.style.display = "block"
+			setTimeout(() => {
+				dataSvg.style.display = "block"
+			}, 10)
 			setTimeout(()=>{
 				dataSvg.remove();
 			},delay)

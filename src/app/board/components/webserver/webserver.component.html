@@ -28,84 +28,11 @@
         [ConnectableEndpoints]="connectableEndpoints"
         [AfterChange]="afterChange"
         ></endpoint-select>
-        <!--
-        <div class="options-endpoints-container">
-            <div class="options-endpoints-top">
-                <span class="property-name">Endpoints: <info-tooltip [Message]="'List of endpoints the Web Server has available. Click the dropdown to show allowed methods and actions.'"></info-tooltip></span>
-                <span *ngIf="LogicWebServer.options.type != APIType.GraphQL" class="button-icon" (click)="addEndpoint()"><i class="fas fa-plus"></i></span>
-            </div>
-            <div class="options-endpoints">
-                <div class="options-endpoint" *ngFor="let endpoint of this.LogicWebServer.options.endpoints">
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <input (blur)="handleEndpointUrlChange(endpoint)" (change)="afterChange()" class="endpoint-url" type="text" spellcheck="false" [(ngModel)]="endpoint.url" placeholder="url">
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="options-endpoint-menu-top">
-                            <mat-form-field class="endpoint-method" appearance="fill">
-                                <mat-select *ngIf="LogicWebServer.options.type == APIType.REST" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
-                                    <mat-option *ngFor="let method of HTTPMethodKeys" [value]="method">{{ HTTPMethod[method] }}</mat-option>
-                                </mat-select>
-                                <mat-select *ngIf="LogicWebServer.options.type == APIType.GraphQL" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods" multiple required>
-                                    <mat-option [value]="HTTPMethod.GET">GET</mat-option>
-                                    <mat-option [value]="HTTPMethod.POST">POST</mat-option>
-                                </mat-select>
-                                <mat-select *ngIf="LogicWebServer.options.type == APIType.RPC || LogicWebServer.options.type == APIType.gRPC" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.supportedMethods[0]" required>
-                                    <mat-option [value]="HTTPMethod.GET">GET</mat-option>
-                                    <mat-option [value]="HTTPMethod.POST">POST</mat-option>
-                                </mat-select>
-                                <mat-select *ngIf="LogicWebServer.options.type == APIType.WebSockets" (selectionChange)="afterChange()" (closed)="handleEndpointMethodChange(endpoint)" disabled [(ngModel)]="endpoint.supportedMethods[0]">
-                                    <mat-option [value]="HTTPMethod.GET">GET</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <mat-form-field class="endpoint-grpcmode" appearance="fill" *ngIf="LogicWebServer.options.type == APIType.gRPC">
-                                <mat-select (selectionChange)="afterChange()" [disabled]="endpoint.protocol == Protocol.WebSockets" [(ngModel)]="endpoint.grpcMode" required>
-                                    <mat-option *ngFor="let mode of gRPCModeKeys" [value]="mode">{{ gRPCMode[mode] }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="options-endpoint-actions-container">
-                            <div class="options-endpoint-action">
-                                <span class="property-name action-endpoint">Actions: <info-tooltip [Message]="'List of actions of the endpoint. Change the target endpoint and method used.'"></info-tooltip></span>
-                                <span class="action-method"></span>
-                                <span class="button-icon" (click)="addAction(endpoint)"><i class="fas fa-plus"></i></span>
-                            </div>
-                            <div class="options-endpoint-actions">
-                                <div class="options-endpoint-action" *ngFor="let action of endpoint.actions">
-                                    <mat-form-field appearance="fill" class="action-endpoint">
-                                        <mat-select (selectionChange)="handleActionEndpointChange(endpoint, action); afterChange()" [(ngModel)]="action.endpoint">
-                                            <mat-option 
-                                            [disabled]="(((endpoint.grpcMode == gRPCMode.Unary || endpoint.grpcMode == gRPCMode['Client Streaming']) && (connendpoint.protocol == Protocol.WebSockets || connendpoint.grpcMode == gRPCMode['Server Streaming'] || connendpoint.grpcMode == gRPCMode['Bidirectional Streaming'])) || (endpoint.grpcMode == gRPCMode['Server Streaming'] && connendpoint.grpcMode == gRPCMode['Client Streaming'])) && !(LogicWebServer.options.type == APIType.WebSockets && connendpoint.protocol == Protocol.WebSockets)"
-                                            *ngFor="let connendpoint of connectableEndpoints" [value]="connendpoint">{{connendpoint.url}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <mat-form-field appearance="fill" class="action-method">
-                                        <mat-select (selectionChange)="afterChange()" [(ngModel)]="action.method" *ngIf="action.endpoint != null; else emptyMethod">
-                                            <mat-option *ngIf="action.endpoint.protocol != Protocol.WebSockets && endpoint.protocol != Protocol.WebSockets" [value]="EndpointActionHTTPMethod.Inherit">Inherit</mat-option>
-                                            <mat-option *ngFor="let method of action.endpoint.supportedMethods" [value]="EndpointActionHTTPMethod[HTTPMethod[method]]">{{ formatMethod(HTTPMethod[method+''], action.endpoint.protocol == Protocol.Database) }}</mat-option>
-                                        </mat-select>
-                                        <ng-template #emptyMethod>
-                                            <mat-select disabled>
-                                                <mat-option></mat-option>
-                                            </mat-select>
-                                        </ng-template>
-                                    </mat-form-field>
-                                    <span [class.disabled]="action.endpoint == null || action.endpoint.protocol === Protocol.WebSockets || action.endpoint.grpcMode !== gRPCMode.Unary" (click)="action.asynchronous = !(action.asynchronous || false)" 
-                                        [class.checked]="action.asynchronous === true" class="async-check"
-                                        matTooltip="{{ 'Make action asynchronous' }}">
-                                            A
-                                    </span>
-                                    <span class="button-icon" (click)="removeAction(endpoint, action)"><i class="fas fa-minus"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-expansion-panel>
-                    <span *ngIf="LogicWebServer.options.type != APIType.GraphQL" class="button-icon remove-endpoint" (click)="removeEndpoint(endpoint)"><i class="fas fa-minus"></i></span>
-                </div>
-            </div>
-        </div>
-        -->
-
+    </div>
+    <div #simulations>
+        <slider-described
+        [Model]="LogicWebServer"
+        [AfterChange]="afterChange"
+        ></slider-described>
     </div>
 </div>

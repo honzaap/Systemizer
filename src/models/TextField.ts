@@ -22,17 +22,8 @@ export class TextField extends LogicComponent implements IDataOperator{
     sendData(data: RequestData): void { 
         return;
     }
-    connectTo(operator: IDataOperator, connectingWithOutput: boolean, connectingToOutput: boolean): Connection {
-        return null;
-    }
     getAvailableEndpoints(): Endpoint[] {
         return [];
-    }
-    onShowStatusCode(handler: Handler<ShowStatusCodeEvent>) {
-        return;
-    }
-    onConnectionUpdate(wasOutput: boolean = false){
-        return;
     }
 
     destroy = () => {}

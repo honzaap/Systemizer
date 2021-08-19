@@ -9,10 +9,11 @@ export class LogicComponent {
     originID: string = UUID();
     color: string = "#6059DF";
     fillColor: boolean = true;
+    isFlowSimulationOn: boolean = false;
 
-    connectTo(operator: IDataOperator, connectingWithOutput:boolean, connectingToOutput:boolean) : Connection{
-        let otherPort = operator.getPort(connectingToOutput);
-        if(!operator.canConnectTo(this.getPort(connectingWithOutput), connectingToOutput) || !this.canConnectTo(otherPort, connectingWithOutput)) 
+    connectTo(operator: IDataOperator, connectingWithOutput:boolean) : Connection{
+        let otherPort = operator.getPort(!connectingWithOutput);
+        if(!operator.canConnectTo(this.getPort(connectingWithOutput), !connectingWithOutput) || !this.canConnectTo(otherPort, connectingWithOutput)) 
             return null;
         return this.getPort(connectingWithOutput).connectTo(otherPort);
     }

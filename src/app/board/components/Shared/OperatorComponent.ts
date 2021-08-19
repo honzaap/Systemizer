@@ -22,7 +22,8 @@ import { TitleComponent } from "./title/title.component";
 	queries: {
 		anchorRef: new ViewChild( "anchorRef" ),
 		optionsRef: new ViewChild( "options" ),
-		actionsRef: new ViewChild("actions")
+		actionsRef: new ViewChild("actions"),
+		simulationsRef: new ViewChild("simulations")
 	},
 })
 export abstract class OperatorComponent {
@@ -61,6 +62,7 @@ export abstract class OperatorComponent {
 	private LogicComponent: IDataOperator;
 	public optionsRef: ElementRef;
 	public actionsRef: ElementRef;
+	public simulationsRef: ElementRef;
 	public inputPortRef: PortComponent;
 	public outputPortRef: PortComponent;
 
@@ -180,6 +182,14 @@ export abstract class OperatorComponent {
 	 */
 	public getActionsElement(): ElementRef{
 		return this.actionsRef;
+	}
+
+	/**
+	 * 
+	 * @returns simulations element, null if component doesnt have any actions
+	 */
+	 public getSimulationsElement(): ElementRef{
+		return this.simulationsRef;
 	}
 
 	destroyComponent = () => {}

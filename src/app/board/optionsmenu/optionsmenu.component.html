@@ -103,6 +103,24 @@
                 </div>
             </div>
         </div>
+        <div class="section" [class.active]="openSimulations" [style.display]="!hasSimulations || selectionService.currentSelections.length > 1 ? 'none' : 'block'">
+            <div class="header" (click)="openSimulations = !openSimulations">
+                <span class="title">Simulation</span>
+                <span class="icon" *ngIf="openSimulations; else closed">
+                    <i class="fas fa-caret-up"></i>
+                </span>
+                <ng-template #closed>
+                    <span class="icon">
+                        <i class="fas fa-caret-down"></i>
+                    </span>
+                </ng-template>
+            </div>
+            <div class="content">
+                <div #simulationsWrapper >
+                    
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,0 +1,22 @@
+<div>
+    <span class="property-name endpoint-title">{{Title}} <info-tooltip [Message]="Tooltip"></info-tooltip></span>
+    <div>
+        <mat-slider
+            thumbLabel
+            [(ngModel)]="Model.options[Property]"
+            tickInterval="1"
+            step="1"
+            min="1"
+            max="10"
+            (change)="AfterChange()"
+            aria-label="units"></mat-slider>
+        <div class="mat-slider-description" 
+        [class.low]="Model.options[Property] < 4" 
+        [class.medium]="Model.options[Property] < 8 && Model.options[Property] >= 4" 
+        [class.high]="Model.options[Property] >= 8">
+            <span>Low</span>
+            <span>Medium</span>
+            <span>High</span>
+        </div>
+    </div>
+</div>
