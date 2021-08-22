@@ -32,11 +32,6 @@ export interface IDataOperator{
     fillColor: boolean;
 
     /**
-     * Whether the flow simulation is on
-     */
-     isFlowSimulationOn: boolean;
-
-    /**
      * receiveData: receives data
      */
     receiveData(data: RequestData, fromOutput: boolean): void;

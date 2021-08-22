@@ -1,12 +1,14 @@
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
+import { EndpointOperator } from 'src/models/EndpointOperator';
 import { clone, sleep, UUID } from 'src/shared/ExtensionMethods';
 import { ChangesService } from '../changes.service';
 import { ExportPngOptions, ExportService, ExportSvgOptions } from '../export.service';
 import { PlacingService } from '../placing.service';
 import { SavingService } from '../saving.service';
 import { SelectionService } from '../selection.service';
+import { SimulationService } from '../simulation.service';
 import { ViewingService } from '../viewing.service';
 import { ApiComponent } from './components/api/api.component';
 import { ApiGatewayComponent } from './components/apigateway/apigateway.component';
@@ -112,6 +114,7 @@ export class BoardComponent implements AfterViewChecked  {
 	private changesService: ChangesService,
 	private exportService: ExportService,
 	private viewingService: ViewingService,
+	public simulationService: SimulationService,
 	private renderer: Renderer2) { }
 	
 	scroll(event){
@@ -573,6 +576,34 @@ export class BoardComponent implements AfterViewChecked  {
 		}, 400);
 	}
 
+	/**
+	 * Starts flow simulation
+	 */
+	startSimulation(){
+		this.simulationService.startFlowSimulation();
+		for(let component of this.allComponents){
+			let logicComponent = component.getLogicComponent()
+			if(logicComponent instanceof EndpointOperator){
+				logicComponent.isFlowSimulationOn = true;
+				component.cdRef.detectChanges();
+			}
+		}
+	}
+
+	/**
+	 * Stops flow simulation
+	 */
+	stopSimulation(){
+		this.simulationService.stopFlowSimulation();
+		for(let component of this.allComponents){
+			let logicComponent = component.getLogicComponent()
+			if(logicComponent instanceof EndpointOperator){
+				logicComponent.isFlowSimulationOn = false;
+				component.cdRef.detectChanges();
+			}
+		}
+	}
+
 	componentChanged(){
 		this.changesService.pushChange(this.beforeState);
 		this.beforeState = this.getCurrentBoardJson();
@@ -765,6 +796,8 @@ export class BoardComponent implements AfterViewChecked  {
 			localStorage.setItem(this.savingService.LOCALSTORAGE_AUTOSAVE_KEY,"");
 		this.allComponents = [];
 		this.allLogicComponents = [];
+		this.simulationService.closeSimulationCard();
+		this.simulationService.stopFlowSimulation();
 	}
 
 	getComponentTypeFromName(name: string){

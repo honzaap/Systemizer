@@ -1,0 +1,31 @@
+.simulation-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    font-size: 13px;
+    width: 22px;
+    height: 22px;
+    top: -6px;
+    right: -14px;
+    z-index: 10;
+    background-color: var(--background);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.1s linear, box-shadow 0.1s linear;
+    &:hover{
+        background-color: var(--background-dark);
+        box-shadow: 0 0 3px 0 var(--text);
+    }
+ 
+}
+
+.success{
+    color: #28A745;
+}
+.warning{
+    color: #FFC107;
+}
+.danger{
+    color: #DC3545;
+}

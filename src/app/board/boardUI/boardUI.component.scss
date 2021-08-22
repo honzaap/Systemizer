@@ -1,7 +1,7 @@
 nav{
     z-index: 30;
     display:flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     align-items: stretch;
     background-color: var(--background-light);
     color: rgba(255,255,255,0.6);
@@ -350,19 +350,39 @@ input[type="file"] {
         font-size: 1em;
     }
 }
-.mobile-fullscreen{
+.nav-bonus{
     margin-left: 2em;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 0.8rem;
-    & button{
+    gap: 0.75em;
+    > *{
+        font-size: inherit;
+        color: var(--text);
+    }
+    button{
         background-color: var(--main);
-        padding: 0.2em 0.4em;
+        padding: 0.2em 0.55em;
         color: #fff;
-        border-radius: 0.4em;
+        border-radius: 0.2em;
+        transition: filter 0.1s linear;
+        position: relative;
         &:hover{
             color: #fff;
+            filter: saturate(1.35);
+        }
+        .badge{
+            text-transform: uppercase;
+            font-size: 0.75em;
+            background-color: rgb(177, 134, 17);
+            color: #fff;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateX(75%) rotateZ(15deg);
+            padding: 0.2em;
+            border-radius: 0.2em;
         }
     }
 }

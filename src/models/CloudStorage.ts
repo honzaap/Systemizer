@@ -35,7 +35,10 @@ export class CloudStorage extends EndpointOperator implements IDataOperator{
 
         this.connectionTable[data.requestId] = data.origin;
 
-        await this.throttleThroughput(targetEndpoint.actions.length > 0);
+        if(!await this.throttleThroughput(5000)){
+            this.requestProcessed();
+            return;
+        }
 
         // Send response back
         this.requestProcessed();

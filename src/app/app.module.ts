@@ -8,6 +8,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from "@angular/material/slider"
+import { MatCheckboxModule } from "@angular/material/checkbox"
 
 import { BrowserModule, EVENT_MANAGER_PLUGINS, HAMMER_LOADER } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,13 +51,15 @@ import { GettingStartedComponent } from './pages/getting-started/getting-started
 import { PagesHeaderComponent } from './pages/header/header.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { PagesComponent } from './pages/pages.component';
-import { EndpointSelectComponent } from './board/components/shared/endpoint-select/endpoint-select.component';
+import { EndpointSelectComponent } from './board/components/Shared/endpoint-select/endpoint-select.component';
+import { SliderDescribedComponent } from './board/components/Shared/slider-described/slider-described.component';
+import { SimulationCardComponent } from './board/components/Shared/simulation-card/simulation-card.component';  
 
 import * as Hammer from 'hammerjs';
 import {
 HammerModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG} 
 from '@angular/platform-browser';
-import { SliderDescribedComponent } from './board/components/shared/slider-described/slider-described.component';  
+
 
 @NgModule({
   declarations: [
@@ -93,7 +96,8 @@ import { SliderDescribedComponent } from './board/components/shared/slider-descr
     ClientclusterComponent,
     CDNComponent,
     EndpointSelectComponent,
-    SliderDescribedComponent
+    SliderDescribedComponent,
+    SimulationCardComponent
   ],
   imports: [
     BrowserModule,
@@ -108,6 +112,7 @@ import { SliderDescribedComponent } from './board/components/shared/slider-descr
     MatSnackBarModule,
     MatTooltipModule,
     MatSliderModule,
+    MatCheckboxModule,
     ColorPickerModule,
     HammerModule
   ],

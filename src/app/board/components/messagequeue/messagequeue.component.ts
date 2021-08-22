@@ -4,7 +4,7 @@ import { MessageQueue } from 'src/models/MessageQueue';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
-	selector: 'app-messagequeue',
+	selector: 'messagequeue',
 	templateUrl: './messagequeue.component.html',
 	styleUrls: ['./messagequeue.component.scss']
 })
@@ -20,12 +20,7 @@ export class MessagequeueComponent extends OperatorComponent implements OnInit {
 	ngAfterViewInit(): void {
 		super.Init();
 		this.LogicMessageQueue.onReceiveData((data) => {
-			if(!this.comp.classList.contains("anim")){
-				this.comp.classList.add("anim");
-				setTimeout(()=>{
-					this.comp.classList.remove("anim");
-				},500);
-			}
+			this.setReceiveDataAnimation();
 			this.cdRef.detectChanges();
 		});
 		this.LogicMessageQueue.onSendData((data) => {

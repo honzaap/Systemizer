@@ -618,6 +618,19 @@ mat-tooltip-component .mat-tooltip{
 .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label{
     background-color: var(--text);
 }
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background{
+    background: var(--main);
+    svg path{
+        stroke: var(--background-dark) !important;
+    }
+}
+.mat-checkbox-disabled .mat-checkbox-label{
+    color: var(--text);
+    opacity: 0.7;
+}
+.mat-checkbox-disabled.mat-accent .mat-checkbox-background{
+    filter: grayscale(1);
+}
 .mat-slider-description{
     width: 80%;
     padding-inline: 0.5em;

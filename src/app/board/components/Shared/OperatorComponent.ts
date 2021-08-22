@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, EventEmitter, ViewChild, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
+import { ViewingService } from "src/app/viewing.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
+import { EndpointOperator } from "src/models/EndpointOperator";
 import { APIType } from "src/models/enums/APIType";
 import { BalancingAlgorithm } from "src/models/enums/BalancingAlgorithm";
 import { DatabaseType } from "src/models/enums/DatabaseType";
@@ -15,6 +17,7 @@ import { WritePolicy } from "src/models/enums/WritePolicy";
 import { Options } from "src/models/Options";
 import { clone, getFormattedMethod } from "src/shared/ExtensionMethods";
 import { PortComponent } from "../port/port.component";
+import { SimulationCardComponent } from "./simulation-card/simulation-card.component";
 import { TitleComponent } from "./title/title.component";
 
 @Component({
@@ -75,7 +78,7 @@ export abstract class OperatorComponent {
 
 	public beforeOptions: Options;
 
-    constructor(protected placingService: PlacingService, protected selectionService: SelectionService, protected resolver: ComponentFactoryResolver, public cdRef: ChangeDetectorRef) {
+    constructor(protected placingService: PlacingService, protected selectionService: SelectionService, protected resolver: ComponentFactoryResolver, public cdRef: ChangeDetectorRef, private viewingService: ViewingService) {
 		this.cdRef.detach();
 	}
 
@@ -236,6 +239,17 @@ export abstract class OperatorComponent {
 		this.cdRef.detectChanges();
 	}
 
+	setReceiveDataAnimation(){
+		if(this.viewingService.isPerformanceMode())
+			return;
+		if(!this.comp.classList.contains("anim")){
+			this.comp.classList.add("anim");
+			setTimeout(()=>{
+				this.comp.classList.remove("anim");
+			},500);
+		}
+	}
+
 	Init(generateTitle: boolean = true): void {
 		this.LogicComponent = this.getLogicComponent();
 		this.board = document.getElementById("board");
@@ -261,13 +275,15 @@ export abstract class OperatorComponent {
 		});
 
 		this.LogicComponent.onReceiveData((data) => {
-			if(!this.comp.classList.contains("anim")){
-				this.comp.classList.add("anim");
-				setTimeout(()=>{
-					this.comp.classList.remove("anim");
-				},500);
-			}
+			this.setReceiveDataAnimation();
     	});
+
+		if(this.LogicComponent instanceof EndpointOperator){
+			this.LogicComponent.onSimulationStateUpdated((state) => {
+				this.cdRef.detectChanges();
+			})
+			this.createSimulationCard();
+		}
 
 		this.LogicComponent.onFailedConnect((data) => {
 			this.placingService.showSnack(data.message);
@@ -284,7 +300,8 @@ export abstract class OperatorComponent {
 		}
 		
 		if(generateTitle)
-			setTimeout(()=>{this.generateTitle();}, 100); 
+			this.generateTitle();
+
 
 		if(inputPort != null)
 			this.createPort(false);
@@ -313,6 +330,14 @@ export abstract class OperatorComponent {
 			this.outputPortRef = ref.instance;
 		else
 			this.inputPortRef = ref.instance;
+		this.cdRef.detectChanges();
+	}
+
+	createSimulationCard(){
+		let factory  = this.resolver.resolveComponentFactory(SimulationCardComponent);
+		let ref = this.conn.createComponent(factory);
+
+		ref.instance.Model = this.LogicComponent;
 		this.cdRef.detectChanges();
 	}
 

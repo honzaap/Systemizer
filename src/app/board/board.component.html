@@ -28,6 +28,39 @@
             <div class="item" (click)="cutItem(); showComponentContextMenu = false">Cut</div>
         </div>
     </div>
+    <div [style.top]="simulationService.Model.options.Y + 'px'" [style.left]="simulationService.Model.options.X + 'px'" class="simulation-card" *ngIf="simulationService.isSimulationCardOpen">
+        <div class="card-top">
+            <span class="title">
+                <span *ngIf="simulationService.Model.options.title.length > 20; else fullTitle">
+                    {{ simulationService.Model.options.title | slice:0:20 }}...
+                </span>
+                <ng-template #fullTitle>
+                    {{ simulationService.Model.options.title}}
+                </ng-template>
+                
+                <small><br>
+                    ({{ simulationService.Model.options['performance'] < 4 ? 'Low' : simulationService.Model.options['performance'] < 8 ? 'Medium' : 'High' }} performance)
+                </small>
+            </span>
+        </div>
+        <div class="card-body">
+            <p>Response time: <b>{{ simulationService.Model['simulationState'].responseTime > 5000 ? '>5000' : '~' + simulationService.Model['simulationState'].responseTime }}</b>ms</p>
+            <p>Maximum flow: <b>{{ simulationService.Model.options['performance'] }}</b></p>
+            <p>Incoming flow: <b [style.color]="'hsl(' + simulationService.Model['simulationState'].rating + ', 74%, 36%)'">{{ simulationService.Model['simulationState'].incomingFlow }}</b></p>
+            <p>Currently processing <b>{{ simulationService.Model['requestCount'] }}</b> requests</p>
+        </div>
+        <svg class="svg-meter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" height="20" width="24">
+            <path [attr.fill]="'hsl(' + simulationService.Model['simulationState'].rating + ', 74%, 36%)'"
+                d="M 12 0 C 5.3830004 0 2.3684758e-15 5.383 0 12 C -0.0013500031 14.7847 0.97151 17.4822 2.75 19.625 L 3.03125 20 L 20.970703 20 L 21.251953 19.625 C 23.030053 17.482 24.0016 14.7846 24 12 C 24 5.383 18.617 0 12 0 z M 12 2 C 17.535 2 22 6.465 22 12 C 22 14.266 21.2075 16.324 19.9375 18 L 4.0625 18 C 2.7925 16.324 2 14.266 2 12 C 2 6.465 6.4650004 2 12 2 z M 12 3 C 11.45 3 11 3.45 11 4 C 11 4.55 11.45 5 12 5 C 12.55 5 13 4.55 13 4 C 13 3.45 12.55 3 12 3 z M 8 4.0625 C 7.45 4.0625 7 4.5115 7 5.0625 C 7 5.6125 7.45 6.0625 8 6.0625 C 8.55 6.0625 9 5.6125 9 5.0625 C 9 4.5115 8.55 4.0625 8 4.0625 z M 16 4.0625 C 15.45 4.0625 15 4.5115 15 5.0625 C 15 5.6125 15.45 6.0625 16 6.0625 C 16.55 6.0625 17 5.6125 17 5.0625 C 17 4.5115 16.55 4.0625 16 4.0625 z M 5.0625 7 C 4.5125 7 4.0625 7.45 4.0625 8 C 4.0625 8.55 4.5125 9 5.0625 9 C 5.6135 9 6.0625 8.55 6.0625 8 C 6.0625 7.45 5.6135 7 5.0625 7 z M 18.9375 7 A 0.9999994 0.9999994 0 0 0 17.9375 8 A 0.9999994 0.9999994 0 0 0 18.9375 9 A 0.9999994 0.9999994 0 0 0 19.9375 8 A 0.9999994 0.9999994 0 0 0 18.9375 7 z M 4 11 C 3.45 11 3 11.45 3 12 C 3 12.55 3.45 13 4 13 C 4.55 13 5 12.55 5 12 C 5 11.45 4.55 11 4 11 z M 20 11 C 19.45 11 19 11.45 19 12 C 19 12.55 19.45 13 20 13 C 20.55 13 21 12.55 21 12 C 21 11.45 20.55 11 20 11 z M 5.0625 15 C 4.5125 15 4.0625 15.45 4.0625 16 C 4.0625 16.55 4.5125 17 5.0625 17 C 5.6135 17 6.0625 16.55 6.0625 16 C 6.0625 15.45 5.6135 15 5.0625 15 z M 18.9375 15 C 18.3865 15 17.9375 15.45 17.9375 16 C 17.9375 16.55 18.3865 17 18.9375 17 C 19.4875 17 19.9375 16.55 19.9375 16 C 19.9375 15.45 19.4875 15 18.9375 15 z "
+            />
+            <line [style.transform]=" 'rotateZ(' + (180 - (simulationService.Model['simulationState'].rating / 100) * 180) + 'deg)' " 
+            class="hand" x1="4" y1="12" x2="12" y2="12"></line>
+         </svg>
+         
+        <span class="close" (click)="simulationService.closeSimulationCard()">
+            <i class="fas fa-times"></i>
+        </span>
+    </div>
 </div>
 <div class="backdrop-centralized loading" *ngIf="isLoading">
     Loading...

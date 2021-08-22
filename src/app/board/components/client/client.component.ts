@@ -31,6 +31,10 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 
 	isAutomaticSending = false;
 
+	ngAfterViewInit(): void {
+		this.Init(true);
+  	}
+
 	handleEndpointChange(){
 		this.LogicClient.options.endpointRef.method = this.LogicClient.options.endpointRef.endpoint.supportedMethods[0];
 		this.availableMethods = this.endpointSelect.value.supportedMethods;

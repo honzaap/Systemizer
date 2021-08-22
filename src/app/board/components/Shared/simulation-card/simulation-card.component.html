@@ -1,0 +1,5 @@
+<div class="simulation-icon" (click)="showCard()" *ngIf="simulationService.isFlowSimulationOn">
+    <i *ngIf="Model['simulationState'].responseTime <= 550" class="fas fa-check success"></i>
+    <i *ngIf="Model['simulationState'].responseTime > 550 && Model['simulationState'].responseTime < 1000" class="fas fa-exclamation-triangle warning"></i>
+    <i *ngIf="Model['simulationState'].responseTime >= 1000" class="fas fa-exclamation-triangle danger"></i>
+</div>

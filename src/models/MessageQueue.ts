@@ -66,8 +66,11 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         if(this.messages.length == 0 || this.outputPort.connections.length == 0)
             return;
         this.isSendingData = true;
-        //await this.throttleThroughput(true, -1);
-        await sleep(400);
+        if(!await this.throttleThroughput(5000)){
+            this.requestProcessed();
+            return;
+        }
+        //await sleep(400);
         
         let message = this.messages.pop();
         let epRef = new EndpointRef();

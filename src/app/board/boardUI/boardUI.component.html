@@ -142,9 +142,20 @@
                 </mat-menu>
             </li>
         </ul>
-        <div class="mobile-fullscreen" *ngIf="isMobile">
-            <button (click)="fullscreen.emit()">
-                <span>Go fullscreen</span>
+        <div class="nav-bonus">
+            <mat-checkbox [disabled]="simulationService.isFlowSimulationOn" class="example-margin" (change)="togglePerformanceModeEnabled()" [(ngModel)]="isPerformanceModeEnabled">Performance mode</mat-checkbox>
+            <mat-checkbox class="example-margin" (change)="toggleHideResponses()" [(ngModel)]="isResponsesHidden">Hide responses</mat-checkbox>
+            <button [matTooltip]="'Start a flow simulation (still in a beta)'" (click)="startFlowSimulation()" *ngIf="!simulationService.isFlowSimulationOn; else stopSimulationTemp">
+                Start simulation
+                <span class="badge">Beta</span>
+            </button>
+            <ng-template #stopSimulationTemp>
+                <button (click)="stopFlowSimulation()">
+                    Stop simulation
+                </button>
+            </ng-template>
+            <button (click)="fullscreen.emit()" *ngIf="isMobile">
+                Go fullscreen
             </button>        
         </div>
     </nav>

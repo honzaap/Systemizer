@@ -39,7 +39,7 @@
     gap: 1em;
     font-size: 2em;
     color: var(--text);
-    & img{
+    img{
         animation: loadingAnim 1s ease-in-out infinite;
     }
 }
@@ -80,24 +80,24 @@
     color: var(--text);
     background-color: var(--background-light);
     padding: 1em;
-    & .title{
+    .title{
         text-align: center;
     }
-    & .note{
+    .note{
         font-size: 0.65em;
         font-weight: normal;
         text-align: center;
         display: block;
         color: var(--text);
     }
-    & .saved-boards-main-container{
+    .saved-boards-main-container{
         display: flex;
         gap: 0.5em;
     }
-    & .selected{
+    .selected{
         outline: 0.2em solid var(--main) !important;
     }
-    & .saved-boards-main{
+    .saved-boards-main{
         margin-top: 1em;
         padding: 1em;
         flex-basis: 70%;
@@ -106,7 +106,7 @@
         gap: 1em;
         max-height: 70vh;
         overflow-y: scroll;
-        & .saved-board{
+        .saved-board{
             position: relative;
             transition: filter 0.2s ease-in-out;
             outline: 0.1rem solid var(--background-dark);
@@ -114,7 +114,7 @@
             &:hover{
                 filter: brightness(80%);
             }
-            & .saved-board-title{
+            .saved-board-title{
                 position: absolute;
                 top: 0.3em;
                 right: 0.5em;
@@ -122,31 +122,31 @@
             }
         }
     }
-    & .saved-boards-side{
+    .saved-boards-side{
         display: flex;
         flex-flow: column;
         gap: 0.5em;
         padding: 0.5em;
         flex-grow: 1;
         color: var(--text);
-        & .selected-title{
+        .selected-title{
             font-size: 1.1em;
             text-align: center;
             display: block;
         }
-        & .selected-info{
+        .selected-info{
             font-size: 0.85em;
-            & .highlight{
+            .highlight{
                 color: var(--main);
             }
         }
-        & .selected-actions{
+        .selected-actions{
             margin-top: auto;
             margin-bottom: auto;
             align-self: center;
             display: flex;
             gap: 1.4em;
-            & button{
+            button{
                 font-size: 0.9em;
                 font-weight: normal;
                 border: 0;
@@ -182,7 +182,7 @@
     &:hover{
         transform: translateX(0) !important;
     }
-    & .hidden{
+    .hidden{
         width: 1.75em;
         display: flex;
         justify-content: center;
@@ -192,10 +192,10 @@
         font-size: 1.25em;
         background-color: var(--main);
     }
-    & .show{
+    .show{
         padding: 0.5em 1em;
     }
-    & button{
+    button{
         margin-left: 0.5em;
         width: 80px;
         outline: 0;
@@ -219,7 +219,7 @@
     justify-content: center;
     width: max-content;
     margin: 0 auto;
-    & .controls{ 
+    .controls{ 
         display: flex;
         gap: 0.5em;
         transition: background-color 0.2s ease-in-out;
@@ -230,7 +230,7 @@
         &:hover{
             background-color: var(--background);
         }
-        & button, & a{
+        button, a{
             border: 0;
             font-size: 1.5rem;
             outline: none;
@@ -252,7 +252,7 @@
     opacity: 0.5;
     font-weight: 100;
     font-size: 12px;
-    & a{
+    a{
         text-decoration: underline;
         &:hover{
             color: var(--main)
@@ -283,10 +283,10 @@
     font-size: 0.9rem;
     transform-origin: top left;
     white-space: nowrap;
-    & .menu{
+    .menu{
         display: flex;
         flex-direction: column;
-        & .item{
+        .item{
             padding: 0.75em 1em;
             flex-grow: 1;
             cursor: pointer;
@@ -294,13 +294,73 @@
                 background-color: var(--background-dark);
             }
         }
-        & .line{
+        .line{
             margin: 0 auto;
             width: 80%;
             background-color: var(--text);
             border-color: var(--text);
             opacity: 0.1;
         }
+    }
+}
+.simulation-card{
+    position: absolute;
+    width: 240px;
+    height: 120px;
+    z-index: 15;
+    transform: translate(calc(-50% + 40px), calc(-100% - 20px - 20px));
+    color: var(--text);
+    background-color: var(--background-dark);
+    border: 2px solid var(--border);
+    font-size: 11px;
+    padding: 5px;
+    .card-top{
+        .title{
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            small{
+                color: var(--text-light);
+                font-size: 10px;
+            }
+        }
+    }
+    .card-body{
+        margin-top: 10px;
+        p{
+            margin-bottom: 4px;
+        }
+    }
+    .svg-meter{
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        .hand{
+            stroke: var(--text);
+            stroke-width: 2;
+            stroke-linecap: round;
+            transform-origin: 12px 12px;
+            transition: transform 0.1s linear;
+        }
+    }
+    .close{
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        font-size: 12px;
+        &:hover{
+            color: var(--main);
+        }
+    }
+    &::after{
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -20px;
+        left: 85px;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 20px solid var(--background-dark);
     }
 }
 

@@ -194,6 +194,14 @@ export class CreateComponent implements OnInit {
 		this.isTutorialMenuOpen = false;
 	}
 
+	startSimulation(){
+		this.board.startSimulation();
+	}
+
+	stopSimulation(){
+		this.board.stopSimulation();
+	}
+
 	changeSystemName(name: string){
 		if(this.ui == null){
 			setTimeout(() => {this.changeSystemName(name)}, 50);

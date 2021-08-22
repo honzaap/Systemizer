@@ -5,7 +5,7 @@ import { PubSub } from 'src/models/PubSub';
 import { OperatorComponent } from '../Shared/OperatorComponent';
 
 @Component({
-	selector: 'app-pubsub',
+	selector: 'pubsub',
 	templateUrl: './pubsub.component.html',
   	styleUrls: ['./pubsub.component.scss']
 })

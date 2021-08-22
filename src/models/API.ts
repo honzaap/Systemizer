@@ -15,7 +15,7 @@ export class API extends EndpointOperator implements IDataOperator{
     inputPort: Port;
     connectionTable: { [id:string]: Connection } = {};
     options: APIOptions;
-    color = "#4CA1AF";
+    color: string = "#4CA1AF";
 
     constructor() {
         super();
@@ -77,7 +77,7 @@ export class API extends EndpointOperator implements IDataOperator{
                 }
             }
           
-            if(!await this.throttleThroughput(targetEndpoint.actions.length > 0, 5000)){
+            if(!await this.throttleThroughput(5000)){
                 this.requestProcessed();
                 return;
             }

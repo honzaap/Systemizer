@@ -91,7 +91,7 @@ export class WebServer extends EndpointOperator implements IDataOperator{
 
             this.connectionTable[data.requestId] = data.origin;
 
-            if(!await this.throttleThroughput(targetEndpoint.actions.length > 0, 5000)){
+            if(!await this.throttleThroughput(5000)){
                 this.requestProcessed();
                 return;
             }

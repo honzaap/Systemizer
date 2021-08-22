@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SelectionService } from 'src/app/selection.service';
+import { ViewingService } from 'src/app/viewing.service';
 import { Connection, LineBreak } from 'src/models/Connection';
 import { createRoundedPath, UUID } from 'src/shared/ExtensionMethods';
 import { PortComponent } from '../port/port.component';
@@ -35,7 +36,7 @@ export class ConnectionComponent implements OnInit {
 	titlePopupX: number = 0;
 	titlePopupY: number = 0;
 
-	constructor(private cdRef: ChangeDetectorRef, public selectionService: SelectionService){
+	constructor(private cdRef: ChangeDetectorRef, public selectionService: SelectionService, private viewingService: ViewingService){
 		cdRef.detach();
 	}
 
@@ -62,6 +63,11 @@ export class ConnectionComponent implements OnInit {
 			let anim = document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
 			let delay = Math.max(this.mainPath.nativeElement.getTotalLength(), 230);
 
+			if(this.viewingService.isResponsesHidden() && port !== this.portComponent1.LogicPort){
+				this.LogicConnection.getSendDataDelay = () => {return delay}
+				return;
+			}
+			
 			anim.setAttribute("attributeName", "cx");
 
 			anim.setAttribute("dur", `${delay+20}ms`);

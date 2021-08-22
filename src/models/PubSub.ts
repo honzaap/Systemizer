@@ -53,8 +53,10 @@ export class PubSub extends EndpointOperator implements IDataOperator{
     }
 
     async sendToConsumers(message: RequestData){
-        await this.throttleThroughput();
-        
+        if(!await this.throttleThroughput(5000)){
+            this.requestProcessed();
+            return;
+        }
         this.sendData(message);
     }
 

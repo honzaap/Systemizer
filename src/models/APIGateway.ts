@@ -82,7 +82,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
             let isLastStreamRequest = this.connectionTable[data.requestId] != null && !data.header.stream;
             let dontSendRequestResponse = (isFirstStreamRequest || isLastStreamRequest);
 
-            if(!await this.throttleThroughput(targetEndpoint.actions.length > 0, 5000)){
+            if(!await this.throttleThroughput(5000)){
                 this.requestProcessed();
                 return;
             }

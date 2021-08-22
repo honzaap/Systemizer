@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { EmbedIFrameOptions, ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
+import { SimulationService } from 'src/app/simulation.service';
 import { ViewingService } from 'src/app/viewing.service';
 import { IDataOperator } from 'src/interfaces/IDataOperator';
 import { downloadPng, downloadSvg } from 'src/shared/ExtensionMethods';
@@ -44,6 +45,10 @@ export class BoardUIComponent implements OnInit {
 	// Help section events
 	@Output() onboardTutorial1 = new EventEmitter();
 
+	// Other events
+	@Output() startSimulation = new EventEmitter();
+	@Output() stopSimulation = new EventEmitter();
+
 	@Input() getComponents: () => IDataOperator[];
 
 	name = "Untitled System";
@@ -62,6 +67,9 @@ export class BoardUIComponent implements OnInit {
 	isPreviewOpen: boolean = false;
 	isSavingOpen: boolean = false;
 	isEmbedIFrameOpen: boolean = false;
+	isPerformanceModeEnabled: boolean = false;
+	wasPerformanceModeBeforeSimulation: boolean = false;
+	isResponsesHidden: boolean = false;
 
 	embedIFrameTemplate: string = "";
 	showEmbedError: boolean = false;
@@ -76,6 +84,7 @@ export class BoardUIComponent implements OnInit {
 	exportSvgPreview: SVGElement;
 
 	isMobile: boolean = false;
+
 
 	scaleControl: FormControl = new FormControl();
 	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
@@ -124,10 +133,12 @@ export class BoardUIComponent implements OnInit {
 		}
 	}
 
-	constructor(private placingService: PlacingService, private savingService: SavingService, public viewingService: ViewingService, private exportService: ExportService) { 
+	constructor(private placingService: PlacingService, private savingService: SavingService, public viewingService: ViewingService, private exportService: ExportService, public simulationService: SimulationService) { 
 		this.isHelpersDisabled = viewingService.isHelpersDisabled();
 		this.isTitlesHidden = viewingService.isTitlesHidden();
 		this.isTechnologiesHidden = viewingService.isTechnologiesHidden();
+		this.isPerformanceModeEnabled = viewingService.isPerformanceMode();
+		this.isResponsesHidden = viewingService.isResponsesHidden();
 	}
 
 	load(file){
@@ -324,6 +335,30 @@ export class BoardUIComponent implements OnInit {
 	toggleTechnologiesHidden(){
 		this.isTechnologiesHidden = !this.isTechnologiesHidden;
 		this.viewingService.setTechnologiesHidden(this.isTechnologiesHidden);
+	}
+
+	togglePerformanceModeEnabled(){
+		this.viewingService.setPerformanceMode(this.isPerformanceModeEnabled);
+	}
+
+	startFlowSimulation(){
+		// Save performance mode state before simulation
+		this.wasPerformanceModeBeforeSimulation = this.viewingService.isPerformanceMode();
+		if(!this.wasPerformanceModeBeforeSimulation)
+			this.viewingService.setPerformanceMode(true, false);
+		this.isPerformanceModeEnabled = true;
+		this.startSimulation.emit();
+	}
+
+	stopFlowSimulation(){
+		// Set the state to the one before flow simulation
+		this.viewingService.setPerformanceMode(this.wasPerformanceModeBeforeSimulation, false);
+		this.isPerformanceModeEnabled = this.wasPerformanceModeBeforeSimulation;
+		this.stopSimulation.emit();
+	}
+
+	toggleHideResponses(){
+		this.viewingService.setResponsesHidden(this.isResponsesHidden);
 	}
 	
 	async openPreview(png: boolean = true){

@@ -68,7 +68,7 @@ export class OptionsmenuComponent implements OnInit {
 
 				let simulationsElement = selection.getSimulationsElement();
 				if(simulationsElement){
-					//this.hasSimulations = true;
+					this.hasSimulations = true;
 					this.renderer.appendChild(this.simulationsWrapper.nativeElement,simulationsElement.nativeElement);
 				}
 				else

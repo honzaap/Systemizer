@@ -41,8 +41,11 @@ export class Database extends EndpointOperator implements IDataOperator{
         this.fireReceiveData(request);
         this.requestReceived();
 
-        await this.throttleThroughput(false);
-
+        if(!await this.throttleThroughput(5000)){
+            this.requestProcessed();
+            return;
+        }
+        
         if(this.options.isMasterShard){
             let length = this.outputPort.connections.length;
             if(length == 0)
