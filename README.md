@@ -29,7 +29,7 @@ Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/
 1) Clone repository to your local machine
 2) Open terminal and `cd` into repository folder
 3) run `npm install`
-4) run `ng serve`
+4) run `npm run start`
 5) Systemize!
 
 ## Documentation
