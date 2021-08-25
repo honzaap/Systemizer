@@ -18,6 +18,7 @@ export class SimulationService {
 
 	stopFlowSimulation(){
 		this.isFlowSimulationOn = false;
+		this.closeSimulationCard();
 	}
 
 	closeSimulationCard(){

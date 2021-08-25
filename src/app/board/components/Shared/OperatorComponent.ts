@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, EventEmitter, ViewChild, ViewContainerRef } from "@angular/core";
 import { PlacingService } from "src/app/placing.service";
 import { SelectionService } from "src/app/selection.service";
+import { SimulationService } from "src/app/simulation.service";
 import { ViewingService } from "src/app/viewing.service";
 import { IDataOperator } from "src/interfaces/IDataOperator";
 import { EndpointOperator } from "src/models/EndpointOperator";
@@ -78,7 +79,7 @@ export abstract class OperatorComponent {
 
 	public beforeOptions: Options;
 
-    constructor(protected placingService: PlacingService, protected selectionService: SelectionService, protected resolver: ComponentFactoryResolver, public cdRef: ChangeDetectorRef, private viewingService: ViewingService) {
+    constructor(protected placingService: PlacingService, protected selectionService: SelectionService, protected resolver: ComponentFactoryResolver, public cdRef: ChangeDetectorRef, private viewingService: ViewingService, private simulationService: SimulationService) {
 		this.cdRef.detach();
 	}
 
@@ -267,9 +268,13 @@ export abstract class OperatorComponent {
 		}
 		if(this.isReadOnly)
 			this.comp.classList.add("read-only")
+
 		this.anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
 		this.maxX = this.placingService.boardWidth;
 		this.maxY = this.placingService.boardHeight;
+
+	
+
 		this.LogicComponent.onShowStatusCode((code:HTTPStatus)=>{
 			this.showStatusCode(code);
 		});
@@ -279,6 +284,9 @@ export abstract class OperatorComponent {
     	});
 
 		if(this.LogicComponent instanceof EndpointOperator){
+			if(this.simulationService.isFlowSimulationOn){
+				this.LogicComponent.isFlowSimulationOn = true;
+			}
 			this.LogicComponent.onSimulationStateUpdated((state) => {
 				this.cdRef.detectChanges();
 			})

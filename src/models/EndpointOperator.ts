@@ -123,8 +123,7 @@ export class EndpointOperator extends LogicComponent{
         else{
             sleepTime = (this.requestCount * Math.max(Math.log10(this.requestCount),1) * 10000) / Math.pow(this.options.performance, 3);
         }
-        let roundedSleeptime = Math.max(Math.round(sleepTime / 50) * 50, 50);
-        this.simulationState.responseTime = roundedSleeptime;
+        this.simulationState.responseTime = Math.max(Math.round(sleepTime / 50) * 50, 50);;
         return sleepTime;
     }
 
@@ -135,7 +134,8 @@ export class EndpointOperator extends LogicComponent{
         this.requestCount++;
         if(this.isFlowSimulationOn){
             let pre = this.simulationState.rawIncomingFlow;
-            let increment = 1+1/Math.max(this.simulationState.incomingFlow, 1);
+            // Incoming flow will be easier to increment at smaller flow
+            let increment = 1+1/Math.max(this.simulationState.incomingFlow, 1); 
             this.simulationState.rawIncomingFlow+= increment;
             this.calculateSimulationState(pre);
             setTimeout(() => {
@@ -146,11 +146,19 @@ export class EndpointOperator extends LogicComponent{
         }
     }
 
-    // Calculate incoming flow as average number of requests per 1 second that came in the last 5 second
+    /**
+     * Updates simulation state and fires event for change detection
+     */
     private calculateSimulationState(previousRawIncomingFlow: number){
         this.simulationState.incomingFlow = Math.ceil((previousRawIncomingFlow + this.simulationState.rawIncomingFlow) / 2 / 5);
         this.simulationState.flowRatio = (this.simulationState.incomingFlow / this.options.performance);
-        this.simulationState.rating = Math.max(Math.min(100 - 100 * (this.simulationState.responseTime / 550) + 100, 100), 0);
+        let oldRating = this.simulationState.rating;
+        setTimeout(() => { // Prevent some cases of switching in and out infinitely due to rating
+            if(this.simulationState.rating === oldRating){
+                this.simulationState.rating = Math.max(Math.min(100 - 100 * (this.simulationState.responseTime / 550) + 100, 100), 0);
+            }
+        }, 500);
+        
         this.fireSimulationStateUpdated(this.simulationState);
     }
 

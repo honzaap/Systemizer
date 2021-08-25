@@ -796,7 +796,6 @@ export class BoardComponent implements AfterViewChecked  {
 			localStorage.setItem(this.savingService.LOCALSTORAGE_AUTOSAVE_KEY,"");
 		this.allComponents = [];
 		this.allLogicComponents = [];
-		this.simulationService.closeSimulationCard();
 		this.simulationService.stopFlowSimulation();
 	}
 
