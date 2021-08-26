@@ -624,6 +624,9 @@ mat-tooltip-component .mat-tooltip{
         stroke: var(--background-dark) !important;
     }
 }
+.mat-checkbox-background{
+    border: 0.1rem solid var(--border);
+}
 .mat-checkbox-disabled .mat-checkbox-label{
     color: var(--text);
     opacity: 0.7;

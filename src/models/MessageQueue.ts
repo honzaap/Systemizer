@@ -47,8 +47,6 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
         this.fireReceiveData(data);
         this.requestReceived();
 
-        
-
         // Return response to publisher
         let response = new RequestData();
         response.responseId = data.requestId;
@@ -65,13 +63,20 @@ export class MessageQueue extends EndpointOperator implements IDataOperator{
     async sendToConsumer(){
         if(this.messages.length == 0 || this.outputPort.connections.length == 0)
             return;
+        console.log("send")
         this.isSendingData = true;
-        if(!await this.throttleThroughput(5000)){
-            this.requestProcessed();
-            return;
+        if(!this.isFlowSimulationOn){
+            await sleep(400);
         }
-        //await sleep(400);
-        
+        else{
+            if(!await this.throttleThroughput(5000)){
+                console.log("drop");
+                this.requestProcessed();
+                return;
+            }
+        }
+        console.log("continue");
+
         let message = this.messages.pop();
         let epRef = new EndpointRef();
         epRef.endpoint = new Endpoint(this.options.endpoints[0].url, [HTTPMethod.GET, HTTPMethod.POST, HTTPMethod.PUT, HTTPMethod.PATCH, HTTPMethod.DELETE]);

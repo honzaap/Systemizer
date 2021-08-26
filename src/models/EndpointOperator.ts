@@ -101,6 +101,7 @@ export class EndpointOperator extends LogicComponent{
     async throttleThroughput(timeoutLimit: number = -1): Promise<boolean>{
         if(!this.isFlowSimulationOn)
             return true;
+        console.log("lol")
         // Simulate throughput (start sending data to actions every X seconds)
         let sleepTime = this.calculateThroughputThrottleTime();
         if(timeoutLimit > 0 && sleepTime > timeoutLimit){
