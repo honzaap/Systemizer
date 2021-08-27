@@ -148,7 +148,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
             }
-            if(sendResponse || targetEndpoint.actions.length == 0 && data.sendResponse && !data.header.stream){
+            if((sendResponse || targetEndpoint.actions.length == 0 && !data.header.stream) && data.sendResponse){
                 // Send response back
                 this.connectionTable[data.requestId] = data.origin;
                 await this.sendData(this.getResponse(data));

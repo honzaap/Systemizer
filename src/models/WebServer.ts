@@ -156,9 +156,10 @@ export class WebServer extends EndpointOperator implements IDataOperator{
                 if(isLastStreamRequest)
                     this.connectionTable[data.requestId] = null;
             }
-            if(sendResponse || targetEndpoint.actions.length == 0 && data.sendResponse && !data.header.stream){
+            if((sendResponse || targetEndpoint.actions.length == 0 && !data.header.stream) && data.sendResponse){
                 //Send response back
                 //this.connectionTable[data.requestId] = data.origin;
+                console.log("send response");
                 await this.sendData(this.getResponse(data));
             }
         }
