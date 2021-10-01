@@ -122,8 +122,8 @@ export class SavingService {
 					for(let connection of inputPort.connections){
 						let jsonReadyConnection: any = {};
 						jsonReadyConnection.from = jsonReadyComponent.id;
-						let connectedCompoent = connection.getOtherPort(inputPort).parent;
-						jsonReadyConnection.to = connectedCompoent.originID.slice(0, 6);
+						let connectedComponent = connection.getOtherPort(inputPort).parent;
+						jsonReadyConnection.to = connectedComponent.originID.slice(0, 6);
 						jsonReadyComponent.connections.push(jsonReadyConnection);
 						if(connection.lineBreaks != null && connection.lineBreaks.length != 2)
 							jsonReadyConnection.lineBreaks = connection.lineBreaks;
@@ -210,7 +210,7 @@ export class SavingService {
 	getOptimizedBoardJson(allLogicComponents: IDataOperator[]){
 		let save = this.getBoardSave(allLogicComponents, "", "");
 		if(save.id)
-			delete save.id; // Save ID is unnecesarry
+			delete save.id; // Save ID is unnecessary
 		for(let component of save.components){
 			component.i = component.id.slice(0, 5);  // Slicing ID's to only 5 characters
 			delete component.id;
