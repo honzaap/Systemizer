@@ -16,8 +16,8 @@
     <button class="icon" (click)="sendData()" *ngIf="canSend">
         <img src="./assets/send.svg">
     </button>
-    <button *ngIf="canEstabilishConnection"(click)="estabilishConnection()">
-        Estabilish<br>Connection
+    <button *ngIf="canEstablishConnection"(click)="establishConnection()">
+        Establish<br>Connection
     </button>
     <button class="bottom" *ngIf="canEndConnection"(click)="endConnection()">
         End<br>Connection
@@ -66,8 +66,8 @@
     <div #actions>
         <div class="options-actions">
             <div class="actions-container">
-                <button *ngIf="canEstabilishConnection"
-                 (click)="estabilishConnection()">Estabilish Connection</button>
+                <button *ngIf="canEstablishConnection"
+                 (click)="establishConnection()">Establish Connection</button>
                 <button *ngIf="canEndConnection"
                  (click)="endConnection()">End Connection</button>
                 <div>
