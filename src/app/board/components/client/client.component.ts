@@ -23,7 +23,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 	canAutoSend: boolean = true;
 
 	canSend: boolean = false;
-	canEstabilishConnection: boolean = false;
+	canEstablishConnection: boolean = false;
 	canEndConnection: boolean = false;
 
 	@ViewChild("endpointSelect") endpointSelect;
@@ -52,7 +52,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		if(this.availableEndpoints.length == 0){
 			this.availableMethods = [];
 			this.updateCanSendData();
-			this.updateCanEstabilishStream();
+			this.updateCanEstablishStream();
 			this.updateCanEndStream();
 			return;
 		}
@@ -80,7 +80,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		}
 		this.protocol = this.LogicClient.options.endpointRef.endpoint.protocol;
 		this.updateCanSendData();
-		this.updateCanEstabilishStream();
+		this.updateCanEstablishStream();
 		this.updateCanEndStream();
 		if(this.isReadOnly)
 			this.cdRef.detectChanges();
@@ -119,8 +119,8 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 			this.cdRef.detectChanges();
 	}
 
-	updateCanEstabilishStream(){
-		this.canEstabilishConnection = this.LogicClient.options.endpointRef.endpoint != null && 
+	updateCanEstablishStream(){
+		this.canEstablishConnection = this.LogicClient.options.endpointRef.endpoint != null && 
 		(this.LogicClient.options.endpointRef.endpoint.grpcMode != gRPCMode.Unary || 
 		this.LogicClient.options.endpointRef.endpoint.protocol == Protocol.WebSockets) && 
 		!this.LogicClient.isConnectedToEndpoint
@@ -172,7 +172,7 @@ export class ClientComponent  extends OperatorComponent implements OnInit{
 		}
 	}
 
-	estabilishConnection(){
+	establishConnection(){
 		if(this.LogicClient.isConnectedToEndpoint) 
 			return;
 		this.LogicClient.isConnectedToEndpoint = true;
