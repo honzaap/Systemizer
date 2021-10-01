@@ -31,7 +31,7 @@ export class LoadBalancer extends LogicComponent implements IDataOperator{
         if(fromOutput){
             let targetConnection = this.connectionTable[data.responseId];
             if(targetConnection == null)
-                throw new Error("Connection doesnt exist (response to unknown request)");
+                throw new Error("Connection doesn't exist (response to unknown request)");
             if(data.header.stream != true) {
                 this.connectionTable[data.responseId] = null;  // reset request id
                 this.streamConnectionTable[data.responseId] = null;

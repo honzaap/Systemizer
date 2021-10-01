@@ -96,7 +96,7 @@ export class EndpointOperator extends LogicComponent{
 
     /**
      * waits until next request can be processed (determined by performance).
-     * If a timeoutLimit is specified, false will be returned after that time of waiting (if it exceedes the actual wait time). 
+     * If a timeoutLimit is specified, false will be returned after that time of waiting (if it exceeds the actual wait time). 
     */
     async throttleThroughput(timeoutLimit: number = -1): Promise<boolean>{
         if(!this.isFlowSimulationOn)
