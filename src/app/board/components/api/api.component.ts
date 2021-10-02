@@ -17,7 +17,6 @@ export class ApiComponent  extends OperatorComponent implements OnInit{
 	public LogicApi: API = new API();
 	
 	connectableEndpoints: Endpoint[] = [];
-	consumableEndpoints: Endpoint[] = [];
 	
 	public handleClick(event: MouseEvent){
 		super.handleClick(event);
