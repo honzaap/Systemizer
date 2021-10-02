@@ -174,7 +174,7 @@ export abstract class OperatorComponent {
 
 	/**
 	 * 
-	 * @returns options element, null if component doesnt have any options
+	 * @returns options element, null if component doesn't have any options
 	 */
 	public getOptionsElement(): ElementRef{
 		return this.optionsRef;
@@ -182,7 +182,7 @@ export abstract class OperatorComponent {
 
 	/**
 	 * 
-	 * @returns actions element, null if component doesnt have any actions
+	 * @returns actions element, null if component doesn't have any actions
 	 */
 	public getActionsElement(): ElementRef{
 		return this.actionsRef;
@@ -190,7 +190,7 @@ export abstract class OperatorComponent {
 
 	/**
 	 * 
-	 * @returns simulations element, null if component doesnt have any actions
+	 * @returns simulations element, null if component doesn't have any actions
 	 */
 	 public getSimulationsElement(): ElementRef{
 		return this.simulationsRef;

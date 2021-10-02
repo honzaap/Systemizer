@@ -123,8 +123,8 @@ export class Port{
      * isConnectedTo: returns true if connected to given port via Connection
      */
     public isConnectedTo(port: Port) : boolean {
-        for(let connecion of this.connections){
-            if(connecion.getOtherPort(this) === port) 
+        for(let connection of this.connections){
+            if(connection.getOtherPort(this) === port) 
                 return true;
         }
         return false;

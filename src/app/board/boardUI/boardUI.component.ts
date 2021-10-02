@@ -95,7 +95,7 @@ export class BoardUIComponent implements OnInit {
 	@ViewChild("preview") preview;
 
 	/**
-	 * Dictionary of keys witht assigned function when pressed with ctrl key
+	 * Dictionary of keys with assigned function when pressed with ctrl key
 	 */
 	controlShortcuts = { 
 		"c": (e: Event) => {

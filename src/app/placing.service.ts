@@ -20,7 +20,7 @@ class CopiedItem {
 export class PlacingService{
 
 	@Output() componentChanged = new EventEmitter();
-	@Output() showComponentConextMenu = new EventEmitter<any>();
+	@Output() showComponentContextMenu = new EventEmitter<any>();
 	@Output() pushComponent = new EventEmitter<OperatorComponent>();
 
 	isPlacing = false;
@@ -221,7 +221,7 @@ export class PlacingService{
 			this.componentChanged.emit();
 		})
 		c.instance.showContextMenu.subscribe((e)=>{
-			this.showComponentConextMenu.emit({
+			this.showComponentContextMenu.emit({
 				x: c.instance.getLogicComponent().options.X + e.offsetX,
 				y: c.instance.getLogicComponent().options.Y + e.offsetY,
 			});

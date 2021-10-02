@@ -22,7 +22,7 @@ export interface IDataOperator{
     options: Options;
 
     /**
-     * Color of compoent on board
+     * Color of component on board
      */
     color: string;
 

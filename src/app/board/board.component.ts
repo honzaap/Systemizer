@@ -183,7 +183,7 @@ export class BoardComponent implements AfterViewChecked  {
 				// A component was created somewhere else and needs to be added to the state of the board
 				this.pushComponent(component);
 			})
-			this.placingService.showComponentConextMenu.subscribe((e)=>{
+			this.placingService.showComponentContextMenu.subscribe((e)=>{
 				// Display a context menu on component
 				this.showComponentContextMenu = true;
 				this.showContextMenu = false;
@@ -537,8 +537,8 @@ export class BoardComponent implements AfterViewChecked  {
 		this.isAllClientsSendingData = true;
 		for(let component of this.allComponents){
 			if(component instanceof ClientComponent){
-				if(component.canEstabilishConnection){
-					component.estabilishConnection();
+				if(component.canEstablishConnection){
+					component.establishConnection();
 				}
 				component.toggleAutomaticSend();
 				await sleep(300); // Make some delay between

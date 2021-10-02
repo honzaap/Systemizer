@@ -52,7 +52,7 @@ export class APIGateway extends EndpointOperator implements IDataOperator{
                     return;
                 }
                 let result = await this.inputPort.sendData(data, this.connectionTable[data.responseId]);
-                if(!result && data.header.stream){ // send end stream to out if the client doesnt exist 
+                if(!result && data.header.stream){ // send end stream to out if the client doesn't exist 
                     data.header.stream = false;
                     data.requestId = data.responseId;
                     data.responseId = null;
