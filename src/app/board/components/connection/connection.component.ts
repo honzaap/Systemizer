@@ -58,7 +58,7 @@ export class ConnectionComponent implements OnInit {
 
 		this.LogicConnection.onSendData((port)=>{
 			let dataSvg = document.createElementNS('http://www.w3.org/2000/svg','circle');
-			dataSvg.style.display = "none"
+			dataSvg.style.opacity = "0";
 			this.svg.nativeElement.appendChild(dataSvg);
 			let anim = document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
 			let delay = Math.max(this.mainPath.nativeElement.getTotalLength(), 230);
@@ -94,7 +94,7 @@ export class ConnectionComponent implements OnInit {
 
 			(anim as any).beginElement();
 			setTimeout(() => {
-				dataSvg.style.display = "block"
+				dataSvg.style.opacity = "1";
 			}, 10)
 			setTimeout(()=>{
 				dataSvg.remove();

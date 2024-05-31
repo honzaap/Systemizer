@@ -5,15 +5,12 @@
 <p align="center">
   <img alt="Scrutinizer build (GitHub/Bitbucket)" src="https://img.shields.io/scrutinizer/build/g/honzaap/Systemizer/main?style=flat-square">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/honzaap/Systemizer?style=flat-square">
-  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/honzaap/Systemizer?style=flat-square">
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/honzaap/Systemizer?color=2411ed&style=flat-square">
   <img alt="GitHub" src="https://img.shields.io/github/license/honzaap/Systemizer?style=flat-square">
 </p>
 
 <p>Systemizer is a system design tool used to create and simulate large scale distributed systems.
 </p>
-<p align="center">
-<a href="https://www.buymeacoffee.com/honzaap" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a></p>
 
 ### Want to try Systemizer?
 Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/">github pages</a>.
