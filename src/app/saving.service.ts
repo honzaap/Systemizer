@@ -285,42 +285,42 @@ export class SavingService {
 	 */
 	private cloneOptions(options: Options): any {
 		var cloneObj = new (options.constructor as any);
-		for (var attribut in options) {
-			if(options[attribut] != null && options[attribut].endpoint != null && options[attribut].method != null){
-				cloneObj[attribut] = {
-					endpoint: {url: options[attribut].endpoint.url, supportedMethods: options[attribut].endpoint.supportedMethods },
-					method: options[attribut].method
+		for (var attribute in options) {
+			if(options[attribute] != null && options[attribute].endpoint != null && options[attribute].method != null){
+				cloneObj[attribute] = {
+					endpoint: {url: options[attribute].endpoint.url, supportedMethods: options[attribute].endpoint.supportedMethods },
+					method: options[attribute].method
 				};
-				if(options[attribut].asynchronous === true){
-					cloneObj[attribut].asynchronous = true;
+				if(options[attribute].asynchronous === true){
+					cloneObj[attribute].asynchronous = true;
 				}
 			}
-			else if (typeof options[attribut] === "object" && options[attribut] != null)
-				cloneObj[attribut] = this.cloneOptions(options[attribut]);
+			else if (typeof options[attribute] === "object" && options[attribute] != null)
+				cloneObj[attribute] = this.cloneOptions(options[attribute]);
 			else
-				cloneObj[attribut] = options[attribut];
+				cloneObj[attribute] = options[attribute];
 		}
 		return cloneObj;
 	}
 
 	cloneOptionsOptimized(options: any){
 		var cloneObj = new (options.constructor as any);
-		for (var attribut in options) {
+		for (var attribute in options) {
 			let opt = Object.keys(this.optimizedBoardNames).find(
-				key => this.optimizedBoardNames[key] === attribut
+				key => this.optimizedBoardNames[key] === attribute
 			); // Optimize type
 			if(opt){
-				if (typeof options[attribut] === "object" && options[attribut] != null)
-					cloneObj[opt] = this.cloneOptionsOptimized(options[attribut]);
+				if (typeof options[attribute] === "object" && options[attribute] != null)
+					cloneObj[opt] = this.cloneOptionsOptimized(options[attribute]);
 				else
-					cloneObj[opt] = options[attribut];
-				delete cloneObj[attribut];
+					cloneObj[opt] = options[attribute];
+				delete cloneObj[attribute];
 			}
 			else{
-				if (typeof options[attribut] === "object" && options[attribut] != null)
-					cloneObj[attribut] = this.cloneOptionsOptimized(options[attribut]);
+				if (typeof options[attribute] === "object" && options[attribute] != null)
+					cloneObj[attribute] = this.cloneOptionsOptimized(options[attribute]);
 				else
-					cloneObj[attribut] = options[attribut];
+					cloneObj[attribute] = options[attribute];
 			}
 		}
 		return cloneObj;
@@ -328,19 +328,19 @@ export class SavingService {
 
 	getOptionsFromOptimized(options: any){
 		let cloneObj = new (options.constructor as any);
-		for (var attribut in options) {
-			let opt = this.optimizedBoardNames[attribut]
+		for (var attribute in options) {
+			let opt = this.optimizedBoardNames[attribute]
 			if(opt){
-				if (typeof options[attribut] === "object" && options[attribut] != null)
-					cloneObj[opt] = this.getOptionsFromOptimized(options[attribut]);
+				if (typeof options[attribute] === "object" && options[attribute] != null)
+					cloneObj[opt] = this.getOptionsFromOptimized(options[attribute]);
 				else
-					cloneObj[opt] = options[attribut];
+					cloneObj[opt] = options[attribute];
 			}
 			else{
-				if (typeof options[attribut] === "object" && options[attribut] != null)
-					cloneObj[attribut] = this.getOptionsFromOptimized(options[attribut]);
+				if (typeof options[attribute] === "object" && options[attribute] != null)
+					cloneObj[attribute] = this.getOptionsFromOptimized(options[attribute]);
 				else
-					cloneObj[attribut] = options[attribut];
+					cloneObj[attribute] = options[attribute];
 			}
 
 		}

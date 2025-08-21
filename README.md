@@ -13,9 +13,9 @@
 </p>
 
 ### Want to try Systemizer?
-Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/">github pages</a>.
+Systemizer is currently hosted on <a href="https://honzaap.github.io/Systemizer/">GitHub Pages</a>.
 
-![Gif of Systemizer](https://honzaap.github.io/Systemizer/assets/gifs/tutorial0.gif)
+![GIF of Systemizer](https://honzaap.github.io/Systemizer/assets/gifs/tutorial0.gif)
 
 ### How does Systemizer work?
   * Select a component. This can be an **API**, **Client**, **Message Queue**, you name it.

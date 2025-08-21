@@ -93,11 +93,11 @@ export function downloadSvg(filename, svg) {
 
 export function clone(object: any): any {
   var cloneObj = new (object.constructor as any);
-  for (var attribut in object) {
-    if (typeof object[attribut] === "object" && object[attribut] != null)
-      cloneObj[attribut] = clone(object[attribut]);
+  for (var attribute in object) {
+    if (typeof object[attribute] === "object" && object[attribute] != null)
+      cloneObj[attribute] = clone(object[attribute]);
     else
-      cloneObj[attribut] = object[attribut];
+      cloneObj[attribute] = object[attribute];
   }
   return cloneObj;
 }
@@ -146,7 +146,7 @@ export function createRoundedCanvasPath(ctx: CanvasRenderingContext2D, coords, r
 
 (function()
 {
-/* Usefull function */
+/* Useful function */
 function dist2D(x1,y1,x2,y2)
 {	var dx = x2-x1;
 	var dy = y2-y1;

@@ -80,7 +80,7 @@ export class ClientCluster extends LogicComponent implements IDataOperator{
                 this.streamingConnections.splice(this.streamingConnections.findIndex(con => con.connectionId == streamConnection.connectionId), 1);
             }
             else{ 
-                // Estabilish new stream to given connection 
+                // Establish new stream to given connection 
                 this.streamingConnections.push(new StreamingConnection(request.requestId, targetEndpoint, connection));
                 this.stream(request, request.requestId);
             }
