@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { EmbedIFrameOptions, ExportPngOptions, ExportService, ExportSvgOptions } from 'src/app/export.service';
 import { PlacingService } from 'src/app/placing.service';
 import { SavingService } from 'src/app/saving.service';
@@ -86,7 +86,7 @@ export class BoardUIComponent implements OnInit {
 	isMobile: boolean = false;
 
 
-	scaleControl: FormControl = new FormControl();
+	scaleControl: UntypedFormControl = new UntypedFormControl();
 	scaleSelectList = [0.1, 0.5, 1, 1.5, 2];
 
 	confirmDialogReturnFunction = () => {};
