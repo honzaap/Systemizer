@@ -1,43 +1,43 @@
 <div
-#anchorRef
-[class.side-menu]="isReadOnly"
-[style.left.px]="LogicClientCluster.options.X "
-[style.top.px]="LogicClientCluster.options.Y"
+  #anchorRef
+  [class.side-menu]="isReadOnly"
+  [style.left.px]="LogicClientCluster.options.X"
+  [style.top.px]="LogicClientCluster.options.Y"
 >
-    <template #conn></template>
-    <div class="img-container" (mousedown)="handleMousedown( $event )" (touchstart)="handleMousedown($event)"
-    (click)="handleClick($event)">
-        <img src="./assets/clientcluster.svg">
-    </div>    
+  <ng-template #conn></ng-template>
+  <div class="img-container" (mousedown)="handleMousedown($event)" (touchstart)="handleMousedown($event)" (click)="handleClick($event)">
+    <img src="./assets/clientcluster.svg" />
+  </div>
 </div>
-<div *ngIf="isReadOnly" 
-[style.left.px]="LogicClientCluster.options.X "
-[style.top.px]="LogicClientCluster.options.Y" class="read-only-controls">
-    <button *ngIf="!LogicClientCluster.isSendingData" (click)="LogicClientCluster.startSendingData(); cdRef.detectChanges()">
-        <img src="./assets/send.svg">
-    </button>
-    <button *ngIf="LogicClientCluster.isSendingData" (click)="LogicClientCluster.stopSendingData(); cdRef.detectChanges()">
-        <img src="./assets/send.svg" style="transform: rotateY(180deg);">
-    </button>
+
+<div *ngIf="isReadOnly" [style.left.px]="LogicClientCluster.options.X" [style.top.px]="LogicClientCluster.options.Y" class="read-only-controls">
+  <button *ngIf="!LogicClientCluster.isSendingData" (click)="LogicClientCluster.startSendingData(); cdRef.detectChanges()">
+    <img src="./assets/send.svg" />
+  </button>
+  <button *ngIf="LogicClientCluster.isSendingData" (click)="LogicClientCluster.stopSendingData(); cdRef.detectChanges()">
+    <img src="./assets/send.svg" style="transform: rotateY(180deg);" />
+  </button>
 </div>
+
 <div style="display:none">
-    <div #options>
-        <slider-described class="mt"
-        [Model]="LogicClientCluster"
-        [Title]="'Output rate'"
-        [Property]="'outputRate'"
-        [AfterChange]="afterChange"
-        [Tooltip]="'Change the speed at which data is sent.'"
-        ></slider-described>
+  <div #options>
+    <slider-described class="mt"
+      [Model]="LogicClientCluster"
+      [Title]="'Output rate'"
+      [Property]="'outputRate'"
+      [AfterChange]="afterChange"
+      [Tooltip]="'Change the speed at which data is sent.'"
+    ></slider-described>
+  </div>
+
+  <div #actions>
+    <div class="options-actions">
+      <div class="actions-container">
+        <button *ngIf="!LogicClientCluster.isSendingData" (click)="LogicClientCluster.startSendingData()">Start sending data</button>
+        <button *ngIf="LogicClientCluster.isSendingData" (click)="LogicClientCluster.stopSendingData()">Stop sending data</button>
+      </div>
     </div>
-    <div #actions>
-        <div class="options-actions">
-            <div class="actions-container">
-                <button *ngIf="!LogicClientCluster.isSendingData"
-                 (click)="LogicClientCluster.startSendingData()">Start sending data</button>
-                <button *ngIf="LogicClientCluster.isSendingData"
-                 (click)="LogicClientCluster.stopSendingData()">Stop sending data</button>
-            </div>
-        </div>
-    </div>
+  </div>
+
+  <div #simulations></div>
 </div>
