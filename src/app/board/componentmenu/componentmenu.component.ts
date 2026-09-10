@@ -74,7 +74,7 @@ export class ComponentmenuComponent implements OnInit {
 	{
 		// Create Categories
 		this.allCategories.push(new Category("Client-side",[
-			new MenuItem(ClientComponent, "Basic Client", "","./assets/client.svg", '<p>Client is the component, that simulates either a real client, or client side application on any device.</p><p>Use the output port to connect to other compoenents via their input port. Select endpoint you want to connect to and the HTTP method used.</p><p>Once connected to an endpoint, you can use the <span class="highlight">Send data</span> button. To send data automatically, use the loop icon next to <span class="highlight">Send data</span> button.</p>'),
+			new MenuItem(ClientComponent, "Basic Client", "","./assets/client.svg", '<p>Client is the component, that simulates either a real client, or client side application on any device.</p><p>Use the output port to connect to other components via their input port. Select endpoint you want to connect to and the HTTP method used.</p><p>Once connected to an endpoint, you can use the <span class="highlight">Send data</span> button. To send data automatically, use the loop icon next to <span class="highlight">Send data</span> button.</p>'),
 			new MenuItem(ClientclusterComponent, "Client Cluster", "","./assets/clientcluster.svg", '<p>Client cluster represents multiple clients. It sends data to any endpoint available at given speed.<p>To start sending data, click the <span class="highlight">Start sending data</span> button.</p>')
 		]));
 		this.allCategories.push(new Category("Server-side",[
